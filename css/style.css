@@ -2,12 +2,12 @@
 body{
     font-family: Arial, sans-serif;
     margin:0;
-    background:hsl(#21d16a);
+    background:hsl(oklch(57.524% 0.16055 250.775));
 }
 
 /* Header */
 header{
-    background:#21d16a;
+    background:hsl(oklch(57.524% 0.16055 250.775));
     color:white;
     padding:20px;
     text-align:center;
