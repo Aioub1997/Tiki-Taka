@@ -31,18 +31,6 @@ nav a:hover{
     color:#38bdf8;
 }
 
-/* Section HERO (WELCOME) */
-.hero{
-    background-image:url("stadium.jpg"); /* mets ton image ici */
-    background-size:cover;
-    background-position:center;
-    height:500px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    text-align:center;
-    color:white;
-}
 
 .hero h1{
     font-size:60px;
@@ -90,5 +78,4 @@ section{
     display: flex;
     align-items: center;
     justify-content: center;
-}
 }
