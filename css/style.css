@@ -8,20 +8,20 @@ body{
 /* Header */
 header{
     background:hsl(oklch(57.524% 0.16055 250.775));
-    color:white;
+    color:rgba(255, 255, 255, 0.404);
     padding:20px;
     text-align:center;
 }
 
 /* Navigation */
 nav{
-    background:#0f172a;
+    background:hsla(244, 96%, 38%, 0);
     padding:10px;
     text-align:center;
 }
 
 nav a{
-    color:white;
+    color:rgb(244, 96%, 38%, 0);
     margin:10px;
     text-decoration:none;
     font-weight:bold;
