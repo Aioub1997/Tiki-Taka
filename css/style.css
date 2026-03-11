@@ -8,7 +8,7 @@ body{
 /* Header */
 header{
     background:hsl(oklch(57.524% 0.16055 250.775));
-    color:rgba(19, 131, 52, 0.404);
+    color:rgb(0, 0, 0);
     padding:20px;
     text-align:center;
 }
@@ -62,7 +62,7 @@ main{
 }
 
 section{
-    background:rgb(5, 5, 5);
+    background:rgb(240, 237, 237);
     padding:20px;
     margin:20px;
     border-radius:8px;
