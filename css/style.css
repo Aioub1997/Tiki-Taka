@@ -1,74 +1,47 @@
 /* Style général */
-body{
+body {
     font-family: Arial, sans-serif;
-    margin:0;
-    background:hsl(oklch(13.698% 0.02477 233.622));
+    margin: 0;
+    background: hsl(13.698% 0.02477 233.622);
 }
 
 /* Header */
-header{
-    background:hsl(oklch(57.524% 0.16055 250.775));
-    color:rgb(0, 0, 0);
-    padding:20px;
-    text-align:center;
+header {
+    background: hsl(0, 0%, 8%); /* très foncé, presque noir */
+    color: white; /* texte blanc */
+    padding: 20px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.8rem;
+    letter-spacing: 0.05em;
 }
 
 /* Navigation */
-nav{
-    background:hsl(0, 0%, 0%);
-    padding:10px;
-    text-align:center;
+nav {
+    background: hsl(0, 0%, 93%); /* gris clair */
+    padding: 10px;
+    text-align: center;
+    border-bottom: 2px solid #ddd;
+    box-shadow: inset 0 -2px 3px rgba(0, 0, 0, 0.1);
 }
 
-nav a{
-    color:rgba(236, 236, 236, 0.959);
-    margin:10px;
-    text-decoration:none;
-    font-weight:bold;
+nav a {
+    color: hsl(0, 0%, 27%); /* gris foncé */
+    margin: 10px;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 5px 8px;
+    border-radius: 4px;
+    transition: color 0.25s ease;
 }
 
-nav a:hover{
-    color:#f8f9fa;
+nav a:hover {
+    color: black;
+    background-color: hsl(0, 0%, 85%);
 }
 
-
-.hero h1{
-    font-size:60px;
-    margin:0;
-}
-
-.hero p{
-    font-size:20px;
-    margin:10px 0 20px;
-}
-
-/* Boutons */
-button{
-    background:#1e3a5f;
-    color:white;
-    border:none;
-    padding:10px 15px;
-    border-radius:5px;
-    cursor:pointer;
-}
-
-button:hover{
-    background:#38bdf8;
-}
-
-/* Contenu principal */
-main{
-    padding:20px;
-}
-
-section{
-    background:rgb(240, 237, 237);
-    padding:20px;
-    margin:20px;
-    border-radius:8px;
-    box-shadow:0 2px 5px rgb(255, 253, 253);
-}
-.hero{
+/* Hero Section */
+.hero {
     background-image: url("stade.jpg");
     background-size: cover;
     background-position: center;
@@ -78,4 +51,41 @@ section{
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.hero h1 {
+    font-size: 60px;
+    margin: 0;
+}
+
+.hero p {
+    font-size: 20px;
+    margin: 10px 0 20px;
+}
+
+/* Boutons */
+button {
+    background: #1e3a5f;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #38bdf8;
+}
+
+/* Contenu principal */
+main {
+    padding: 20px;
+}
+
+section {
+    background: rgb(240, 237, 237);
+    padding: 20px;
+    margin: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgb(255, 253, 253);
 }
