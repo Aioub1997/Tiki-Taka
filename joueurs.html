@@ -131,11 +131,11 @@ button:hover {
 
 <table id="tableJoueurs">
 <tr>
-<th>#</th>
+<th>Numéro</th>
 <th>Nom</th>
 <th>Poste</th>
-<th>Âge</th>
-<th>Nation</th>
+<th>Passes Décisives</th>
+<th>Buts Marqués</th>
 </tr>
 </table>
 
@@ -155,9 +155,10 @@ function charger() {
     for(let i=1;i<=nbJoueurs;i++){
         let nom = localStorage.getItem("joueur_nom"+i) || "";
         let poste = localStorage.getItem("joueur_poste"+i) || "";
-        let age = localStorage.getItem("joueur_age"+i) || "";
-        let nation = localStorage.getItem("joueur_nation"+i) || "";
+        let passes = localStorage.getItem("joueur_passes"+i) || "";
+        let buts = localStorage.getItem("joueur_buts"+i) || "";
 
+        // Surligne Tiki-Taka ou capitaine
         let classe = (nom.toLowerCase().includes("tiki-taka") || nom.toLowerCase().includes("capitaine")) ? "cle" : "";
 
         table.innerHTML += `
@@ -165,8 +166,8 @@ function charger() {
             <td>${i}</td>
             <td><input type="text" id="nom${i}" value="${nom}"></td>
             <td><input type="text" id="poste${i}" value="${poste}"></td>
-            <td><input type="number" id="age${i}" value="${age}" min="10" max="99"></td>
-            <td><input type="text" id="nation${i}" value="${nation}"></td>
+            <td><input type="number" id="passes${i}" value="${passes}" min="0"></td>
+            <td><input type="number" id="buts${i}" value="${buts}" min="0"></td>
         </tr>
         `;
     }
@@ -177,8 +178,8 @@ function sauvegarder(){
     for(let i=1;i<=nbJoueurs;i++){
         localStorage.setItem("joueur_nom"+i, document.getElementById("nom"+i).value);
         localStorage.setItem("joueur_poste"+i, document.getElementById("poste"+i).value);
-        localStorage.setItem("joueur_age"+i, document.getElementById("age"+i).value);
-        localStorage.setItem("joueur_nation"+i, document.getElementById("nation"+i).value);
+        localStorage.setItem("joueur_passes"+i, document.getElementById("passes"+i).value);
+        localStorage.setItem("joueur_buts"+i, document.getElementById("buts"+i).value);
     }
     alert("Effectif sauvegardé ✅");
 }
