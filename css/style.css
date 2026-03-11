@@ -80,4 +80,15 @@ section{
     border-radius:8px;
     box-shadow:0 2px 5px rgba(0,0,0,0.1);
 }
+.hero{
+    background-image: url("stade.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 500px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 }
