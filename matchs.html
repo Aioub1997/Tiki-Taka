@@ -1,18 +1,125 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <title>Calendrier - Tiki-Taka</title>
+<meta charset="UTF-8">
+<title>Calendrier - Tiki-Taka</title>
 <link rel="stylesheet" href="css/style.css">
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #222;
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+}
+
+nav {
+    text-align: center;
+    margin: 15px 0;
+}
+
+nav a {
+    margin: 0 10px;
+    text-decoration: none;
+    color: #222;
+    font-weight: bold;
+}
+
+main {
+    max-width: 1000px;
+    margin: auto;
+    padding: 20px;
+}
+
+section {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Tableau des matchs */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    table-layout: fixed;
+}
+
+th, td {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #ccc;
+    word-wrap: break-word;
+}
+
+th {
+    background-color: #222;
+    color: white;
+}
+
+/* Alternance des lignes */
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+/* Classement : Top et bas du tableau */
+tr.top {
+    background-color: #c7f0c7; 
+    font-weight: bold;
+}
+
+tr.bottom {
+    background-color: #f0c7c7; 
+    font-weight: bold;
+}
+
+/* Mettre Tiki-Taka en couleur */
+tr.tiki {
+    background-color: #ffe680;
+    font-weight: bold;
+}
+
+/* Logos */
+td.logo img {
+    width: 30px;
+    height: 30px;
+}
+
+/* Responsive */
+@media screen and (max-width: 768px) {
+    th, td {
+        padding: 6px;
+        font-size: 12px;
+    }
+    td.logo img {
+        width: 20px;
+        height: 20px;
+    }
+}
+</style>
+
 </head>
 <body>
 
 <header>
-    <h1>Tiki-Taka </h1>
+<h1>Tiki-Taka</h1>
 </header>
 
 <nav>
-
 <a href="joueurs.html">Effectif</a> |
 <a href="matchs.html">Calendrier</a> |
 <a href="convocations.html">Convocations</a> |
@@ -20,13 +127,196 @@
 </nav>
 
 <main>
+
 <section>
-    <h2>Matchs à venir</h2>
-    <ul>
-        <li>Match 1 – 15/03/2026</li>
-        <li>Match 2 – 22/03/2026</li>
-    </ul>
+<h2>Matchs à venir</h2>
+
+<table>
+<tr>
+<th>Date</th>
+<th>Adversaire</th>
+<th>Lieu</th>
+<th>Heure</th>
+</tr>
+
+<tr>
+<td>15/03/2026</td>
+<td>Équipe B</td>
+<td>Domicile</td>
+<td>15:00</td>
+</tr>
+
+<tr>
+<td>22/03/2026</td>
+<td>Équipe C</td>
+<td>Extérieur</td>
+<td>16:00</td>
+</tr>
+</table>
 </section>
+
+<section>
+<h2>Classement U19 Régionaux (19B)</h2>
+
+<table>
+<tr>
+<th>#</th>
+<th>Logo</th>
+<th>Équipe</th>
+<th>M</th>
+<th>V</th>
+<th>D</th>
+<th>N</th>
+<th>BP</th>
+<th>BC</th>
+<th>Diff</th>
+<th>Pts</th>
+</tr>
+
+<tr class="tiki">
+<td>1</td>
+<td class="logo"><img src="logos/leopold.png" alt="Leopold"></td>
+<td>R. Leopold F.C. B</td>
+<td>13</td>
+<td>13</td>
+<td>0</td>
+<td>0</td>
+<td>56</td>
+<td>9</td>
+<td>+47</td>
+<td>39</td>
+</tr>
+
+<tr class="top">
+<td>2</td>
+<td class="logo"><img src="logos/racing.png" alt="Racing White Woluwe"></td>
+<td>Racing White Woluwe B</td>
+<td>10</td>
+<td>7</td>
+<td>2</td>
+<td>1</td>
+<td>35</td>
+<td>21</td>
+<td>+14</td>
+<td>22</td>
+</tr>
+
+<tr class="top">
+<td>3</td>
+<td class="logo"><img src="logos/saintoise.png" alt="R.A.S. Saintoise"></td>
+<td>R.A.S. Saintoise</td>
+<td>13</td>
+<td>7</td>
+<td>5</td>
+<td>1</td>
+<td>34</td>
+<td>37</td>
+<td>-3</td>
+<td>22</td>
+</tr>
+
+<tr>
+<td>4</td>
+<td class="logo"><img src="logos/mont.png" alt="C.S. Mont-St-Guibert"></td>
+<td>C.S. Mont-St-Guibert</td>
+<td>11</td>
+<td>6</td>
+<td>4</td>
+<td>1</td>
+<td>33</td>
+<td>21</td>
+<td>+12</td>
+<td>19</td>
+</tr>
+
+<tr>
+<td>5</td>
+<td class="logo"><img src="logos/ros.png" alt="ROS Ottignies-Louvain-La-Neuve"></td>
+<td>ROS Ottignies-Louvain-La-Neuve</td>
+<td>11</td>
+<td>5</td>
+<td>5</td>
+<td>1</td>
+<td>35</td>
+<td>31</td>
+<td>+4</td>
+<td>16</td>
+</tr>
+
+<tr class="bottom">
+<td>6</td>
+<td class="logo"><img src="logos/jodoigne_c.png" alt="R.A.S. Jodoigne C"></td>
+<td>R.A.S. Jodoigne C</td>
+<td>11</td>
+<td>2</td>
+<td>9</td>
+<td>0</td>
+<td>24</td>
+<td>56</td>
+<td>-32</td>
+<td>6</td>
+</tr>
+
+<tr class="bottom">
+<td>7</td>
+<td class="logo"><img src="logos/nivellois.png" alt="R.C.S. Nivellois"></td>
+<td>R.C.S. Nivellois</td>
+<td>11</td>
+<td>1</td>
+<td>7</td>
+<td>3</td>
+<td>18</td>
+<td>33</td>
+<td>-15</td>
+<td>6</td>
+</tr>
+
+<tr class="bottom">
+<td>8</td>
+<td class="logo"><img src="logos/jodoigne_b.png" alt="R.A.S. Jodoigne B"></td>
+<td>R.A.S. Jodoigne B</td>
+<td>12</td>
+<td>1</td>
+<td>10</td>
+<td>1</td>
+<td>23</td>
+<td>50</td>
+<td>-27</td>
+<td>4</td>
+</tr>
+
+<tr>
+<td>9</td>
+<td class="logo"><img src="logos/ittroise.png" alt="J.S. Ittroise"></td>
+<td>J.S. Ittroise</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+
+<tr>
+<td>10</td>
+<td class="logo"><img src="logos/incourt.png" alt="S-R Incourt A"></td>
+<td>S-R Incourt A</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+
+</table>
+
+</section>
+
 </main>
 
 </body>
