@@ -1,31 +1,29 @@
 <!DOCTYPE html>
-<html lang="fr">
-<head>
-    <link rel="stylesheet" href="css/style.css">
-    <meta charset="UTF-8">
-    <title>Convocations - Racing White Woluwe</title>
-<link rel="stylesheet" href="css/style.css">
-</head>
-<body>
-
-<header>
-    <h1>Racing White Woluwe </h1>
-</header>
-
-<nav>
-
-<a href="joueurs.html">Effectif</a> |
-<a href="matchs.html">Calendrier</a> |
-<a href="convocations.html">Convocations</a> |
-<a href="login.html">Connexion</a>
-</nav>
-
-<main>
-<section>
-    <h2>Convocations</h2>
-    <p>Les joueurs recevront un email lorsqu’une convocation est envoyée.</p>
-</section>
-</main>
-
-</body>
+<html>
+  <head>
+    <base target="_top">
+    <style>
+      <link rel="stylesheet" href="css/style.css">
+      body {
+        font-family: sans-serif;
+      }
+      .container {
+        padding: 20px;
+        border-radius: 5px;
+        <link rel="stylesheet" href="css/style.css">
+      }
+      .nom-joueur {
+        font-weight: bold;
+        color: #2c3e50;
+      }
+      <link rel="stylesheet" href="css/style.css">
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Bonjour <span class="nom-joueur"><?= nom ?></span>,</h2>
+      <p>Vous êtes pris.</p>
+      <p>Merci de confirmer votre présence.</p>
+    </div>
+  </body>
 </html>
