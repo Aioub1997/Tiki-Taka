@@ -2,320 +2,79 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Racing White Woluwe</title>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <title>Convocations - Racing White Woluwe</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', sans-serif; background: #f5f4f0; color: #141414; min-height: 100vh; }
 
-    :root {
-      --black: #141414;
-      --white: #f5f4f0;
-      --accent: #e8c840;
-      --gray: #e2e1dd;
-      --mid: #888;
-      --danger: #d94f3d;
-      --success: #3a9e6f;
-    }
+    header { background: #141414; padding: 24px; text-align: center; border-bottom: 4px solid #e8c840; }
+    header h1 { font-family: 'Bebas Neue', sans-serif; font-size: 2.8rem; color: #f5f4f0; letter-spacing: .05em; }
 
-    body {
-      font-family: 'DM Sans', sans-serif;
-      background: var(--white);
-      color: var(--black);
-      min-height: 100vh;
-    }
+    nav { background: #eeede9; border-bottom: 1px solid #d4d3cf; padding: 0 20px; display: flex; justify-content: center; }
+    nav a { display: inline-block; padding: 12px 20px; font-size: 13px; font-weight: 600; color: #555; text-decoration: none; letter-spacing: .05em; border-bottom: 3px solid transparent; transition: .2s; }
+    nav a:hover { color: #141414; }
+    nav a.active { color: #141414; border-bottom-color: #e8c840; }
 
-    /* ── HEADER ── */
-    header {
-      background: var(--black);
-      padding: 28px 40px 20px;
-      text-align: center;
-      position: relative;
-      border-bottom: 4px solid var(--accent);
-    }
+    main { max-width: 960px; margin: 0 auto; padding: 40px 24px 80px; }
+    .page-title { font-family: 'Bebas Neue', sans-serif; font-size: 2.2rem; letter-spacing: .05em; margin-bottom: 6px; }
+    .page-subtitle { font-size: 13px; color: #888; margin-bottom: 32px; }
 
-    header h1 {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(2.4rem, 6vw, 4rem);
-      color: var(--white);
-      letter-spacing: 0.04em;
-    }
+    .toolbar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; }
+    .search-box { display: flex; align-items: center; gap: 8px; background: white; border: 1px solid #d4d3cf; border-radius: 8px; padding: 8px 14px; flex: 1; max-width: 320px; }
+    .search-box input { border: none; outline: none; font-family: 'DM Sans', sans-serif; font-size: 14px; width: 100%; background: transparent; color: #141414; }
+    .counter { font-size: 13px; color: #888; }
+    .counter span { font-weight: 600; color: #141414; }
 
-    header p {
-      font-size: 12px;
-      color: var(--accent);
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      margin-top: 4px;
-    }
-
-    /* ── NAV ── */
-    nav {
-      background: #eeede9;
-      border-bottom: 1px solid #d4d3cf;
-      padding: 0 40px;
-      display: flex;
-      justify-content: center;
-      gap: 0;
-    }
-
-    nav a {
-      display: inline-block;
-      padding: 13px 24px;
-      font-size: 13px;
-      font-weight: 500;
-      color: #555;
-      text-decoration: none;
-      letter-spacing: 0.05em;
-      border-bottom: 3px solid transparent;
-      transition: color 0.2s, border-color 0.2s;
-    }
-
-    nav a:hover { color: var(--black); }
-    nav a.active { color: var(--black); border-bottom-color: var(--accent); }
-
-    /* ── MAIN ── */
-    main {
-      max-width: 960px;
-      margin: 0 auto;
-      padding: 40px 24px 80px;
-    }
-
-    .page-title {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 2.2rem;
-      letter-spacing: 0.05em;
-      margin-bottom: 6px;
-    }
-
-    .page-subtitle {
-      font-size: 13px;
-      color: var(--mid);
-      margin-bottom: 32px;
-    }
-
-    /* ── TOOLBAR ── */
-    .toolbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-bottom: 20px;
-    }
-
-    .search-box {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: white;
-      border: 1px solid #d4d3cf;
-      border-radius: 8px;
-      padding: 8px 14px;
-      flex: 1;
-      max-width: 320px;
-    }
-
-    .search-box input {
-      border: none;
-      outline: none;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 14px;
-      width: 100%;
-      background: transparent;
-      color: var(--black);
-    }
-
-    .search-icon { color: var(--mid); font-size: 15px; }
-
-    .btn-convoke {
-      background: var(--black);
-      color: var(--accent);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 13px;
-      font-weight: 600;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      padding: 10px 22px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background 0.2s, transform 0.1s;
-    }
-
+    .btn-convoke { background: #141414; color: #e8c840; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; padding: 10px 22px; border: none; border-radius: 8px; cursor: pointer; transition: .2s; }
     .btn-convoke:hover { background: #2a2a2a; }
     .btn-convoke:active { transform: scale(0.97); }
     .btn-convoke:disabled { opacity: 0.4; cursor: not-allowed; }
 
-    /* ── COUNTER ── */
-    .counter {
-      font-size: 13px;
-      color: var(--mid);
-    }
-
-    .counter span {
-      font-weight: 600;
-      color: var(--black);
-    }
-
-    /* ── TABLE ── */
-    .table-wrap {
-      background: white;
-      border-radius: 12px;
-      border: 1px solid #d4d3cf;
-      overflow: hidden;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.05);
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    thead {
-      background: var(--black);
-      color: var(--white);
-    }
-
-    thead th {
-      padding: 14px 20px;
-      text-align: left;
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      white-space: nowrap;
-    }
-
+    .table-wrap { background: white; border-radius: 12px; border: 1px solid #d4d3cf; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,.05); }
+    table { width: 100%; border-collapse: collapse; }
+    thead { background: #141414; color: white; }
+    thead th { padding: 14px 20px; text-align: left; font-size: 11px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
     thead th:last-child { text-align: center; }
-
-    tbody tr {
-      border-bottom: 1px solid #ebe9e4;
-      transition: background 0.15s;
-    }
-
+    tbody tr { border-bottom: 1px solid #ebe9e4; transition: background .15s; }
     tbody tr:last-child { border-bottom: none; }
     tbody tr:hover { background: #f9f8f4; }
     tbody tr.selected { background: #fffbe8; }
-
-    td {
-      padding: 14px 20px;
-      font-size: 14px;
-      color: var(--black);
-      vertical-align: middle;
-    }
-
+    td { padding: 14px 20px; font-size: 14px; color: #141414; vertical-align: middle; }
     td:last-child { text-align: center; }
 
-    /* Avatar + nom */
-    .player-cell {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .avatar {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background: var(--black);
-      color: var(--accent);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 12px;
-      font-weight: 700;
-      flex-shrink: 0;
-      letter-spacing: 0.04em;
-    }
-
+    .player-cell { display: flex; align-items: center; gap: 12px; }
+    .avatar { width: 36px; height: 36px; border-radius: 50%; background: #141414; color: #e8c840; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
     .player-name { font-weight: 500; }
-    .player-pos { font-size: 11px; color: var(--mid); margin-top: 1px; }
-
-    /* Email */
-    .email-link {
-      color: #3a6fd8;
-      text-decoration: none;
-      font-size: 13px;
-    }
+    .player-pos { font-size: 11px; color: #888; margin-top: 1px; }
+    .email-link { color: #3a6fd8; text-decoration: none; font-size: 13px; }
     .email-link:hover { text-decoration: underline; }
+    .checkbox-wrap { display: flex; justify-content: center; }
+    input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; accent-color: #141414; }
 
-    /* Checkbox stylisé */
-    .checkbox-wrap {
-      display: flex;
-      justify-content: center;
-    }
-
-    input[type="checkbox"] {
-      width: 20px;
-      height: 20px;
-      cursor: pointer;
-      accent-color: var(--black);
-      border-radius: 4px;
-    }
-
-    /* ── BADGE statut ── */
-    .badge {
-      display: inline-block;
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      padding: 3px 9px;
-      border-radius: 20px;
-    }
-
+    .badge { display: inline-block; font-size: 10px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; padding: 3px 9px; border-radius: 20px; }
     .badge-ok { background: #d4f5e4; color: #1f7a4f; }
     .badge-no { background: #fde8e6; color: #a33426; }
     .badge-pending { background: #f0ede4; color: #666; }
 
-    /* ── TOAST ── */
-    #toast {
-      position: fixed;
-      bottom: 32px;
-      left: 50%;
-      transform: translateX(-50%) translateY(80px);
-      background: var(--black);
-      color: var(--accent);
-      padding: 13px 28px;
-      border-radius: 8px;
-      font-size: 14px;
-      font-weight: 500;
-      letter-spacing: 0.03em;
-      opacity: 0;
-      transition: transform 0.35s cubic-bezier(.4,0,.2,1), opacity 0.35s;
-      z-index: 999;
-      pointer-events: none;
-      white-space: nowrap;
-    }
+    #toast { position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(80px); background: #141414; color: #e8c840; padding: 13px 28px; border-radius: 8px; font-size: 14px; font-weight: 500; opacity: 0; transition: transform .35s, opacity .35s; z-index: 999; pointer-events: none; white-space: nowrap; }
+    #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
 
-    #toast.show {
-      transform: translateX(-50%) translateY(0);
-      opacity: 1;
-    }
-
-    /* ── FOOTER ── */
-    footer {
-      text-align: center;
-      padding: 20px;
-      font-size: 12px;
-      color: #aaa;
-      border-top: 1px solid #e2e1dd;
-    }
+    footer { text-align: center; padding: 20px; font-size: 12px; color: #aaa; border-top: 1px solid #e2e1dd; }
   </style>
 </head>
 <body>
 
 <header>
   <h1>Racing White Woluwe</h1>
-  <p>Club de football — Woluwe-Saint-Lambert</p>
 </header>
 
 <nav>
-  <a href="#">Effectif</a>
-  <a href="#">Calendrier</a>
-  <a href="#" class="active">Convocations</a>
-  <a href="#">Connexion</a>
+  <a href="joueurs.html">Effectif</a> |
+  <a href="matchs.html">Calendrier</a> |
+  <a href="convocations.html" class="active">Convocations</a> |
+  <a href="login.html">Connexion</a>
 </nav>
 
 <main>
@@ -324,19 +83,15 @@
 
   <div class="toolbar">
     <div class="search-box">
-      <span class="search-icon">🔍</span>
+      <span>🔍</span>
       <input type="text" id="searchInput" placeholder="Rechercher un joueur…" oninput="filterTable()">
     </div>
-    <div class="counter">
-      <span id="selectedCount">0</span> joueur(s) sélectionné(s)
-    </div>
-    <button class="btn-convoke" id="convokeBtn" onclick="convoquer()" disabled>
-      ✉ Envoyer convocation
-    </button>
+    <div class="counter"><span id="selectedCount">0</span> joueur(s) sélectionné(s)</div>
+    <button class="btn-convoke" id="convokeBtn" onclick="convoquer()" disabled>✉ Envoyer convocation</button>
   </div>
 
   <div class="table-wrap">
-    <table id="playerTable">
+    <table>
       <thead>
         <tr>
           <th>Joueur</th>
@@ -345,31 +100,27 @@
           <th>Sélectionner</th>
         </tr>
       </thead>
-      <tbody id="tableBody">
-      </tbody>
+      <tbody id="tableBody"></tbody>
     </table>
   </div>
 </main>
 
-<footer>
-  &copy; 2025 Racing White Woluwe — Tous droits réservés
-</footer>
-
+<footer>&copy; 2025 Racing White Woluwe — Tous droits réservés</footer>
 <div id="toast"></div>
 
 <script>
-  const joueurs = [
-    { nom: "Lucas Martin",    poste: "Gardien",    email: "lucas.martin@gmail.com",    statut: "ok" },
-    { nom: "Thomas Dupont",   poste: "Défenseur",  email: "thomas.dupont@gmail.com",   statut: "ok" },
-    { nom: "Antoine Bernard", poste: "Défenseur",  email: "antoine.bernard@gmail.com", statut: "pending" },
-    { nom: "Maxime Leroy",    poste: "Milieu",     email: "maxime.leroy@gmail.com",    statut: "ok" },
-    { nom: "Nicolas Lambert", poste: "Milieu",     email: "nicolas.lambert@gmail.com", statut: "no" },
-    { nom: "Kevin Moreau",    poste: "Milieu",     email: "kevin.moreau@gmail.com",    statut: "ok" },
-    { nom: "Julien Simon",    poste: "Attaquant",  email: "julien.simon@gmail.com",    statut: "pending" },
-    { nom: "Romain Petit",    poste: "Attaquant",  email: "romain.petit@gmail.com",    statut: "ok" },
-    { nom: "Baptiste Girard", poste: "Défenseur",  email: "baptiste.girard@gmail.com", statut: "ok" },
-    { nom: "Clément Roux",    poste: "Attaquant",  email: "clement.roux@gmail.com",    statut: "no" },
-  ];
+  // Charge les joueurs depuis le localStorage (saisis dans joueurs.html)
+  function getJoueurs() {
+    const liste = [];
+    for (let i = 1; i <= 23; i++) {
+      const nom = localStorage.getItem('joueur_nom' + i) || '';
+      const poste = localStorage.getItem('joueur_poste' + i) || '';
+      if (nom.trim() !== '') {
+        liste.push({ num: i, nom, poste, email: localStorage.getItem('joueur_email' + i) || '' });
+      }
+    }
+    return liste;
+  }
 
   const statutLabel = {
     ok: '<span class="badge badge-ok">Disponible</span>',
@@ -378,29 +129,27 @@
   };
 
   function initials(nom) {
-    return nom.split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
+    return nom.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
   }
 
-  function buildTable(list) {
+  function buildTable(liste) {
     const tbody = document.getElementById('tableBody');
     tbody.innerHTML = '';
-    list.forEach((j, i) => {
+    if (liste.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#888;padding:30px;">Aucun joueur trouvé. Remplissez d\'abord la page Effectif.</td></tr>';
+      return;
+    }
+    liste.forEach(j => {
+      const statut = localStorage.getItem('statut_' + j.num) || 'ok';
       const tr = document.createElement('tr');
       tr.innerHTML = `
-        <td>
-          <div class="player-cell">
-            <div class="avatar">${initials(j.nom)}</div>
-            <div>
-              <div class="player-name">${j.nom}</div>
-              <div class="player-pos">${j.poste}</div>
-            </div>
-          </div>
-        </td>
-        <td><a class="email-link" href="mailto:${j.email}">${j.email}</a></td>
-        <td>${statutLabel[j.statut]}</td>
-        <td class="checkbox-wrap">
-          <input type="checkbox" onchange="updateCounter()" ${j.statut === 'no' ? 'disabled title="Joueur indisponible"' : ''}>
-        </td>
+        <td><div class="player-cell">
+          <div class="avatar">${initials(j.nom)}</div>
+          <div><div class="player-name">${j.nom}</div><div class="player-pos">${j.poste}</div></div>
+        </div></td>
+        <td><a class="email-link" href="mailto:${j.email}">${j.email || '—'}</a></td>
+        <td>${statutLabel[statut]}</td>
+        <td class="checkbox-wrap"><input type="checkbox" onchange="updateCounter()" ${statut === 'no' ? 'disabled' : ''}></td>
       `;
       tbody.appendChild(tr);
     });
@@ -408,10 +157,8 @@
 
   function filterTable() {
     const q = document.getElementById('searchInput').value.toLowerCase();
-    const rows = document.querySelectorAll('#tableBody tr');
-    rows.forEach(row => {
-      const txt = row.textContent.toLowerCase();
-      row.style.display = txt.includes(q) ? '' : 'none';
+    document.querySelectorAll('#tableBody tr').forEach(row => {
+      row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
     });
     updateCounter();
   }
@@ -420,7 +167,6 @@
     const checked = document.querySelectorAll('#tableBody input[type="checkbox"]:checked').length;
     document.getElementById('selectedCount').textContent = checked;
     document.getElementById('convokeBtn').disabled = checked === 0;
-
     document.querySelectorAll('#tableBody tr').forEach(row => {
       const cb = row.querySelector('input[type="checkbox"]');
       row.classList.toggle('selected', cb && cb.checked);
@@ -429,7 +175,7 @@
 
   function convoquer() {
     const checked = document.querySelectorAll('#tableBody input[type="checkbox"]:checked').length;
-    showToast(`✓ Convocation envoyée à ${checked} joueur(s) !`);
+    showToast('✓ Convocation envoyée à ' + checked + ' joueur(s) !');
     document.querySelectorAll('#tableBody input[type="checkbox"]').forEach(cb => cb.checked = false);
     updateCounter();
   }
@@ -441,9 +187,8 @@
     setTimeout(() => t.classList.remove('show'), 3200);
   }
 
-  buildTable(joueurs);
+  buildTable(getJoueurs());
 </script>
+
 </body>
 </html>
-
-    

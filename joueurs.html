@@ -41,4 +41,113 @@ input:focus{outline:none;border-color:#141414;background:white;}
 .tactic-label{text-align:center;font-size:10px;color:rgba(255,255,255,.5);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;}
 .row{display:flex;justify-content:space-around;align-items:center;margin:6px 0;}
 .slot{text-align:center;cursor:pointer;}
-.slot-circle{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,0.15);border:2px solid rgba(255,255,255,0.7);display:flex;align-items:cente
+.slot-circle{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,0.15);border:2px solid rgba(255,255,255,0.7);display:flex;align-items:center;justify-content:center;margin:0 auto 3px;font-size:18px;transition:.2s;}
+.slot:hover .slot-circle{background:rgba(255,255,255,0.35);}
+.slot-name{font-size:10px;color:white;font-weight:600;text-shadow:0 1px 3px rgba(0,0,0,.6);letter-spacing:.03em;min-height:13px;cursor:text;}
+.slot-name:focus{outline:1px dashed rgba(255,255,255,.8);border-radius:3px;background:rgba(0,0,0,.2);padding:0 2px;}
+</style>
+</head>
+<body>
+
+<header><h1>Racing White Woluwe</h1></header>
+<nav>
+  <a href="joueurs.html" class="active">Effectif</a> |
+  <a href="matchs.html">Calendrier</a> |
+  <a href="convocations.html">Convocations</a> |
+  <a href="login.html">Connexion</a>
+</nav>
+
+<div class="page-layout">
+
+  <div class="left-panel">
+    <div class="panel-title">Effectif U19</div>
+    <div class="table-wrap">
+      <table id="tableJoueurs">
+        <thead><tr>
+          <th>#</th><th>Nom</th><th>Poste</th><th>Passes</th><th>Buts</th>
+        </tr></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+    <button class="btn-save" onclick="sauvegarder()">✔ Sauvegarder</button>
+  </div>
+
+  <div class="right-panel">
+    <div class="terrain-title">Tactique 4-3-3</div>
+    <div class="terrain-wrap">
+      <div class="terrain">
+        <div class="tactic-label">↑ But adverse</div>
+        <div class="row">
+          <div class="slot"><div class="slot-circle">⚽</div><div class="slot-name" contenteditable="true" data-pos="ag" onblur="saveSlot(this)">AG</div></div>
+          <div class="slot"><div class="slot-circle">⚽</div><div class="slot-name" contenteditable="true" data-pos="ac" onblur="saveSlot(this)">AC</div></div>
+          <div class="slot"><div class="slot-circle">⚽</div><div class="slot-name" contenteditable="true" data-pos="ad" onblur="saveSlot(this)">AD</div></div>
+        </div>
+        <div class="row" style="margin-top:18px;">
+          <div class="slot"><div class="slot-circle">🔵</div><div class="slot-name" contenteditable="true" data-pos="mg" onblur="saveSlot(this)">MG</div></div>
+          <div class="slot"><div class="slot-circle">🔵</div><div class="slot-name" contenteditable="true" data-pos="mc" onblur="saveSlot(this)">MC</div></div>
+          <div class="slot"><div class="slot-circle">🔵</div><div class="slot-name" contenteditable="true" data-pos="md" onblur="saveSlot(this)">MD</div></div>
+        </div>
+        <div class="row" style="margin-top:18px;">
+          <div class="slot"><div class="slot-circle">🟡</div><div class="slot-name" contenteditable="true" data-pos="dg" onblur="saveSlot(this)">DG</div></div>
+          <div class="slot"><div class="slot-circle">🟡</div><div class="slot-name" contenteditable="true" data-pos="dcg" onblur="saveSlot(this)">DCG</div></div>
+          <div class="slot"><div class="slot-circle">🟡</div><div class="slot-name" contenteditable="true" data-pos="dcd" onblur="saveSlot(this)">DCD</div></div>
+          <div class="slot"><div class="slot-circle">🟡</div><div class="slot-name" contenteditable="true" data-pos="dd" onblur="saveSlot(this)">DD</div></div>
+        </div>
+        <div class="row" style="margin-top:18px;">
+          <div class="slot"><div class="slot-circle">🧤</div><div class="slot-name" contenteditable="true" data-pos="gk" onblur="saveSlot(this)">GK</div></div>
+        </div>
+        <div class="tactic-label" style="margin-top:10px;">↓ Notre but</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const nb=23;
+const tbody=document.getElementById('tbody');
+
+function charger(){
+  tbody.innerHTML='';
+  for(let i=1;i<=nb;i++){
+    const nom=localStorage.getItem('joueur_nom'+i)||'';
+    const poste=localStorage.getItem('joueur_poste'+i)||'';
+    const passes=localStorage.getItem('joueur_passes'+i)||'';
+    const buts=localStorage.getItem('joueur_buts'+i)||'';
+    const cls=(nom.toLowerCase().includes('capitaine')||nom.toLowerCase().includes('tiki-taka'))?'cle':'';
+    tbody.innerHTML+=`<tr class="${cls}">
+      <td>${i}</td>
+      <td><input type="text" id="nom${i}" value="${nom}"></td>
+      <td><input type="text" id="poste${i}" value="${poste}"></td>
+      <td><input type="number" id="passes${i}" value="${passes}" min="0"></td>
+      <td><input type="number" id="buts${i}" value="${buts}" min="0"></td>
+    </tr>`;
+  }
+}
+
+function sauvegarder(){
+  for(let i=1;i<=nb;i++){
+    localStorage.setItem('joueur_nom'+i,document.getElementById('nom'+i).value);
+    localStorage.setItem('joueur_poste'+i,document.getElementById('poste'+i).value);
+    localStorage.setItem('joueur_passes'+i,document.getElementById('passes'+i).value);
+    localStorage.setItem('joueur_buts'+i,document.getElementById('buts'+i).value);
+  }
+  const b=document.querySelector('.btn-save');
+  b.textContent='✔ Sauvegardé !';
+  b.style.background='#3a9e6f';
+  setTimeout(()=>{b.textContent='✔ Sauvegarder';b.style.background='#141414';},2000);
+}
+
+['ag','ac','ad','mg','mc','md','dg','dcg','dcd','dd','gk'].forEach(p=>{
+  const v=localStorage.getItem('slot_'+p);
+  if(v){const el=document.querySelector('[data-pos="'+p+'"]');if(el)el.textContent=v;}
+});
+
+function saveSlot(el){
+  localStorage.setItem('slot_'+el.dataset.pos,el.textContent.trim());
+}
+
+charger();
+</script>
+</body>
+</html>
