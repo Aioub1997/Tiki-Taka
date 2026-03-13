@@ -19,6 +19,56 @@
     .stat-present .num { color: #1f7a4f; }
     .stat-absent .num  { color: #a33426; }
     .stat-pending .num { color: #888; }
+
+    /* Carte match */
+    .match-banner {
+      background: #141414;
+      color: white;
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      border-left: 5px solid #e8c840;
+    }
+    .match-banner .match-label {
+      font-size: 10px;
+      color: #e8c840;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .match-banner .match-teams {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.6rem;
+      letter-spacing: .05em;
+    }
+    .match-banner .match-infos {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+    .match-banner .match-infos span {
+      background: rgba(255,255,255,0.1);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      color: #ddd;
+    }
+    .no-match-banner {
+      background: #f0ede4;
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-bottom: 24px;
+      font-size: 14px;
+      color: #888;
+      border-left: 5px solid #d4d3cf;
+    }
   </style>
 </head>
 <body>
@@ -34,7 +84,9 @@
 
 <main>
   <h2 class="page-title">Convocations</h2>
-  <p class="page-subtitle" id="subtitleMatch">Prochain match — confirmez votre présence.</p>
+
+  <!-- Prochain match -->
+  <div id="matchBanner"></div>
 
   <!-- Stats rapides -->
   <div class="stats-bar">
@@ -93,6 +145,7 @@
   let currentUser = null;
   let isAdmin = false;
   let joueursList = [];
+  let prochainMatch = null;
 
   function initials(nom) {
     return nom.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
@@ -108,14 +161,25 @@
       document.getElementById('thAction').textContent = 'Sélectionner';
     }
 
+    // Charger le prochain match
+    const snapM = await getDoc(doc(db, "matchs", "liste"));
+    if (snapM.exists()) {
+      const matchs = snapM.data().matchs || [];
+      // Prochain match = premier sans score
+      prochainMatch = matchs.find(m => !m.score) || null;
+    }
+    afficherMatch();
+
     // Charger joueurs
     const snap = await getDoc(doc(db, "effectif", "joueurs"));
     const data = snap.exists() ? snap.data() : {};
     joueursList = [];
     for (let i = 1; i <= 23; i++) {
       const nom = data['nom'+i] || '';
+      const prenom = data['prenom'+i] || '';
       const poste = data['poste'+i] || '';
-      if (nom.trim()) joueursList.push({ num: i, nom, poste });
+      const email = data['email'+i] || '';
+      if (nom.trim()) joueursList.push({ num: i, nom, prenom, poste, email });
     }
 
     // Écouter les réponses en temps réel
@@ -125,6 +189,26 @@
       updateStats(reponses);
     });
   });
+
+  function afficherMatch() {
+    const div = document.getElementById('matchBanner');
+    if (!prochainMatch) {
+      div.innerHTML = `<div class="no-match-banner">⚽ Aucun match à venir — ajoutez-en un dans la page <a href="matchs.html">Calendrier</a>.</div>`;
+      return;
+    }
+    div.innerHTML = `
+      <div class="match-banner">
+        <div>
+          <div class="match-label">⚽ Prochain match</div>
+          <div class="match-teams">Racing White Woluwe vs ${prochainMatch.adversaire}</div>
+          <div class="match-infos">
+            <span>📅 ${prochainMatch.date}</span>
+            <span>🕐 ${prochainMatch.heure}</span>
+            <span>📍 ${prochainMatch.lieu}</span>
+          </div>
+        </div>
+      </div>`;
+  }
 
   function buildTable(reponses) {
     const tbody = document.getElementById('tableBody');
@@ -145,22 +229,19 @@
       let actionCell = '';
       if (isAdmin) {
         actionCell = `<td class="checkbox-wrap"><input type="checkbox" onchange="updateCounter()"></td>`;
-      } else if (currentUser && currentUser.email) {
-        // Chaque joueur connecté peut répondre
+      } else {
         actionCell = `<td>
           <div class="resp-group">
             <button class="resp-btn resp-present ${rep === 'present' ? 'active' : ''}" onclick="repondre(${j.num}, 'present', this)">✓ Présent</button>
             <button class="resp-btn resp-absent ${rep === 'absent' ? 'active' : ''}" onclick="repondre(${j.num}, 'absent', this)">✗ Absent</button>
           </div>
         </td>`;
-      } else {
-        actionCell = `<td style="text-align:center">—</td>`;
       }
 
       tr.innerHTML = `
         <td><div class="player-cell">
           <div class="avatar">${initials(j.nom)}</div>
-          <div><div class="player-name">${j.nom}</div></div>
+          <div><div class="player-name">${j.prenom} ${j.nom}</div></div>
         </div></td>
         <td style="color:#888;font-size:13px">${j.poste}</td>
         <td>${badgeMap[rep]}</td>
@@ -183,7 +264,7 @@
     document.getElementById('countPending').textContent = pending;
   }
 
-  window.repondre = async function(num, rep, btn) {
+  window.repondre = async function(num, rep) {
     const snap = await getDoc(doc(db, "convocations", "reponses"));
     const data = snap.exists() ? snap.data() : {};
     data['joueur_' + num] = rep;
@@ -210,8 +291,24 @@
   };
 
   window.convoquer = function() {
-    const checked = document.querySelectorAll('#tableBody input[type="checkbox"]:checked').length;
-    showToast('✓ Convocation envoyée à ' + checked + ' joueur(s) !');
+    const rows = document.querySelectorAll('#tableBody tr');
+    const convokes = [];
+    rows.forEach((row, idx) => {
+      const cb = row.querySelector('input[type="checkbox"]');
+      if (cb && cb.checked && joueursList[idx]) {
+        convokes.push(joueursList[idx]);
+      }
+    });
+
+    if (!prochainMatch) {
+      showToast('⚠ Aucun match à venir défini !');
+      return;
+    }
+
+    // Simulation envoi email — affiche les infos dans le toast
+    const matchInfo = `${prochainMatch.adversaire} — ${prochainMatch.date} à ${prochainMatch.heure} (${prochainMatch.lieu})`;
+    showToast(`✉ Convocation envoyée à ${convokes.length} joueur(s) pour : ${matchInfo}`);
+
     document.querySelectorAll('#tableBody input[type="checkbox"]').forEach(cb => cb.checked = false);
     updateCounter();
   };
@@ -219,7 +316,7 @@
   function showToast(msg) {
     const t = document.getElementById('toast');
     t.textContent = msg; t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 3200);
+    setTimeout(() => t.classList.remove('show'), 4000);
   }
 </script>
 </body>
