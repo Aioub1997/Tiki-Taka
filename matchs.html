@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Calendrier - Racing White Woluwe</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header><h1>Racing White Woluwe</h1></header>
+<nav>
+  <a href="joueurs.html">Effectif</a> |
+  <a href="matchs.html" class="active">Calendrier</a> |
+  <a href="convocations.html">Convocations</a> |
+  <a href="login.html">Connexion</a>
+</nav>
+
+<main>
+
+<section>
+<h2>Matchs à venir</h2>
+<table>
+<thead><tr><th>Date</th><th>Adversaire</th><th>Lieu</th><th>Heure</th></tr></thead>
+<tbody>
+<tr><td>15/03/2026</td><td>Équipe B</td><td>Domicile</td><td>15:00</td></tr>
+<tr><td>22/03/2026</td><td>Équipe C</td><td>Extérieur</td><td>16:00</td></tr>
+</tbody>
+</table>
+</section>
+
+<section>
+<h2>Classement U19 Régionaux (19B)</h2>
+<table>
+<thead>
+<tr><th>#</th><th>Logo</th><th>Équipe</th><th>M</th><th>V</th><th>D</th><th>N</th><th>BP</th><th>BC</th><th>Diff</th><th>Pts</th></tr>
+</thead>
+<tbody>
+<tr class="tiki"><td>1</td><td class="logo"><img src="logos/leopold.png" alt="Leopold"></td><td>R. Leopold F.C. B</td><td>13</td><td>13</td><td>0</td><td>0</td><td>56</td><td>9</td><td>+47</td><td>39</td></tr>
+<tr class="top"><td>2</td><td class="logo"><img src="logos/racing.png" alt="Racing White Woluwe"></td><td>Racing White Woluwe B</td><td>10</td><td>7</td><td>2</td><td>1</td><td>35</td><td>21</td><td>+14</td><td>22</td></tr>
+<tr class="top"><td>3</td><td class="logo"><img src="logos/saintoise.png" alt="R.A.S. Saintoise"></td><td>R.A.S. Saintoise</td><td>13</td><td>7</td><td>5</td><td>1</td><td>34</td><td>37</td><td>-3</td><td>22</td></tr>
+<tr><td>4</td><td class="logo"><img src="logos/mont.png" alt="C.S. Mont-St-Guibert"></td><td>C.S. Mont-St-Guibert</td><td>11</td><td>6</td><td>4</td><td>1</td><td>33</td><td>21</td><td>+12</td><td>19</td></tr>
+<tr><td>5</td><td class="logo"><img src="logos/ros.png" alt="ROS Ottignies"></td><td>ROS Ottignies-Louvain-La-Neuve</td><td>11</td><td>5</td><td>5</td><td>1</td><td>35</td><td>31</td><td>+4</td><td>16</td></tr>
+<tr class="bottom"><td>6</td><td class="logo"><img src="logos/jodoigne_c.png" alt="R.A.S. Jodoigne C"></td><td>R.A.S. Jodoigne C</td><td>11</td><td>2</td><td>9</td><td>0</td><td>24</td><td>56</td><td>-32</td><td>6</td></tr>
+<tr class="bottom"><td>7</td><td class="logo"><img src="logos/nivellois.png" alt="R.C.S. Nivellois"></td><td>R.C.S. Nivellois</td><td>11</td><td>1</td><td>7</td><td>3</td><td>18</td><td>33</td><td>-15</td><td>6</td></tr>
+<tr class="bottom"><td>8</td><td class="logo"><img src="logos/jodoigne_b.png" alt="R.A.S. Jodoigne B"></td><td>R.A.S. Jodoigne B</td><td>12</td><td>1</td><td>10</td><td>1</td><td>23</td><td>50</td><td>-27</td><td>4</td></tr>
+<tr><td>9</td><td class="logo"><img src="logos/ittroise.png" alt="J.S. Ittroise"></td><td>J.S. Ittroise</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+<tr><td>10</td><td class="logo"><img src="logos/incourt.png" alt="S-R Incourt A"></td><td>S-R Incourt A</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+</tbody>
+</table>
+</section>
+
+</main>
+
+<footer>&copy; 2025 Racing White Woluwe — Tous droits réservés</footer>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBtHgQSmZY76kMrZQhClrRo9NuuMgHLbKE",
+    authDomain: "racing-white-woluwe.firebaseapp.com",
+    projectId: "racing-white-woluwe",
+    storageBucket: "racing-white-woluwe.firebasestorage.app",
+    messagingSenderId: "443553313021",
+    appId: "1:443553313021:web:058e27950c829566624e94"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  onAuthStateChanged(auth, (user) => {
+    if (!user) window.location.href = "login.html";
+  });
+</script>
+</body>
+</html>

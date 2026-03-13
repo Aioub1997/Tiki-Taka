@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Connexion - Racing White Woluwe</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header><h1>Racing White Woluwe</h1></header>
+<nav>
+  <a href="joueurs.html">Effectif</a> |
+  <a href="matchs.html">Calendrier</a> |
+  <a href="convocations.html">Convocations</a> |
+  <a href="login.html" class="active">Connexion</a>
+</nav>
+
+<main>
+
+  <!-- CONNEXION -->
+  <section id="section-login">
+    <h2>Connexion</h2>
+    <p id="msg-login" style="color:red;font-size:13px;margin-bottom:10px;"></p>
+    <form onsubmit="return false">
+      <label>Email :</label><br>
+      <input type="email" id="login-email" placeholder="tonemail@exemple.com"><br><br>
+      <label>Mot de passe :</label><br>
+      <input type="password" id="login-password" placeholder="Mot de passe"><br><br>
+      <button onclick="seConnecter()">Se connecter</button>
+    </form>
+    <br>
+    <p><a href="#" onclick="afficher('section-login','section-forgot')">Mot de passe oublié ?</a></p>
+    <p>Pas encore de compte ? <a href="#" onclick="afficher('section-login','section-register')">Créer un compte</a></p>
+  </section>
+
+  <!-- CRÉER UN COMPTE -->
+  <section id="section-register" style="display:none">
+    <h2>Créer un compte</h2>
+    <p id="msg-register" style="font-size:13px;margin-bottom:10px;"></p>
+    <form onsubmit="return false">
+      <label>Email :</label><br>
+      <input type="email" id="reg-email" placeholder="tonemail@exemple.com"><br><br>
+      <label>Mot de passe :</label><br>
+      <input type="password" id="reg-password" placeholder="Choisir un mot de passe"><br><br>
+      <label>Confirmer le mot de passe :</label><br>
+      <input type="password" id="reg-password2" placeholder="Répéter le mot de passe"><br><br>
+      <button onclick="creerCompte()">Créer le compte</button>
+    </form>
+    <br>
+    <p>Déjà un compte ? <a href="#" onclick="afficher('section-register','section-login')">Se connecter</a></p>
+  </section>
+
+  <!-- MOT DE PASSE OUBLIÉ -->
+  <section id="section-forgot" style="display:none">
+    <h2>Mot de passe oublié</h2>
+    <p id="msg-forgot" style="font-size:13px;margin-bottom:10px;"></p>
+    <p style="margin-bottom:16px;font-size:14px;color:#666;">Entrez votre email pour recevoir un lien de réinitialisation.</p>
+    <form onsubmit="return false">
+      <label>Email :</label><br>
+      <input type="email" id="forgot-email" placeholder="tonemail@exemple.com"><br><br>
+      <button onclick="motDePasseOublie()">Envoyer le lien</button>
+    </form>
+    <br>
+    <p><a href="#" onclick="afficher('section-forgot','section-login')">← Retour à la connexion</a></p>
+  </section>
+
+  <!-- CONNECTÉ -->
+  <section id="section-connected" style="display:none">
+    <h2>Bienvenue !</h2>
+    <p id="msg-welcome" style="font-size:15px;margin-bottom:20px;"></p>
+    <button onclick="seDeconnecter()">Se déconnecter</button>
+  </section>
+
+</main>
+
+<footer>&copy; 2025 Racing White Woluwe — Tous droits réservés</footer>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import {
+    getAuth, onAuthStateChanged, signInWithEmailAndPassword,
+    createUserWithEmailAndPassword, sendPasswordResetEmail, signOut
+  } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBtHgQSmZY76kMrZQhClrRo9NuuMgHLbKE",
+    authDomain: "racing-white-woluwe.firebaseapp.com",
+    projectId: "racing-white-woluwe",
+    storageBucket: "racing-white-woluwe.firebasestorage.app",
+    messagingSenderId: "443553313021",
+    appId: "1:443553313021:web:058e27950c829566624e94"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      afficher('section-login', 'section-connected');
+      document.getElementById('msg-welcome').textContent = 'Connecté en tant que ' + user.email;
+    }
+  });
+
+  window.afficher = function(cacher, montrer) {
+    document.getElementById(cacher).style.display = 'none';
+    document.getElementById(montrer).style.display = 'block';
+  };
+
+  window.seConnecter = async function() {
+    const email = document.getElementById('login-email').value.trim();
+    const pwd = document.getElementById('login-password').value;
+    const msg = document.getElementById('msg-login');
+    try {
+      await signInWithEmailAndPassword(auth, email, pwd);
+      window.location.href = 'joueurs.html';
+    } catch(e) {
+      msg.textContent = 'Email ou mot de passe incorrect.';
+    }
+  };
+
+  window.creerCompte = async function() {
+    const email = document.getElementById('reg-email').value.trim();
+    const pwd = document.getElementById('reg-password').value;
+    const pwd2 = document.getElementById('reg-password2').value;
+    const msg = document.getElementById('msg-register');
+    if (pwd !== pwd2) { msg.style.color='red'; msg.textContent = 'Les mots de passe ne correspondent pas.'; return; }
+    try {
+      await createUserWithEmailAndPassword(auth, email, pwd);
+      msg.style.color='green'; msg.textContent = '✔ Compte créé ! Redirection...';
+      setTimeout(() => window.location.href = 'joueurs.html', 1500);
+    } catch(e) {
+      msg.style.color='red';
+      msg.textContent = e.code === 'auth/email-already-in-use' ? 'Cet email est déjà utilisé.' : 'Erreur : ' + e.message;
+    }
+  };
+
+  window.motDePasseOublie = async function() {
+    const email = document.getElementById('forgot-email').value.trim();
+    const msg = document.getElementById('msg-forgot');
+    try {
+      await sendPasswordResetEmail(auth, email);
+      msg.style.color='green'; msg.textContent = '✔ Email de réinitialisation envoyé !';
+    } catch(e) {
+      msg.style.color='red'; msg.textContent = 'Aucun compte trouvé avec cet email.';
+    }
+  };
+
+  window.seDeconnecter = async function() {
+    await signOut(auth);
+    afficher('section-connected', 'section-login');
+  };
+</script>
+</body>
+</html>

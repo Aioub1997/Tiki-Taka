@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Effectif - Racing White Woluwe</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header><h1>Racing White Woluwe</h1></header>
+<nav>
+  <a href="joueurs.html" class="active">Effectif</a> |
+  <a href="matchs.html">Calendrier</a> |
+  <a href="convocations.html">Convocations</a> |
+  <a href="login.html">Connexion</a>
+</nav>
+
+<div class="page-layout">
+
+  <div class="left-panel">
+    <div class="panel-title">Effectif U19</div>
+    <div class="table-wrap">
+      <table id="tableJoueurs">
+        <thead><tr>
+          <th>#</th><th>Nom</th><th>Poste</th><th>Passes</th><th>Buts</th>
+        </tr></thead>
+        <tbody id="tbody"><tr><td colspan="5" style="text-align:center;padding:20px;color:#888;">Chargement...</td></tr></tbody>
+      </table>
+    </div>
+    <button class="btn-save" onclick="sauvegarder()">✔ Sauvegarder</button>
+  </div>
+
+  <div class="right-panel">
+    <div class="terrain-title">Tactique 4-3-3</div>
+    <div class="terrain-wrap">
+      <div class="terrain">
+        <div class="tactic-label">↑ But adverse</div>
+        <div class="row">
+          <div class="slot"><div class="slot-circle">⚽</div><div class="slot-name" contenteditable="true" data-pos="ag" onblur="saveSlot(this)">AG</div></div>
+          <div class="slot"><div class="slot-circle">⚽</div><div class="slot-name" contenteditable="true" data-pos="ac" onblur="saveSlot(this)">AC</div></div>
+          <div class="slot"><div class="slot-circle">⚽</div><div class="slot-name" contenteditable="true" data-pos="ad" onblur="saveSlot(this)">AD</div></div>
+        </div>
+        <div class="row">
+          <div class="slot"><div class="slot-circle">🔵</div><div class="slot-name" contenteditable="true" data-pos="mg" onblur="saveSlot(this)">MG</div></div>
+          <div class="slot"><div class="slot-circle">🔵</div><div class="slot-name" contenteditable="true" data-pos="mc" onblur="saveSlot(this)">MC</div></div>
+          <div class="slot"><div class="slot-circle">🔵</div><div class="slot-name" contenteditable="true" data-pos="md" onblur="saveSlot(this)">MD</div></div>
+        </div>
+        <div class="row">
+          <div class="slot"><div class="slot-circle">🟡</div><div class="slot-name" contenteditable="true" data-pos="dg" onblur="saveSlot(this)">DG</div></div>
+          <div class="slot"><div class="slot-circle">🟡</div><div class="slot-name" contenteditable="true" data-pos="dcg" onblur="saveSlot(this)">DCG</div></div>
+          <div class="slot"><div class="slot-circle">🟡</div><div class="slot-name" contenteditable="true" data-pos="dcd" onblur="saveSlot(this)">DCD</div></div>
+          <div class="slot"><div class="slot-circle">🟡</div><div class="slot-name" contenteditable="true" data-pos="dd" onblur="saveSlot(this)">DD</div></div>
+        </div>
+        <div class="row">
+          <div class="slot"><div class="slot-circle">🧤</div><div class="slot-name" contenteditable="true" data-pos="gk" onblur="saveSlot(this)">GK</div></div>
+        </div>
+        <div class="tactic-label">↓ Notre but</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBtHgQSmZY76kMrZQhClrRo9NuuMgHLbKE",
+    authDomain: "racing-white-woluwe.firebaseapp.com",
+    projectId: "racing-white-woluwe",
+    storageBucket: "racing-white-woluwe.firebasestorage.app",
+    messagingSenderId: "443553313021",
+    appId: "1:443553313021:web:058e27950c829566624e94"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+  const nb = 23;
+
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) { window.location.href = "login.html"; return; }
+    await charger();
+  });
+
+  async function charger() {
+    const tbody = document.getElementById('tbody');
+    tbody.innerHTML = '';
+    const snap = await getDoc(doc(db, "effectif", "joueurs"));
+    const data = snap.exists() ? snap.data() : {};
+    for (let i = 1; i <= nb; i++) {
+      const nom = data['nom'+i] || '';
+      const poste = data['poste'+i] || '';
+      const passes = data['passes'+i] || '';
+      const buts = data['buts'+i] || '';
+      const cls = nom.toLowerCase().includes('capitaine') ? 'cle' : '';
+      tbody.innerHTML += `<tr class="${cls}">
+        <td>${i}</td>
+        <td><input type="text" id="nom${i}" value="${nom}"></td>
+        <td><input type="text" id="poste${i}" value="${poste}"></td>
+        <td><input type="number" id="passes${i}" value="${passes}" min="0"></td>
+        <td><input type="number" id="buts${i}" value="${buts}" min="0"></td>
+      </tr>`;
+    }
+    const snapT = await getDoc(doc(db, "effectif", "terrain"));
+    const dataT = snapT.exists() ? snapT.data() : {};
+    ['ag','ac','ad','mg','mc','md','dg','dcg','dcd','dd','gk'].forEach(p => {
+      if (dataT[p]) { const el = document.querySelector('[data-pos="'+p+'"]'); if (el) el.textContent = dataT[p]; }
+    });
+  }
+
+  window.sauvegarder = async function() {
+    const data = {};
+    for (let i = 1; i <= nb; i++) {
+      data['nom'+i] = document.getElementById('nom'+i).value;
+      data['poste'+i] = document.getElementById('poste'+i).value;
+      data['passes'+i] = document.getElementById('passes'+i).value;
+      data['buts'+i] = document.getElementById('buts'+i).value;
+    }
+    await setDoc(doc(db, "effectif", "joueurs"), data);
+    const b = document.querySelector('.btn-save');
+    b.textContent = '✔ Sauvegardé !'; b.style.background = '#3a9e6f';
+    setTimeout(() => { b.textContent = '✔ Sauvegarder'; b.style.background = '#141414'; }, 2000);
+  };
+
+  window.saveSlot = async function(el) {
+    const snapT = await getDoc(doc(db, "effectif", "terrain"));
+    const dataT = snapT.exists() ? snapT.data() : {};
+    dataT[el.dataset.pos] = el.textContent.trim();
+    await setDoc(doc(db, "effectif", "terrain"), dataT);
+  };
+</script>
+</body>
+</html>
