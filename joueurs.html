@@ -6,103 +6,92 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 <style>
-.page-layout { display: flex; gap: 32px; max-width: 1400px; margin: 30px auto; padding: 0 24px; align-items: flex-start; }
-.left-panel { flex: 1.2; min-width: 0; }
-.right-panel { width: 520px; flex-shrink: 0; }
+.page-layout { display: flex; gap: 24px; max-width: 1500px; margin: 24px auto; padding: 0 20px; align-items: flex-start; }
+.left-panel { flex: 1; min-width: 0; }
+.right-panel { width: 560px; flex-shrink: 0; }
 
-/* TERRAIN FIFA */
-.terrain-wrap { border-radius: 12px; overflow: hidden; border: 3px solid #1a5c2a; box-shadow: 0 8px 32px rgba(0,0,0,.3); }
-.terrain-header { background: #141414; color: #e8c840; padding: 14px 20px; display: flex; align-items: center; justify-content: space-between; }
-.terrain-header span { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; letter-spacing: .08em; }
+/* TABLEAU JOUEURS */
+.player-row { cursor: grab; user-select: none; }
+.player-row:active { cursor: grabbing; }
+.player-row.dragging { opacity: 0.4; background: #fffbe8 !important; }
+.drag-hint { font-size: 11px; color: #aaa; margin-top: 8px; }
+
+/* TERRAIN */
+.terrain-wrap { border-radius: 12px; overflow: hidden; border: 3px solid #1a5c2a; box-shadow: 0 8px 32px rgba(0,0,0,.25); }
+.terrain-header { background: #141414; color: #e8c840; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.terrain-header-left { display: flex; align-items: center; gap: 10px; }
+.terrain-header span { font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; letter-spacing: .08em; }
 .terrain-badge { background: #e8c840; color: #141414; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; }
+.tactic-select { background: #2a2a2a; color: #e8c840; border: 1px solid #e8c840; border-radius: 6px; padding: 5px 10px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; }
 
 .terrain {
   width: 100%;
-  min-height: 560px;
-  background:
-    repeating-linear-gradient(
-      to bottom,
-      rgba(255,255,255,0.04) 0px,
-      rgba(255,255,255,0.04) 40px,
-      transparent 40px,
-      transparent 80px
-    ),
+  min-height: 520px;
+  background: repeating-linear-gradient(to bottom, rgba(255,255,255,0.04) 0px, rgba(255,255,255,0.04) 40px, transparent 40px, transparent 80px),
     linear-gradient(to bottom, #1a6b35, #22834a);
-  padding: 20px 16px 24px;
+  padding: 16px 12px 20px;
   position: relative;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
-
-/* Lignes de terrain */
-.terrain::before {
-  content: '';
-  position: absolute;
-  top: 50%; left: 8%; right: 8%;
-  height: 2px;
-  background: rgba(255,255,255,0.2);
-}
-.terrain::after {
-  content: '';
-  position: absolute;
-  top: 50%; left: 50%;
-  width: 90px; height: 90px;
-  border: 2px solid rgba(255,255,255,0.2);
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-}
-.goal-top, .goal-bottom {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100px; height: 14px;
-  border: 2px solid rgba(255,255,255,0.35);
-  background: rgba(255,255,255,0.07);
-}
+.terrain::before { content: ''; position: absolute; top: 50%; left: 8%; right: 8%; height: 2px; background: rgba(255,255,255,0.18); }
+.terrain::after { content: ''; position: absolute; top: 50%; left: 50%; width: 80px; height: 80px; border: 2px solid rgba(255,255,255,0.18); border-radius: 50%; transform: translate(-50%, -50%); }
+.goal-top, .goal-bottom { position: absolute; left: 50%; transform: translateX(-50%); width: 90px; height: 12px; border: 2px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.06); }
 .goal-top { top: 0; border-top: none; border-radius: 0 0 6px 6px; }
 .goal-bottom { bottom: 0; border-bottom: none; border-radius: 6px 6px 0 0; }
 
-.tactic-label { text-align: center; font-size: 10px; color: rgba(255,255,255,0.4); letter-spacing: .12em; text-transform: uppercase; margin: 4px 0; }
-.terrain-rows { display: flex; flex-direction: column; justify-content: space-between; height: 100%; gap: 8px; }
+.tactic-label { text-align: center; font-size: 10px; color: rgba(255,255,255,0.35); letter-spacing: .1em; text-transform: uppercase; margin: 2px 0; }
+.terrain-rows { display: flex; flex-direction: column; justify-content: space-around; flex: 1; gap: 4px; }
 .row { display: flex; justify-content: space-around; align-items: center; }
 
-.slot { text-align: center; cursor: pointer; }
+/* SLOTS */
+.slot { text-align: center; cursor: pointer; position: relative; }
 .slot-circle {
-  width: 68px; height: 68px;
-  border-radius: 50%;
+  width: 58px; height: 58px; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
-  margin: 0 auto 6px;
-  transition: .2s;
-  font-size: 22px;
-  font-weight: 700;
-  color: white;
-  text-shadow: 0 1px 3px rgba(0,0,0,.5);
-  border: 3px solid rgba(255,255,255,0.7);
+  margin: 0 auto 4px; transition: .2s;
+  font-size: 10px; font-weight: 700; color: white;
+  text-shadow: 0 1px 3px rgba(0,0,0,.6);
+  border: 2px solid rgba(255,255,255,0.6);
   background: rgba(0,0,0,0.3);
   backdrop-filter: blur(2px);
+  line-height: 1.1; text-align: center; padding: 4px;
 }
-.slot:hover .slot-circle { transform: scale(1.1); background: rgba(0,0,0,0.5); }
-.slot-name {
-  font-size: 11px; color: white; font-weight: 600;
-  text-shadow: 0 1px 4px rgba(0,0,0,.8);
-  min-height: 15px; cursor: text;
-  max-width: 72px; margin: 0 auto;
-  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-  display: block;
-}
-.slot-name:focus {
-  outline: 1px dashed rgba(255,255,255,.8);
-  border-radius: 3px; background: rgba(0,0,0,.3);
-  padding: 0 3px; white-space: normal;
-}
+.slot-circle.drag-over { border-color: #e8c840 !important; background: rgba(232,200,64,0.4) !important; transform: scale(1.15); }
+.slot-label { font-size: 10px; color: rgba(255,255,255,0.5); font-weight: 600; letter-spacing: .06em; }
+.slot-name-display { font-size: 10px; color: white; font-weight: 700; text-shadow: 0 1px 4px rgba(0,0,0,.9); min-height: 13px; }
 
-/* Couleurs par ligne */
-.row-att .slot-circle { border-color: #e8c840; background: rgba(232,200,64,0.25); }
-.row-att .slot-circle { color: #e8c840; }
-.row-mid .slot-circle { border-color: #60aaff; background: rgba(96,170,255,0.2); color: #60aaff; }
-.row-def .slot-circle { border-color: #ff8c42; background: rgba(255,140,66,0.2); color: #ff8c42; }
-.row-gk  .slot-circle { border-color: #a0ff80; background: rgba(160,255,128,0.2); color: #a0ff80; }
+/* Couleurs lignes */
+.row-att .slot-circle { border-color: #e8c840; background: rgba(232,200,64,0.2); }
+.row-mid .slot-circle { border-color: #60aaff; background: rgba(96,170,255,0.18); }
+.row-def .slot-circle { border-color: #ff8c42; background: rgba(255,140,66,0.18); }
+.row-gk  .slot-circle { border-color: #a0ff80; background: rgba(160,255,128,0.18); }
+
+/* BANC */
+.bench-section { margin-top: 12px; background: #141414; border-radius: 0 0 10px 10px; padding: 12px 16px; }
+.bench-title { font-family: 'Bebas Neue', sans-serif; font-size: 1rem; color: #e8c840; letter-spacing: .08em; margin-bottom: 10px; }
+.bench-slots { display: flex; gap: 10px; flex-wrap: wrap; }
+.bench-slot {
+  display: flex; flex-direction: column; align-items: center;
+  width: 52px;
+}
+.bench-circle {
+  width: 48px; height: 48px; border-radius: 50%;
+  background: rgba(255,255,255,0.08); border: 2px dashed rgba(255,255,255,0.3);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 9px; color: rgba(255,255,255,0.4); font-weight: 600;
+  transition: .2s; margin-bottom: 4px; text-align: center; padding: 3px;
+  line-height: 1.1;
+}
+.bench-circle.drag-over { border-color: #e8c840; background: rgba(232,200,64,0.25); border-style: solid; transform: scale(1.1); }
+.bench-label { font-size: 10px; color: rgba(255,255,255,0.4); font-weight: 600; }
+
+/* SAVE BTN */
+.btn-save-terrain { background: #e8c840; color: #141414; border: none; padding: 8px 18px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; letter-spacing: .05em; transition: .2s; }
+.btn-save-terrain:hover { background: #f5d84a; }
+
+@media(max-width:900px){ .page-layout { flex-direction: column; } .right-panel { width: 100%; } }
 </style>
 </head>
 <body>
@@ -118,6 +107,7 @@
 
 <div class="page-layout">
 
+  <!-- GAUCHE : tableau effectif -->
   <div class="left-panel">
     <div class="panel-title">Effectif U19</div>
     <div class="table-wrap">
@@ -130,80 +120,46 @@
         </tbody>
       </table>
     </div>
-    <button class="btn-save" onclick="sauvegarder()">✔ Sauvegarder</button>
+    <div style="display:flex;gap:10px;align-items:center;margin-top:12px;flex-wrap:wrap;">
+      <button class="btn-save" id="btnSave" onclick="sauvegarder()">✔ Sauvegarder</button>
+      <span class="drag-hint" id="dragHint">⬆ Glissez un joueur sur le terrain →</span>
+    </div>
   </div>
 
+  <!-- DROITE : terrain -->
   <div class="right-panel">
     <div class="terrain-wrap">
       <div class="terrain-header">
-        <span>Tactique 4-3-3</span>
-        <span class="terrain-badge">U19</span>
+        <div class="terrain-header-left">
+          <span id="tacticLabel">Tactique</span>
+          <span class="terrain-badge">U19</span>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <select class="tactic-select" id="tacticSelect" onchange="changerTactique(this.value)">
+            <option value="4-3-3">4-3-3</option>
+            <option value="4-4-2">4-4-2</option>
+            <option value="4-2-3-1">4-2-3-1</option>
+            <option value="3-5-2">3-5-2</option>
+            <option value="3-4-3">3-4-3</option>
+            <option value="5-3-2">5-3-2</option>
+            <option value="4-1-4-1">4-1-4-1</option>
+            <option value="4-3-2-1">4-3-2-1</option>
+            <option value="4-5-1">4-5-1</option>
+            <option value="3-6-1">3-6-1</option>
+          </select>
+          <button class="btn-save-terrain" onclick="sauverTerrain()">💾 Sauver</button>
+        </div>
       </div>
-      <div class="terrain">
+      <div class="terrain" id="terrain">
         <div class="goal-top"></div>
         <div class="goal-bottom"></div>
-
         <div class="tactic-label">↑ But adverse</div>
-
-        <div class="terrain-rows">
-          <div class="row row-att">
-            <div class="slot">
-              <div class="slot-circle">AG</div>
-              <div class="slot-name" contenteditable="true" data-pos="ag" onblur="saveSlot(this)">AG</div>
-            </div>
-            <div class="slot">
-              <div class="slot-circle">AC</div>
-              <div class="slot-name" contenteditable="true" data-pos="ac" onblur="saveSlot(this)">AC</div>
-            </div>
-            <div class="slot">
-              <div class="slot-circle">AD</div>
-              <div class="slot-name" contenteditable="true" data-pos="ad" onblur="saveSlot(this)">AD</div>
-            </div>
-          </div>
-
-          <div class="row row-mid">
-            <div class="slot">
-              <div class="slot-circle">MG</div>
-              <div class="slot-name" contenteditable="true" data-pos="mg" onblur="saveSlot(this)">MG</div>
-            </div>
-            <div class="slot">
-              <div class="slot-circle">MC</div>
-              <div class="slot-name" contenteditable="true" data-pos="mc" onblur="saveSlot(this)">MC</div>
-            </div>
-            <div class="slot">
-              <div class="slot-circle">MD</div>
-              <div class="slot-name" contenteditable="true" data-pos="md" onblur="saveSlot(this)">MD</div>
-            </div>
-          </div>
-
-          <div class="row row-def">
-            <div class="slot">
-              <div class="slot-circle">DG</div>
-              <div class="slot-name" contenteditable="true" data-pos="dg" onblur="saveSlot(this)">DG</div>
-            </div>
-            <div class="slot">
-              <div class="slot-circle">DCG</div>
-              <div class="slot-name" contenteditable="true" data-pos="dcg" onblur="saveSlot(this)">DCG</div>
-            </div>
-            <div class="slot">
-              <div class="slot-circle">DCD</div>
-              <div class="slot-name" contenteditable="true" data-pos="dcd" onblur="saveSlot(this)">DCD</div>
-            </div>
-            <div class="slot">
-              <div class="slot-circle">DD</div>
-              <div class="slot-name" contenteditable="true" data-pos="dd" onblur="saveSlot(this)">DD</div>
-            </div>
-          </div>
-
-          <div class="row row-gk">
-            <div class="slot">
-              <div class="slot-circle">GK</div>
-              <div class="slot-name" contenteditable="true" data-pos="gk" onblur="saveSlot(this)">GK</div>
-            </div>
-          </div>
-        </div>
-
+        <div class="terrain-rows" id="terrainRows"></div>
         <div class="tactic-label">↓ Notre but</div>
+      </div>
+      <div class="bench-section">
+        <div class="bench-title">🪑 Banc de touche</div>
+        <div class="bench-slots" id="benchSlots"></div>
       </div>
     </div>
   </div>
@@ -229,35 +185,124 @@
   const db = getFirestore(app);
   const nb = 23;
   const ADMIN = "mekhalfaioub@gmail.com";
+  let isAdmin = false;
+  let joueurs = [];
+  let draggedPlayer = null;
+
+  // ── TOUTES LES TACTIQUES ──
+  const TACTICS = {
+    '4-3-3': [
+      { pos: ['AG','AC','AD'], cls: 'row-att' },
+      { pos: ['MG','MC','MD'], cls: 'row-mid' },
+      { pos: ['DG','DCG','DCD','DD'], cls: 'row-def' },
+      { pos: ['GK'], cls: 'row-gk' }
+    ],
+    '4-4-2': [
+      { pos: ['AVG','AVD'], cls: 'row-att' },
+      { pos: ['MG','MCG','MCD','MD'], cls: 'row-mid' },
+      { pos: ['DG','DCG','DCD','DD'], cls: 'row-def' },
+      { pos: ['GK'], cls: 'row-gk' }
+    ],
+    '4-2-3-1': [
+      { pos: ['AVT'], cls: 'row-att' },
+      { pos: ['OG','OC','OD'], cls: 'row-mid' },
+      { pos: ['MDG','MDD'], cls: 'row-mid' },
+      { pos: ['DG','DCG','DCD','DD'], cls: 'row-def' },
+      { pos: ['GK'], cls: 'row-gk' }
+    ],
+    '3-5-2': [
+      { pos: ['AVG','AVD'], cls: 'row-att' },
+      { pos: ['MG','MCG','MC','MCD','MD'], cls: 'row-mid' },
+      { pos: ['DCG','DC','DCD'], cls: 'row-def' },
+      { pos: ['GK'], cls: 'row-gk' }
+    ],
+    '3-4-3': [
+      { pos: ['AG','AC','AD'], cls: 'row-att' },
+      { pos: ['MG','MCG','MCD','MD'], cls: 'row-mid' },
+      { pos: ['DCG','DC','DCD'], cls: 'row-def' },
+      { pos: ['GK'], cls: 'row-gk' }
+    ],
+    '5-3-2': [
+      { pos: ['AVG','AVD'], cls: 'row-att' },
+      { pos: ['MG','MC','MD'], cls: 'row-mid' },
+      { pos: ['DG','DCG','DC','DCD','DD'], cls: 'row-def' },
+      { pos: ['GK'], cls: 'row-gk' }
+    ],
+    '4-1-4-1': [
+      { pos: ['AVT'], cls: 'row-att' },
+      { pos: ['MG','MCG','MCD','MD'], cls: 'row-mid' },
+      { pos: ['MDC'], cls: 'row-mid' },
+      { pos: ['DG','DCG','DCD','DD'], cls: 'row-def' },
+      { pos: ['GK'], cls: 'row-gk' }
+    ],
+    '4-3-2-1': [
+      { pos: ['AVT'], cls: 'row-att' },
+      { pos: ['OG','OD'], cls: 'row-mid' },
+      { pos: ['MG','MC','MD'], cls: 'row-mid' },
+      { pos: ['DG','DCG','DCD','DD'], cls: 'row-def' },
+      { pos: ['GK'], cls: 'row-gk' }
+    ],
+    '4-5-1': [
+      { pos: ['AVT'], cls: 'row-att' },
+      { pos: ['MG','MCG','MC','MCD','MD'], cls: 'row-mid' },
+      { pos: ['DG','DCG','DCD','DD'], cls: 'row-def' },
+      { pos: ['GK'], cls: 'row-gk' }
+    ],
+    '3-6-1': [
+      { pos: ['AVT'], cls: 'row-att' },
+      { pos: ['MG','MCG','MC1','MC2','MCD','MD'], cls: 'row-mid' },
+      { pos: ['DCG','DC','DCD'], cls: 'row-def' },
+      { pos: ['GK'], cls: 'row-gk' }
+    ]
+  };
+
+  let currentTactic = '4-3-3';
+  let slotData = {}; // { posKey: "Nom Prenom" }
+  let benchData = { r1:'', r2:'', r3:'', r4:'', r5:'' };
 
   onAuthStateChanged(auth, async (user) => {
     if (!user) { window.location.href = "login.html"; return; }
-    await charger(user.email === ADMIN);
+    isAdmin = user.email === ADMIN;
+
+    document.getElementById('btnSave').style.display = isAdmin ? 'inline-block' : 'none';
+    document.getElementById('dragHint').style.display = isAdmin ? 'inline' : 'none';
+
+    await charger();
+    await chargerTerrain();
   });
 
-  async function charger(isAdmin) {
+  // ── CHARGER JOUEURS ──
+  async function charger() {
     const tbody = document.getElementById('tbody');
     tbody.innerHTML = '';
     const snap = await getDoc(doc(db, "effectif", "joueurs"));
     const data = snap.exists() ? snap.data() : {};
-
-    document.querySelector('.btn-save').style.display = isAdmin ? 'inline-block' : 'none';
-    document.querySelectorAll('.slot-name').forEach(el => {
-      el.contentEditable = isAdmin ? 'true' : 'false';
-    });
+    joueurs = [];
 
     for (let i = 1; i <= nb; i++) {
       const nom = data['nom'+i] || '';
       const prenom = data['prenom'+i] || '';
       const poste = data['poste'+i] || '';
+      if (nom || prenom) joueurs.push({ id: i, nom, prenom, poste });
+
       const cls = nom.toLowerCase().includes('capitaine') ? 'cle' : '';
       if (isAdmin) {
-        tbody.innerHTML += `<tr class="${cls}">
+        const tr = document.createElement('tr');
+        tr.className = cls + ' player-row';
+        tr.draggable = true;
+        tr.dataset.playerName = (prenom + ' ' + nom).trim();
+        tr.innerHTML = `
           <td>${i}</td>
           <td><input type="text" id="nom${i}" value="${nom}" placeholder="Nom"></td>
           <td><input type="text" id="prenom${i}" value="${prenom}" placeholder="Prénom"></td>
-          <td><input type="text" id="poste${i}" value="${poste}" placeholder="Poste"></td>
-        </tr>`;
+          <td><input type="text" id="poste${i}" value="${poste}" placeholder="Poste"></td>`;
+        tr.addEventListener('dragstart', (e) => {
+          draggedPlayer = (prenom + ' ' + nom).trim() || nom || 'Joueur';
+          tr.classList.add('dragging');
+          e.dataTransfer.effectAllowed = 'copy';
+        });
+        tr.addEventListener('dragend', () => tr.classList.remove('dragging'));
+        tbody.appendChild(tr);
       } else {
         tbody.innerHTML += `<tr class="${cls}">
           <td>${i}</td>
@@ -267,20 +312,125 @@
         </tr>`;
       }
     }
+  }
 
-    // Charger noms terrain
-    const snapT = await getDoc(doc(db, "effectif", "terrain"));
-    const dataT = snapT.exists() ? snapT.data() : {};
-    ['ag','ac','ad','mg','mc','md','dg','dcg','dcd','dd','gk'].forEach(p => {
-      const el = document.querySelector('[data-pos="'+p+'"]');
-      const circle = el ? el.previousElementSibling : null;
-      if (dataT[p] && el) {
-        el.textContent = dataT[p];
-        if (circle) circle.textContent = dataT[p].split(' ')[0].slice(0,3).toUpperCase();
+  // ── CHARGER TERRAIN ──
+  async function chargerTerrain() {
+    const snap = await getDoc(doc(db, "effectif", "terrain2"));
+    if (snap.exists()) {
+      const d = snap.data();
+      currentTactic = d.tactic || '4-3-3';
+      slotData = d.slots || {};
+      benchData = d.bench || { r1:'', r2:'', r3:'', r4:'', r5:'' };
+    }
+    document.getElementById('tacticSelect').value = currentTactic;
+    renderTerrain();
+  }
+
+  // ── RENDER TERRAIN ──
+  window.changerTactique = function(t) {
+    currentTactic = t;
+    slotData = {};
+    renderTerrain();
+  };
+
+  function renderTerrain() {
+    document.getElementById('tacticLabel').textContent = 'Tactique ' + currentTactic;
+    const rows = TACTICS[currentTactic];
+    const container = document.getElementById('terrainRows');
+    container.innerHTML = '';
+
+    rows.forEach(rowDef => {
+      const rowEl = document.createElement('div');
+      rowEl.className = 'row ' + rowDef.cls;
+      rowDef.pos.forEach(posKey => {
+        const playerName = slotData[posKey] || '';
+        const displayText = playerName ? playerName.split(' ')[0].slice(0,8) : posKey;
+        const slot = document.createElement('div');
+        slot.className = 'slot';
+        slot.innerHTML = `
+          <div class="slot-circle" data-pos="${posKey}">${displayText}</div>
+          <div class="slot-label">${posKey}</div>
+          <div class="slot-name-display">${playerName}</div>`;
+
+        const circle = slot.querySelector('.slot-circle');
+
+        // Drag over
+        circle.addEventListener('dragover', (e) => { e.preventDefault(); circle.classList.add('drag-over'); });
+        circle.addEventListener('dragleave', () => circle.classList.remove('drag-over'));
+        circle.addEventListener('drop', (e) => {
+          e.preventDefault();
+          circle.classList.remove('drag-over');
+          if (draggedPlayer) {
+            slotData[posKey] = draggedPlayer;
+            circle.textContent = draggedPlayer.split(' ')[0].slice(0,8);
+            slot.querySelector('.slot-name-display').textContent = draggedPlayer;
+            draggedPlayer = null;
+          }
+        });
+
+        // Double-clic pour effacer
+        if (isAdmin) {
+          circle.addEventListener('dblclick', () => {
+            slotData[posKey] = '';
+            circle.textContent = posKey;
+            slot.querySelector('.slot-name-display').textContent = '';
+          });
+        }
+        rowEl.appendChild(slot);
+      });
+      container.appendChild(rowEl);
+    });
+
+    renderBench();
+  }
+
+  // ── BANC ──
+  function renderBench() {
+    const container = document.getElementById('benchSlots');
+    container.innerHTML = '';
+    ['r1','r2','r3','r4','r5'].forEach((key, i) => {
+      const name = benchData[key] || '';
+      const display = name ? name.split(' ')[0].slice(0,8) : '';
+      const div = document.createElement('div');
+      div.className = 'bench-slot';
+      div.innerHTML = `
+        <div class="bench-circle" data-bench="${key}">${display || 'R'+(i+1)}</div>
+        <div class="bench-label">R${i+1}</div>`;
+
+      const circle = div.querySelector('.bench-circle');
+      circle.addEventListener('dragover', (e) => { e.preventDefault(); circle.classList.add('drag-over'); });
+      circle.addEventListener('dragleave', () => circle.classList.remove('drag-over'));
+      circle.addEventListener('drop', (e) => {
+        e.preventDefault();
+        circle.classList.remove('drag-over');
+        if (draggedPlayer) {
+          benchData[key] = draggedPlayer;
+          circle.textContent = draggedPlayer.split(' ')[0].slice(0,8);
+          draggedPlayer = null;
+        }
+      });
+      if (isAdmin) {
+        circle.addEventListener('dblclick', () => {
+          benchData[key] = '';
+          circle.textContent = 'R'+(i+1);
+        });
       }
+      container.appendChild(div);
     });
   }
 
+  // ── SAUVER TERRAIN ──
+  window.sauverTerrain = async function() {
+    await setDoc(doc(db, "effectif", "terrain2"), {
+      tactic: currentTactic,
+      slots: slotData,
+      bench: benchData
+    });
+    showToast('✔ Terrain sauvegardé !');
+  };
+
+  // ── SAUVER JOUEURS ──
   window.sauvegarder = async function() {
     const data = {};
     for (let i = 1; i <= nb; i++) {
@@ -289,22 +439,24 @@
       data['poste'+i] = document.getElementById('poste'+i)?.value || '';
     }
     await setDoc(doc(db, "effectif", "joueurs"), data);
+    // Mettre à jour les noms dans les lignes pour le drag
+    document.querySelectorAll('.player-row').forEach((tr, idx) => {
+      const i = idx + 1;
+      const nom = document.getElementById('nom'+i)?.value || '';
+      const prenom = document.getElementById('prenom'+i)?.value || '';
+      tr.dataset.playerName = (prenom + ' ' + nom).trim();
+    });
     const b = document.querySelector('.btn-save');
     b.textContent = '✔ Sauvegardé !'; b.style.background = '#3a9e6f';
     setTimeout(() => { b.textContent = '✔ Sauvegarder'; b.style.background = '#141414'; }, 2000);
   };
 
-  window.saveSlot = async function(el) {
-    if (auth.currentUser?.email !== ADMIN) return;
-    const snapT = await getDoc(doc(db, "effectif", "terrain"));
-    const dataT = snapT.exists() ? snapT.data() : {};
-    const val = el.textContent.trim();
-    dataT[el.dataset.pos] = val;
-    // Mettre à jour aussi le cercle
-    const circle = el.previousElementSibling;
-    if (circle) circle.textContent = val.split(' ')[0].slice(0,3).toUpperCase();
-    await setDoc(doc(db, "effectif", "terrain"), dataT);
-  };
+  function showToast(msg) {
+    let t = document.getElementById('toast');
+    if (!t) { t = document.createElement('div'); t.id = 'toast'; document.body.appendChild(t); }
+    t.textContent = msg; t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2500);
+  }
 </script>
 </body>
 </html>
