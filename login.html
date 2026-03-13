@@ -9,7 +9,6 @@
 <body>
 
 <header><h1>Racing White Woluwe</h1></header>
-
 <nav>
   <a href="joueurs.html">Effectif</a> |
   <a href="matchs.html">Calendrier</a> |
@@ -41,6 +40,24 @@
     <h2>Créer un compte</h2>
     <p id="msg-register" style="font-size:13px;margin-bottom:10px;"></p>
     <form onsubmit="return false">
+      <label>Nom :</label><br>
+      <input type="text" id="reg-nom" placeholder="Ton nom de famille"><br><br>
+      <label>Prénom :</label><br>
+      <input type="text" id="reg-prenom" placeholder="Ton prénom"><br><br>
+      <label>Poste :</label><br>
+      <select id="reg-poste">
+        <option value="">-- Choisir un poste --</option>
+        <option>Gardien (GK)</option>
+        <option>Défenseur central (DC)</option>
+        <option>Défenseur gauche (DG)</option>
+        <option>Défenseur droit (DD)</option>
+        <option>Milieu central (MC)</option>
+        <option>Milieu gauche (MG)</option>
+        <option>Milieu droit (MD)</option>
+        <option>Attaquant central (AC)</option>
+        <option>Ailier gauche (AG)</option>
+        <option>Ailier droit (AD)</option>
+      </select><br><br>
       <label>Email :</label><br>
       <input type="email" id="reg-email" placeholder="tonemail@exemple.com"><br><br>
       <label>Mot de passe :</label><br>
@@ -84,6 +101,7 @@
     getAuth, onAuthStateChanged, signInWithEmailAndPassword,
     createUserWithEmailAndPassword, sendPasswordResetEmail, signOut
   } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyBtHgQSmZY76kMrZQhClrRo9NuuMgHLbKE",
@@ -96,10 +114,12 @@
 
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
+  const db = getFirestore(app);
 
   onAuthStateChanged(auth, (user) => {
     if (user) {
       afficher('section-login', 'section-connected');
+      afficher('section-register', 'section-connected');
       document.getElementById('msg-welcome').textContent = 'Connecté en tant que ' + user.email;
     }
   });
@@ -122,18 +142,60 @@
   };
 
   window.creerCompte = async function() {
-    const email = document.getElementById('reg-email').value.trim();
-    const pwd = document.getElementById('reg-password').value;
-    const pwd2 = document.getElementById('reg-password2').value;
-    const msg = document.getElementById('msg-register');
+    const nom    = document.getElementById('reg-nom').value.trim();
+    const prenom = document.getElementById('reg-prenom').value.trim();
+    const poste  = document.getElementById('reg-poste').value;
+    const email  = document.getElementById('reg-email').value.trim();
+    const pwd    = document.getElementById('reg-password').value;
+    const pwd2   = document.getElementById('reg-password2').value;
+    const msg    = document.getElementById('msg-register');
+
+    if (!nom || !prenom) { msg.style.color='red'; msg.textContent = 'Veuillez entrer votre nom et prénom.'; return; }
     if (pwd !== pwd2) { msg.style.color='red'; msg.textContent = 'Les mots de passe ne correspondent pas.'; return; }
+
     try {
-      await createUserWithEmailAndPassword(auth, email, pwd);
-      msg.style.color='green'; msg.textContent = '✔ Compte créé ! Redirection...';
+      // Créer le compte Firebase Auth
+      const cred = await createUserWithEmailAndPassword(auth, email, pwd);
+
+      // Trouver le prochain slot libre dans l'effectif
+      const snap = await getDoc(doc(db, "effectif", "joueurs"));
+      const data = snap.exists() ? snap.data() : {};
+
+      let slotLibre = -1;
+      for (let i = 1; i <= 23; i++) {
+        if (!data['nom'+i] || data['nom'+i].trim() === '') {
+          slotLibre = i;
+          break;
+        }
+      }
+
+      if (slotLibre === -1) {
+        msg.style.color='orange';
+        msg.textContent = '✔ Compte créé mais effectif complet (23/23). Contactez le coach.';
+      } else {
+        // Enregistrer dans l'effectif
+        data['nom'+slotLibre]    = nom;
+        data['prenom'+slotLibre] = prenom;
+        data['poste'+slotLibre]  = poste;
+        data['email'+slotLibre]  = email;
+        await setDoc(doc(db, "effectif", "joueurs"), data);
+
+        // Sauvegarder aussi le profil du joueur (par uid)
+        await setDoc(doc(db, "joueurs", cred.user.uid), {
+          nom, prenom, poste, email, slot: slotLibre
+        });
+
+        msg.style.color='green';
+        msg.textContent = '✔ Compte créé ! Bienvenue ' + prenom + ' !';
+      }
+
       setTimeout(() => window.location.href = 'joueurs.html', 1500);
+
     } catch(e) {
       msg.style.color='red';
-      msg.textContent = e.code === 'auth/email-already-in-use' ? 'Cet email est déjà utilisé.' : 'Erreur : ' + e.message;
+      msg.textContent = e.code === 'auth/email-already-in-use'
+        ? 'Cet email est déjà utilisé.'
+        : 'Erreur : ' + e.message;
     }
   };
 
