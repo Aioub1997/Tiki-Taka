@@ -17,7 +17,6 @@
 </nav>
 
 <div class="page-layout">
-
   <div class="left-panel">
     <div class="panel-title">Effectif U19</div>
     <div class="table-wrap">
@@ -59,7 +58,6 @@
       </div>
     </div>
   </div>
-
 </div>
 
 <script type="module">
@@ -80,31 +78,49 @@
   const auth = getAuth(app);
   const db = getFirestore(app);
   const nb = 23;
+  const ADMIN = "mekhalfaioub@gmail.com";
 
   onAuthStateChanged(auth, async (user) => {
     if (!user) { window.location.href = "login.html"; return; }
-    await charger();
+    await charger(user.email === ADMIN);
   });
 
-  async function charger() {
+  async function charger(isAdmin) {
     const tbody = document.getElementById('tbody');
     tbody.innerHTML = '';
     const snap = await getDoc(doc(db, "effectif", "joueurs"));
     const data = snap.exists() ? snap.data() : {};
+
+    document.querySelector('.btn-save').style.display = isAdmin ? 'inline-block' : 'none';
+    document.querySelectorAll('.slot-name').forEach(el => {
+      el.contentEditable = isAdmin ? 'true' : 'false';
+    });
+
     for (let i = 1; i <= nb; i++) {
       const nom = data['nom'+i] || '';
       const poste = data['poste'+i] || '';
       const passes = data['passes'+i] || '';
       const buts = data['buts'+i] || '';
       const cls = nom.toLowerCase().includes('capitaine') ? 'cle' : '';
-      tbody.innerHTML += `<tr class="${cls}">
-        <td>${i}</td>
-        <td><input type="text" id="nom${i}" value="${nom}"></td>
-        <td><input type="text" id="poste${i}" value="${poste}"></td>
-        <td><input type="number" id="passes${i}" value="${passes}" min="0"></td>
-        <td><input type="number" id="buts${i}" value="${buts}" min="0"></td>
-      </tr>`;
+      if (isAdmin) {
+        tbody.innerHTML += `<tr class="${cls}">
+          <td>${i}</td>
+          <td><input type="text" id="nom${i}" value="${nom}"></td>
+          <td><input type="text" id="poste${i}" value="${poste}"></td>
+          <td><input type="number" id="passes${i}" value="${passes}" min="0"></td>
+          <td><input type="number" id="buts${i}" value="${buts}" min="0"></td>
+        </tr>`;
+      } else {
+        tbody.innerHTML += `<tr class="${cls}">
+          <td>${i}</td>
+          <td>${nom || '—'}</td>
+          <td>${poste || '—'}</td>
+          <td>${passes || '0'}</td>
+          <td>${buts || '0'}</td>
+        </tr>`;
+      }
     }
+
     const snapT = await getDoc(doc(db, "effectif", "terrain"));
     const dataT = snapT.exists() ? snapT.data() : {};
     ['ag','ac','ad','mg','mc','md','dg','dcg','dcd','dd','gk'].forEach(p => {
@@ -127,6 +143,7 @@
   };
 
   window.saveSlot = async function(el) {
+    if (auth.currentUser?.email !== ADMIN) return;
     const snapT = await getDoc(doc(db, "effectif", "terrain"));
     const dataT = snapT.exists() ? snapT.data() : {};
     dataT[el.dataset.pos] = el.textContent.trim();
