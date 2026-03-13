@@ -12,11 +12,12 @@
   .match-score.win  { background: #d4f5e4; color: #1f7a4f; }
   .match-score.loss { background: #fde8e6; color: #a33426; }
   .match-score.draw { background: #fffbe8; color: #856d00; }
-  .match-meta { font-size: 12px; color: #888; display: flex; gap: 12px; flex-wrap: wrap; }
+  .match-meta { font-size: 12px; color: #888; display: flex; gap: 12px; flex-wrap: wrap; margin-top: 6px; }
   .match-meta span { background: #f0ede4; padding: 3px 10px; border-radius: 20px; }
   .buteurs-list { font-size: 13px; color: #555; margin-top: 8px; }
   .btn-edit { background: #141414; color: #e8c840; border: none; padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; }
-  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.5); display: flex; align-items: center; justify-content: center; z-index: 100; }
+  .btn-edit:hover { background: #2a2a2a; }
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.5); display: flex; align-items: center; justify-content: center; z-index: 100; overflow-y: auto; padding: 20px; }
   .modal { background: white; border-radius: 12px; padding: 28px; width: 100%; max-width: 480px; }
   .modal h3 { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; margin-bottom: 16px; }
   .modal label { font-size: 13px; font-weight: 600; display: block; margin-bottom: 4px; margin-top: 12px; }
@@ -25,6 +26,11 @@
   .btn-cancel { background: #f0ede4; color: #555; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 600; }
   .section-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; letter-spacing: .05em; margin: 28px 0 14px; }
   .add-match-btn { background: #141414; color: #e8c840; border: none; padding: 10px 20px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; margin-bottom: 16px; }
+  .racing-row td { font-weight: 700; background: #fffbe8 !important; }
+  .classement-edit-btn { background: #f0ede4; color: #555; border: none; padding: 5px 12px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; margin-left: 10px; }
+  .auto-badge { background: #d4f5e4; color: #1f7a4f; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; margin-left: 8px; letter-spacing: .05em; }
+  .classement-header { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; }
+  td input.cls-input { width: 50px; padding: 3px 6px; border: 1px solid #ddd; border-radius: 4px; font-size: 13px; text-align: center; }
 </style>
 </head>
 <body>
@@ -38,7 +44,7 @@
   <a href="login.html">Connexion</a>
 </nav>
 
-<main style="max-width:900px;margin:0 auto;padding:30px 20px;">
+<main style="max-width:960px;margin:0 auto;padding:30px 20px;">
 
   <div class="section-title">Matchs à venir</div>
   <div id="matchsAvenir"><p style="color:#888">Chargement...</p></div>
@@ -46,25 +52,25 @@
   <div class="section-title">Résultats</div>
   <div id="matchsResultats"><p style="color:#888">Chargement...</p></div>
 
-  <div class="section-title">Classement U19 Régionaux (19B)</div>
+  <div class="section-title">
+    Classement U19 Régionaux (19B)
+    <span class="auto-badge">⚡ AUTO Racing</span>
+  </div>
+  <div class="classement-header">
+    <span style="font-size:13px;color:#888;">Le classement de Racing se met à jour automatiquement selon vos résultats.</span>
+    <button class="classement-edit-btn" id="btnEditCls" style="display:none" onclick="toggleEditClassement()">✏ Modifier autres équipes</button>
+    <button class="classement-edit-btn" id="btnSaveCls" style="display:none" onclick="sauverClassement()">💾 Sauvegarder classement</button>
+  </div>
   <div class="table-wrap">
-    <table>
-      <thead><tr><th>#</th><th>Logo</th><th>Équipe</th><th>M</th><th>V</th><th>D</th><th>N</th><th>BP</th><th>BC</th><th>Diff</th><th>Pts</th></tr></thead>
-      <tbody>
-        <tr class="tiki"><td>1</td><td><img src="logos/leopold.png" width="24" alt=""></td><td>R. Leopold F.C. B</td><td>13</td><td>13</td><td>0</td><td>0</td><td>56</td><td>9</td><td>+47</td><td>39</td></tr>
-        <tr class="top"><td>2</td><td><img src="logos/racing.png" width="24" alt=""></td><td>Racing White Woluwe B</td><td>10</td><td>7</td><td>2</td><td>1</td><td>35</td><td>21</td><td>+14</td><td>22</td></tr>
-        <tr class="top"><td>3</td><td><img src="logos/saintoise.png" width="24" alt=""></td><td>R.A.S. Saintoise</td><td>13</td><td>7</td><td>5</td><td>1</td><td>34</td><td>37</td><td>-3</td><td>22</td></tr>
-        <tr><td>4</td><td><img src="logos/mont.png" width="24" alt=""></td><td>C.S. Mont-St-Guibert</td><td>11</td><td>6</td><td>4</td><td>1</td><td>33</td><td>21</td><td>+12</td><td>19</td></tr>
-        <tr><td>5</td><td><img src="logos/ros.png" width="24" alt=""></td><td>ROS Ottignies-LLN</td><td>11</td><td>5</td><td>5</td><td>1</td><td>35</td><td>31</td><td>+4</td><td>16</td></tr>
-        <tr class="bottom"><td>6</td><td><img src="logos/jodoigne_c.png" width="24" alt=""></td><td>R.A.S. Jodoigne C</td><td>11</td><td>2</td><td>9</td><td>0</td><td>24</td><td>56</td><td>-32</td><td>6</td></tr>
-        <tr class="bottom"><td>7</td><td><img src="logos/nivellois.png" width="24" alt=""></td><td>R.C.S. Nivellois</td><td>11</td><td>1</td><td>7</td><td>3</td><td>18</td><td>33</td><td>-15</td><td>6</td></tr>
-        <tr class="bottom"><td>8</td><td><img src="logos/jodoigne_b.png" width="24" alt=""></td><td>R.A.S. Jodoigne B</td><td>12</td><td>1</td><td>10</td><td>1</td><td>23</td><td>50</td><td>-27</td><td>4</td></tr>
-      </tbody>
+    <table id="tableClassement">
+      <thead><tr><th>#</th><th>Équipe</th><th>M</th><th>V</th><th>N</th><th>D</th><th>BP</th><th>BC</th><th>Diff</th><th>Pts</th></tr></thead>
+      <tbody id="tbodyClassement"><tr><td colspan="10" style="text-align:center;padding:20px;color:#888;">Chargement...</td></tr></tbody>
     </table>
   </div>
+
 </main>
 
-<!-- Modal ajout/edit match -->
+<!-- Modal match -->
 <div id="modalOverlay" class="modal-overlay" style="display:none">
   <div class="modal">
     <h3 id="modalTitle">Ajouter un match</h3>
@@ -76,7 +82,7 @@
     <input type="time" id="mHeure">
     <label>Lieu</label>
     <select id="mLieu"><option value="Domicile">Domicile</option><option value="Extérieur">Extérieur</option></select>
-    <label>Score (ex: 3-1) — laisser vide si match à venir</label>
+    <label>Score Racing - Adversaire (ex: 3-1) — vide si match à venir</label>
     <input type="text" id="mScore" placeholder="ex: 3-1">
     <label>Buteurs (séparés par virgule)</label>
     <input type="text" id="mButeurs" placeholder="ex: Dupont, Martin x2">
@@ -110,16 +116,132 @@
   let isAdmin = false;
   let editIndex = -1;
   let allMatchs = [];
+  let editingClassement = false;
 
-  onAuthStateChanged(auth, (user) => {
+  // Classement de base des autres équipes (modifiable par admin)
+  const defaultClassement = [
+    { nom: "R. Leopold F.C. B",     m:13, v:13, n:0, d:0, bp:56, bc:9  },
+    { nom: "Racing White Woluwe B", m:0,  v:0,  n:0, d:0, bp:0,  bc:0, isRacing: true },
+    { nom: "R.A.S. Saintoise",      m:13, v:7,  n:1, d:5, bp:34, bc:37 },
+    { nom: "C.S. Mont-St-Guibert",  m:11, v:6,  n:1, d:4, bp:33, bc:21 },
+    { nom: "ROS Ottignies-LLN",     m:11, v:5,  n:1, d:5, bp:35, bc:31 },
+    { nom: "R.A.S. Jodoigne C",     m:11, v:2,  n:0, d:9, bp:24, bc:56 },
+    { nom: "R.C.S. Nivellois",      m:11, v:1,  n:3, d:7, bp:18, bc:33 },
+    { nom: "R.A.S. Jodoigne B",     m:12, v:1,  n:1, d:10,bp:23, bc:50 },
+  ];
+
+  let classementData = [];
+
+  onAuthStateChanged(auth, async (user) => {
     if (!user) { window.location.href = "login.html"; return; }
     isAdmin = user.email === ADMIN;
+    if (isAdmin) {
+      document.getElementById('btnEditCls').style.display = 'inline-block';
+    }
+
+    // Charger classement sauvegardé
+    const snapCls = await getDoc(doc(db, "classement", "data"));
+    if (snapCls.exists()) {
+      classementData = snapCls.data().equipes || defaultClassement;
+    } else {
+      classementData = JSON.parse(JSON.stringify(defaultClassement));
+    }
+
+    // Écouter matchs en temps réel
     onSnapshot(doc(db, "matchs", "liste"), (snap) => {
       allMatchs = snap.exists() ? (snap.data().matchs || []) : [];
+      recalculerRacing();
       renderMatchs();
     });
   });
 
+  // ── RECALCUL AUTO RACING ──
+  function recalculerRacing() {
+    const racing = classementData.find(e => e.isRacing);
+    if (!racing) return;
+
+    let m=0, v=0, n=0, d=0, bp=0, bc=0;
+    allMatchs.forEach(match => {
+      if (!match.score) return;
+      const parts = match.score.split('-').map(s => parseInt(s.trim()));
+      if (parts.length !== 2 || isNaN(parts[0]) || isNaN(parts[1])) return;
+      m++;
+      bp += parts[0]; bc += parts[1];
+      if (parts[0] > parts[1]) v++;
+      else if (parts[0] === parts[1]) n++;
+      else d++;
+    });
+    racing.m = m; racing.v = v; racing.n = n; racing.d = d;
+    racing.bp = bp; racing.bc = bc;
+    renderClassement();
+  }
+
+  // ── CLASSEMENT ──
+  function renderClassement() {
+    // Calculer pts et trier
+    const avec_pts = classementData.map(e => ({
+      ...e,
+      pts: e.v * 3 + e.n,
+      diff: e.bp - e.bc
+    }));
+    avec_pts.sort((a, b) => b.pts - a.pts || b.diff - a.diff || b.bp - a.bp);
+
+    const tbody = document.getElementById('tbodyClassement');
+    tbody.innerHTML = '';
+    avec_pts.forEach((e, i) => {
+      const isRacing = !!e.isRacing;
+      const diff = e.diff >= 0 ? '+'+e.diff : e.diff;
+      let rowClass = isRacing ? 'racing-row' : (i < 2 ? 'top' : (i >= avec_pts.length - 2 ? 'bottom' : ''));
+
+      if (editingClassement && !isRacing) {
+        tbody.innerHTML += `<tr class="${rowClass}">
+          <td>${i+1}</td>
+          <td>${e.nom}${isRacing ? ' ⚡' : ''}</td>
+          <td><input class="cls-input" data-team="${e.nom}" data-field="m" value="${e.m}"></td>
+          <td><input class="cls-input" data-team="${e.nom}" data-field="v" value="${e.v}"></td>
+          <td><input class="cls-input" data-team="${e.nom}" data-field="n" value="${e.n}"></td>
+          <td><input class="cls-input" data-team="${e.nom}" data-field="d" value="${e.d}"></td>
+          <td><input class="cls-input" data-team="${e.nom}" data-field="bp" value="${e.bp}"></td>
+          <td><input class="cls-input" data-team="${e.nom}" data-field="bc" value="${e.bc}"></td>
+          <td>${diff}</td>
+          <td>${e.pts}</td>
+        </tr>`;
+      } else {
+        tbody.innerHTML += `<tr class="${rowClass}">
+          <td>${i+1}</td>
+          <td>${e.nom}${isRacing ? ' ⚡' : ''}</td>
+          <td>${e.m}</td><td>${e.v}</td><td>${e.n}</td><td>${e.d}</td>
+          <td>${e.bp}</td><td>${e.bc}</td>
+          <td>${diff}</td>
+          <td><strong>${e.pts}</strong></td>
+        </tr>`;
+      }
+    });
+  }
+
+  window.toggleEditClassement = function() {
+    editingClassement = !editingClassement;
+    document.getElementById('btnEditCls').textContent = editingClassement ? '✕ Annuler' : '✏ Modifier autres équipes';
+    document.getElementById('btnSaveCls').style.display = editingClassement ? 'inline-block' : 'none';
+    renderClassement();
+  };
+
+  window.sauverClassement = async function() {
+    // Récupérer les valeurs des inputs
+    document.querySelectorAll('.cls-input').forEach(input => {
+      const teamNom = input.dataset.team;
+      const field = input.dataset.field;
+      const equipe = classementData.find(e => e.nom === teamNom);
+      if (equipe) equipe[field] = parseInt(input.value) || 0;
+    });
+    await setDoc(doc(db, "classement", "data"), { equipes: classementData });
+    editingClassement = false;
+    document.getElementById('btnEditCls').textContent = '✏ Modifier autres équipes';
+    document.getElementById('btnSaveCls').style.display = 'none';
+    recalculerRacing();
+  };
+
+  // ── MATCHS ──
   function scoreClass(score) {
     if (!score) return '';
     const parts = score.split('-');
@@ -132,29 +254,24 @@
 
   function renderMatchs() {
     const avenir = allMatchs.filter(m => !m.score);
-    const resultats = allMatchs.filter(m => m.score);
+    const resultats = allMatchs.filter(m => m.score).reverse();
 
     const divAvenir = document.getElementById('matchsAvenir');
     const divResultats = document.getElementById('matchsResultats');
 
-    if (isAdmin) {
-      divAvenir.innerHTML = `<button class="add-match-btn" onclick="ouvrirModal(-1)">+ Ajouter un match</button>`;
-    } else { divAvenir.innerHTML = ''; }
-
+    divAvenir.innerHTML = isAdmin ? `<button class="add-match-btn" onclick="ouvrirModal(-1)">+ Ajouter un match</button>` : '';
     if (!avenir.length) divAvenir.innerHTML += '<p style="color:#888;font-size:14px;">Aucun match à venir.</p>';
-    avenir.forEach((m, i) => {
-      divAvenir.innerHTML += matchCard(m, allMatchs.indexOf(m));
-    });
+    avenir.forEach(m => { divAvenir.innerHTML += matchCard(m, allMatchs.indexOf(m)); });
 
     divResultats.innerHTML = '';
     if (!resultats.length) divResultats.innerHTML = '<p style="color:#888;font-size:14px;">Aucun résultat enregistré.</p>';
-    resultats.forEach((m) => {
-      divResultats.innerHTML += matchCard(m, allMatchs.indexOf(m));
-    });
+    resultats.forEach(m => { divResultats.innerHTML += matchCard(m, allMatchs.indexOf(m)); });
   }
 
   function matchCard(m, idx) {
-    const sc = m.score ? `<div class="match-score ${scoreClass(m.score)}">${m.score}</div>` : `<div class="match-score">vs</div>`;
+    const sc = m.score
+      ? `<div class="match-score ${scoreClass(m.score)}">${m.score}</div>`
+      : `<div class="match-score">vs</div>`;
     const buteurs = m.buteurs ? `<div class="buteurs-list">⚽ ${m.buteurs}</div>` : '';
     const editBtn = isAdmin ? `<button class="btn-edit" onclick="ouvrirModal(${idx})">✏ Modifier</button>` : '';
     return `<div class="match-card">
