@@ -5,26 +5,24 @@
 <title>Statistiques - Racing White Woluwe</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
-  .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 1100px; margin: 30px auto; padding: 0 20px; }
+  .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 900px; margin: 30px auto; padding: 0 20px; }
   @media(max-width:700px){ .stats-grid { grid-template-columns: 1fr; } }
-  .chart-card { background: white; border: 1px solid #d4d3cf; border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,.05); }
-  .chart-card h3 { font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; letter-spacing: .05em; margin-bottom: 16px; }
-  .top-scorer { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid #ebe9e4; }
+  .chart-card { background: white; border: 1px solid #d4d3cf; border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,.05); }
+  .chart-card h3 { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; letter-spacing: .05em; margin-bottom: 16px; border-bottom: 2px solid #e8c840; padding-bottom: 10px; }
+  .top-scorer { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid #ebe9e4; }
   .top-scorer:last-child { border-bottom: none; }
-  .scorer-rank { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; color: #e8c840; width: 28px; text-align: center; }
-  .scorer-rank.gold   { color: #f5c400; }
-  .scorer-rank.silver { color: #aaa; }
-  .scorer-rank.bronze { color: #cd7f32; }
-  .scorer-name { flex: 1; font-weight: 500; font-size: 14px; }
-  .scorer-val { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; color: #141414; text-align: right; }
-  .scorer-label { font-size: 11px; color: #888; text-align: right; }
-  .page-header { max-width: 1100px; margin: 30px auto 0; padding: 0 20px; }
+  .scorer-rank { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; width: 36px; text-align: center; }
+  .scorer-name { flex: 1; font-weight: 600; font-size: 15px; }
+  .scorer-stats { text-align: right; }
+  .scorer-val { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; color: #141414; line-height: 1; }
+  .scorer-label { font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: .06em; }
+  .page-header { max-width: 900px; margin: 30px auto 0; padding: 0 20px; }
   .page-header h2 { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; letter-spacing: .05em; }
-  .page-header p { font-size: 13px; color: #888; }
-  .auto-badge { background: #d4f5e4; color: #1f7a4f; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; margin-left: 8px; }
-  .empty-msg { color: #aaa; font-size: 13px; padding: 10px 0; }
+  .page-header p { font-size: 13px; color: #888; margin-top: 4px; }
+  .auto-badge { background: #d4f5e4; color: #1f7a4f; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; margin-left: 8px; vertical-align: middle; }
+  .empty-msg { color: #aaa; font-size: 13px; padding: 16px 0; text-align: center; }
+  .scorer-avatar { width: 38px; height: 38px; border-radius: 50%; background: #141414; color: #e8c840; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0; }
 </style>
 </head>
 <body>
@@ -45,20 +43,12 @@
 
 <div class="stats-grid">
   <div class="chart-card">
-    <h3>⚽ Buts marqués</h3>
-    <canvas id="chartButs"></canvas>
+    <h3>🏆 Top Buteurs</h3>
+    <div id="topButeurs"><p class="empty-msg">Chargement...</p></div>
   </div>
   <div class="chart-card">
-    <h3>🎯 Passes décisives</h3>
-    <canvas id="chartPasses"></canvas>
-  </div>
-  <div class="chart-card">
-    <h3>🏆 Top buteurs</h3>
-    <div id="topButeurs"></div>
-  </div>
-  <div class="chart-card">
-    <h3>🎖 Top passeurs</h3>
-    <div id="topPasseurs"></div>
+    <h3>🎯 Top Passeurs</h3>
+    <div id="topPasseurs"><p class="empty-msg">Chargement...</p></div>
   </div>
 </div>
 
@@ -67,7 +57,7 @@
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
   import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-  import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  import { getFirestore, doc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyBtHgQSmZY76kMrZQhClrRo9NuuMgHLbKE",
@@ -82,17 +72,21 @@
   const auth = getAuth(app);
   const db = getFirestore(app);
 
-  let chartButs = null;
-  let chartPasses = null;
+  function initials(nom) {
+    return nom.split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
+  }
 
   onAuthStateChanged(auth, async (user) => {
     if (!user) { window.location.href = "login.html"; return; }
 
-    // Charger les matchs
-    const snapM = await getDoc(doc(db, "matchs", "liste"));
-    const matchs = snapM.exists() ? (snapM.data().matchs || []) : [];
+    // Écouter matchs en temps réel
+    onSnapshot(doc(db, "matchs", "liste"), (snap) => {
+      const matchs = snap.exists() ? (snap.data().matchs || []) : [];
+      calculerStats(matchs);
+    });
+  });
 
-    // Calculer buts et passes depuis les matchs
+  function calculerStats(matchs) {
     const butsMap = {};
     const passesMap = {};
 
@@ -100,77 +94,39 @@
       if (!m.score) return;
       if (m.buteurs) m.buteurs.forEach(b => {
         if (!b.nom) return;
-        butsMap[b.nom] = (butsMap[b.nom] || 0) + (b.nb || 1);
+        butsMap[b.nom] = (butsMap[b.nom] || 0) + (parseInt(b.nb) || 1);
       });
       if (m.passeurs) m.passeurs.forEach(p => {
         if (!p.nom) return;
-        passesMap[p.nom] = (passesMap[p.nom] || 0) + (p.nb || 1);
+        passesMap[p.nom] = (passesMap[p.nom] || 0) + (parseInt(p.nb) || 1);
       });
     });
 
-    const sorted_buts = Object.entries(butsMap).map(([nom,v])=>({nom,val:v})).sort((a,b)=>b.val-a.val).slice(0,8);
-    const sorted_passes = Object.entries(passesMap).map(([nom,v])=>({nom,val:v})).sort((a,b)=>b.val-a.val).slice(0,8);
+    const sorted_buts   = Object.entries(butsMap).map(([nom,val])=>({nom,val})).sort((a,b)=>b.val-a.val);
+    const sorted_passes = Object.entries(passesMap).map(([nom,val])=>({nom,val})).sort((a,b)=>b.val-a.val);
 
-    // Graphique buts
-    if (chartButs) chartButs.destroy();
-    if (sorted_buts.length) {
-      chartButs = new Chart(document.getElementById('chartButs'), {
-        type: 'bar',
-        data: {
-          labels: sorted_buts.map(j => j.nom.split(' ')[0]),
-          datasets: [{ data: sorted_buts.map(j => j.val), backgroundColor: '#141414', borderRadius: 6 }]
-        },
-        options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
-      });
-    } else {
-      document.getElementById('chartButs').parentElement.innerHTML += '<p class="empty-msg">Aucun but enregistré dans les matchs.</p>';
-    }
+    renderTop('topButeurs', sorted_buts, 'but');
+    renderTop('topPasseurs', sorted_passes, 'passe');
+  }
 
-    // Graphique passes
-    if (chartPasses) chartPasses.destroy();
-    if (sorted_passes.length) {
-      chartPasses = new Chart(document.getElementById('chartPasses'), {
-        type: 'bar',
-        data: {
-          labels: sorted_passes.map(j => j.nom.split(' ')[0]),
-          datasets: [{ data: sorted_passes.map(j => j.val), backgroundColor: '#e8c840', borderRadius: 6 }]
-        },
-        options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
-      });
-    } else {
-      document.getElementById('chartPasses').parentElement.innerHTML += '<p class="empty-msg">Aucune passe enregistrée dans les matchs.</p>';
+  function renderTop(containerId, list, label) {
+    const div = document.getElementById(containerId);
+    if (!list.length) {
+      div.innerHTML = `<p class="empty-msg">Aucun${label==='but'?'':'e'} ${label} enregistré${label==='but'?'':'e'} dans les matchs.</p>`;
+      return;
     }
-
-    // Top buteurs
-    const topB = document.getElementById('topButeurs');
-    if (!sorted_buts.length) {
-      topB.innerHTML = '<p class="empty-msg">Entrez les buteurs dans le calendrier pour les voir ici.</p>';
-    } else {
-      sorted_buts.slice(0,5).forEach((j, i) => {
-        const rankClass = i===0?'gold':i===1?'silver':i===2?'bronze':'';
-        topB.innerHTML += `<div class="top-scorer">
-          <div class="scorer-rank ${rankClass}">${i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1}</div>
-          <div class="scorer-name">${j.nom}</div>
-          <div><div class="scorer-val">${j.val}</div><div class="scorer-label">buts</div></div>
-        </div>`;
-      });
-    }
-
-    // Top passeurs
-    const topP = document.getElementById('topPasseurs');
-    if (!sorted_passes.length) {
-      topP.innerHTML = '<p class="empty-msg">Entrez les passeurs dans le calendrier pour les voir ici.</p>';
-    } else {
-      sorted_passes.slice(0,5).forEach((j, i) => {
-        const rankClass = i===0?'gold':i===1?'silver':i===2?'bronze':'';
-        topP.innerHTML += `<div class="top-scorer">
-          <div class="scorer-rank ${rankClass}">${i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1}</div>
-          <div class="scorer-name">${j.nom}</div>
-          <div><div class="scorer-val">${j.val}</div><div class="scorer-label">passes</div></div>
-        </div>`;
-      });
-    }
-  });
+    const medals = ['🥇','🥈','🥉'];
+    div.innerHTML = list.slice(0,10).map((j,i) => `
+      <div class="top-scorer">
+        <div class="scorer-rank">${medals[i] || (i+1)}</div>
+        <div class="scorer-avatar">${initials(j.nom)}</div>
+        <div class="scorer-name">${j.nom}</div>
+        <div class="scorer-stats">
+          <div class="scorer-val">${j.val}</div>
+          <div class="scorer-label">${label}${j.val > 1 ? 's' : ''}</div>
+        </div>
+      </div>`).join('');
+  }
 </script>
 </body>
 </html>
