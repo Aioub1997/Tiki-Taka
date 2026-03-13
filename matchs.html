@@ -5,6 +5,27 @@
 <title>Calendrier - Racing White Woluwe</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
+<style>
+  .match-card { background: white; border: 1px solid #d4d3cf; border-radius: 12px; padding: 20px; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; box-shadow: 0 2px 8px rgba(0,0,0,.05); }
+  .match-teams { display: flex; align-items: center; gap: 16px; font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; letter-spacing: .05em; }
+  .match-score { font-size: 1.8rem; color: #141414; padding: 4px 16px; background: #f5f4f0; border-radius: 8px; min-width: 80px; text-align: center; }
+  .match-score.win  { background: #d4f5e4; color: #1f7a4f; }
+  .match-score.loss { background: #fde8e6; color: #a33426; }
+  .match-score.draw { background: #fffbe8; color: #856d00; }
+  .match-meta { font-size: 12px; color: #888; display: flex; gap: 12px; flex-wrap: wrap; }
+  .match-meta span { background: #f0ede4; padding: 3px 10px; border-radius: 20px; }
+  .buteurs-list { font-size: 13px; color: #555; margin-top: 8px; }
+  .btn-edit { background: #141414; color: #e8c840; border: none; padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; }
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.5); display: flex; align-items: center; justify-content: center; z-index: 100; }
+  .modal { background: white; border-radius: 12px; padding: 28px; width: 100%; max-width: 480px; }
+  .modal h3 { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; margin-bottom: 16px; }
+  .modal label { font-size: 13px; font-weight: 600; display: block; margin-bottom: 4px; margin-top: 12px; }
+  .modal input, .modal select { width: 100%; padding: 8px 10px; border: 1px solid #ddd; border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 14px; }
+  .modal-btns { display: flex; gap: 10px; margin-top: 20px; justify-content: flex-end; }
+  .btn-cancel { background: #f0ede4; color: #555; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 600; }
+  .section-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; letter-spacing: .05em; margin: 28px 0 14px; }
+  .add-match-btn { background: #141414; color: #e8c840; border: none; padding: 10px 20px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; margin-bottom: 16px; }
+</style>
 </head>
 <body>
 
@@ -13,50 +34,65 @@
   <a href="joueurs.html">Effectif</a> |
   <a href="matchs.html" class="active">Calendrier</a> |
   <a href="convocations.html">Convocations</a> |
+  <a href="stats.html">Statistiques</a> |
   <a href="login.html">Connexion</a>
 </nav>
 
-<main>
+<main style="max-width:900px;margin:0 auto;padding:30px 20px;">
 
-<section>
-<h2>Matchs à venir</h2>
-<table>
-<thead><tr><th>Date</th><th>Adversaire</th><th>Lieu</th><th>Heure</th></tr></thead>
-<tbody>
-<tr><td>15/03/2026</td><td>Équipe B</td><td>Domicile</td><td>15:00</td></tr>
-<tr><td>22/03/2026</td><td>Équipe C</td><td>Extérieur</td><td>16:00</td></tr>
-</tbody>
-</table>
-</section>
+  <div class="section-title">Matchs à venir</div>
+  <div id="matchsAvenir"><p style="color:#888">Chargement...</p></div>
 
-<section>
-<h2>Classement U19 Régionaux (19B)</h2>
-<table>
-<thead>
-<tr><th>#</th><th>Logo</th><th>Équipe</th><th>M</th><th>V</th><th>D</th><th>N</th><th>BP</th><th>BC</th><th>Diff</th><th>Pts</th></tr>
-</thead>
-<tbody>
-<tr class="tiki"><td>1</td><td class="logo"><img src="logos/leopold.png" alt="Leopold"></td><td>R. Leopold F.C. B</td><td>13</td><td>13</td><td>0</td><td>0</td><td>56</td><td>9</td><td>+47</td><td>39</td></tr>
-<tr class="top"><td>2</td><td class="logo"><img src="logos/racing.png" alt="Racing White Woluwe"></td><td>Racing White Woluwe B</td><td>10</td><td>7</td><td>2</td><td>1</td><td>35</td><td>21</td><td>+14</td><td>22</td></tr>
-<tr class="top"><td>3</td><td class="logo"><img src="logos/saintoise.png" alt="R.A.S. Saintoise"></td><td>R.A.S. Saintoise</td><td>13</td><td>7</td><td>5</td><td>1</td><td>34</td><td>37</td><td>-3</td><td>22</td></tr>
-<tr><td>4</td><td class="logo"><img src="logos/mont.png" alt="C.S. Mont-St-Guibert"></td><td>C.S. Mont-St-Guibert</td><td>11</td><td>6</td><td>4</td><td>1</td><td>33</td><td>21</td><td>+12</td><td>19</td></tr>
-<tr><td>5</td><td class="logo"><img src="logos/ros.png" alt="ROS Ottignies"></td><td>ROS Ottignies-Louvain-La-Neuve</td><td>11</td><td>5</td><td>5</td><td>1</td><td>35</td><td>31</td><td>+4</td><td>16</td></tr>
-<tr class="bottom"><td>6</td><td class="logo"><img src="logos/jodoigne_c.png" alt="R.A.S. Jodoigne C"></td><td>R.A.S. Jodoigne C</td><td>11</td><td>2</td><td>9</td><td>0</td><td>24</td><td>56</td><td>-32</td><td>6</td></tr>
-<tr class="bottom"><td>7</td><td class="logo"><img src="logos/nivellois.png" alt="R.C.S. Nivellois"></td><td>R.C.S. Nivellois</td><td>11</td><td>1</td><td>7</td><td>3</td><td>18</td><td>33</td><td>-15</td><td>6</td></tr>
-<tr class="bottom"><td>8</td><td class="logo"><img src="logos/jodoigne_b.png" alt="R.A.S. Jodoigne B"></td><td>R.A.S. Jodoigne B</td><td>12</td><td>1</td><td>10</td><td>1</td><td>23</td><td>50</td><td>-27</td><td>4</td></tr>
-<tr><td>9</td><td class="logo"><img src="logos/ittroise.png" alt="J.S. Ittroise"></td><td>J.S. Ittroise</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
-<tr><td>10</td><td class="logo"><img src="logos/incourt.png" alt="S-R Incourt A"></td><td>S-R Incourt A</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
-</tbody>
-</table>
-</section>
+  <div class="section-title">Résultats</div>
+  <div id="matchsResultats"><p style="color:#888">Chargement...</p></div>
 
+  <div class="section-title">Classement U19 Régionaux (19B)</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>#</th><th>Logo</th><th>Équipe</th><th>M</th><th>V</th><th>D</th><th>N</th><th>BP</th><th>BC</th><th>Diff</th><th>Pts</th></tr></thead>
+      <tbody>
+        <tr class="tiki"><td>1</td><td><img src="logos/leopold.png" width="24" alt=""></td><td>R. Leopold F.C. B</td><td>13</td><td>13</td><td>0</td><td>0</td><td>56</td><td>9</td><td>+47</td><td>39</td></tr>
+        <tr class="top"><td>2</td><td><img src="logos/racing.png" width="24" alt=""></td><td>Racing White Woluwe B</td><td>10</td><td>7</td><td>2</td><td>1</td><td>35</td><td>21</td><td>+14</td><td>22</td></tr>
+        <tr class="top"><td>3</td><td><img src="logos/saintoise.png" width="24" alt=""></td><td>R.A.S. Saintoise</td><td>13</td><td>7</td><td>5</td><td>1</td><td>34</td><td>37</td><td>-3</td><td>22</td></tr>
+        <tr><td>4</td><td><img src="logos/mont.png" width="24" alt=""></td><td>C.S. Mont-St-Guibert</td><td>11</td><td>6</td><td>4</td><td>1</td><td>33</td><td>21</td><td>+12</td><td>19</td></tr>
+        <tr><td>5</td><td><img src="logos/ros.png" width="24" alt=""></td><td>ROS Ottignies-LLN</td><td>11</td><td>5</td><td>5</td><td>1</td><td>35</td><td>31</td><td>+4</td><td>16</td></tr>
+        <tr class="bottom"><td>6</td><td><img src="logos/jodoigne_c.png" width="24" alt=""></td><td>R.A.S. Jodoigne C</td><td>11</td><td>2</td><td>9</td><td>0</td><td>24</td><td>56</td><td>-32</td><td>6</td></tr>
+        <tr class="bottom"><td>7</td><td><img src="logos/nivellois.png" width="24" alt=""></td><td>R.C.S. Nivellois</td><td>11</td><td>1</td><td>7</td><td>3</td><td>18</td><td>33</td><td>-15</td><td>6</td></tr>
+        <tr class="bottom"><td>8</td><td><img src="logos/jodoigne_b.png" width="24" alt=""></td><td>R.A.S. Jodoigne B</td><td>12</td><td>1</td><td>10</td><td>1</td><td>23</td><td>50</td><td>-27</td><td>4</td></tr>
+      </tbody>
+    </table>
+  </div>
 </main>
+
+<!-- Modal ajout/edit match -->
+<div id="modalOverlay" class="modal-overlay" style="display:none">
+  <div class="modal">
+    <h3 id="modalTitle">Ajouter un match</h3>
+    <label>Adversaire</label>
+    <input type="text" id="mAdversaire" placeholder="Nom de l'équipe adverse">
+    <label>Date</label>
+    <input type="date" id="mDate">
+    <label>Heure</label>
+    <input type="time" id="mHeure">
+    <label>Lieu</label>
+    <select id="mLieu"><option value="Domicile">Domicile</option><option value="Extérieur">Extérieur</option></select>
+    <label>Score (ex: 3-1) — laisser vide si match à venir</label>
+    <input type="text" id="mScore" placeholder="ex: 3-1">
+    <label>Buteurs (séparés par virgule)</label>
+    <input type="text" id="mButeurs" placeholder="ex: Dupont, Martin x2">
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="fermerModal()">Annuler</button>
+      <button class="btn-edit" onclick="sauverMatch()">Sauvegarder</button>
+    </div>
+  </div>
+</div>
 
 <footer>&copy; 2025 Racing White Woluwe — Tous droits réservés</footer>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
   import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyBtHgQSmZY76kMrZQhClrRo9NuuMgHLbKE",
@@ -69,9 +105,99 @@
 
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
+  const db = getFirestore(app);
+  const ADMIN = "mekhalfaioub@gmail.com";
+  let isAdmin = false;
+  let editIndex = -1;
+  let allMatchs = [];
+
   onAuthStateChanged(auth, (user) => {
-    if (!user) window.location.href = "login.html";
+    if (!user) { window.location.href = "login.html"; return; }
+    isAdmin = user.email === ADMIN;
+    onSnapshot(doc(db, "matchs", "liste"), (snap) => {
+      allMatchs = snap.exists() ? (snap.data().matchs || []) : [];
+      renderMatchs();
+    });
   });
+
+  function scoreClass(score) {
+    if (!score) return '';
+    const parts = score.split('-');
+    if (parts.length !== 2) return '';
+    const [a, b] = parts.map(Number);
+    if (a > b) return 'win';
+    if (a < b) return 'loss';
+    return 'draw';
+  }
+
+  function renderMatchs() {
+    const avenir = allMatchs.filter(m => !m.score);
+    const resultats = allMatchs.filter(m => m.score);
+
+    const divAvenir = document.getElementById('matchsAvenir');
+    const divResultats = document.getElementById('matchsResultats');
+
+    if (isAdmin) {
+      divAvenir.innerHTML = `<button class="add-match-btn" onclick="ouvrirModal(-1)">+ Ajouter un match</button>`;
+    } else { divAvenir.innerHTML = ''; }
+
+    if (!avenir.length) divAvenir.innerHTML += '<p style="color:#888;font-size:14px;">Aucun match à venir.</p>';
+    avenir.forEach((m, i) => {
+      divAvenir.innerHTML += matchCard(m, allMatchs.indexOf(m));
+    });
+
+    divResultats.innerHTML = '';
+    if (!resultats.length) divResultats.innerHTML = '<p style="color:#888;font-size:14px;">Aucun résultat enregistré.</p>';
+    resultats.forEach((m) => {
+      divResultats.innerHTML += matchCard(m, allMatchs.indexOf(m));
+    });
+  }
+
+  function matchCard(m, idx) {
+    const sc = m.score ? `<div class="match-score ${scoreClass(m.score)}">${m.score}</div>` : `<div class="match-score">vs</div>`;
+    const buteurs = m.buteurs ? `<div class="buteurs-list">⚽ ${m.buteurs}</div>` : '';
+    const editBtn = isAdmin ? `<button class="btn-edit" onclick="ouvrirModal(${idx})">✏ Modifier</button>` : '';
+    return `<div class="match-card">
+      <div>
+        <div class="match-teams">Racing White Woluwe ${sc} ${m.adversaire}</div>
+        <div class="match-meta"><span>📅 ${m.date}</span><span>🕐 ${m.heure}</span><span>📍 ${m.lieu}</span></div>
+        ${buteurs}
+      </div>
+      ${editBtn}
+    </div>`;
+  }
+
+  window.ouvrirModal = function(idx) {
+    editIndex = idx;
+    const m = idx >= 0 ? allMatchs[idx] : {};
+    document.getElementById('modalTitle').textContent = idx >= 0 ? 'Modifier le match' : 'Ajouter un match';
+    document.getElementById('mAdversaire').value = m.adversaire || '';
+    document.getElementById('mDate').value = m.date || '';
+    document.getElementById('mHeure').value = m.heure || '';
+    document.getElementById('mLieu').value = m.lieu || 'Domicile';
+    document.getElementById('mScore').value = m.score || '';
+    document.getElementById('mButeurs').value = m.buteurs || '';
+    document.getElementById('modalOverlay').style.display = 'flex';
+  };
+
+  window.fermerModal = function() {
+    document.getElementById('modalOverlay').style.display = 'none';
+  };
+
+  window.sauverMatch = async function() {
+    const m = {
+      adversaire: document.getElementById('mAdversaire').value,
+      date: document.getElementById('mDate').value,
+      heure: document.getElementById('mHeure').value,
+      lieu: document.getElementById('mLieu').value,
+      score: document.getElementById('mScore').value,
+      buteurs: document.getElementById('mButeurs').value,
+    };
+    if (editIndex >= 0) allMatchs[editIndex] = m;
+    else allMatchs.push(m);
+    await setDoc(doc(db, "matchs", "liste"), { matchs: allMatchs });
+    fermerModal();
+  };
 </script>
 </body>
 </html>

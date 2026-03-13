@@ -13,10 +13,12 @@
   <a href="joueurs.html" class="active">Effectif</a> |
   <a href="matchs.html">Calendrier</a> |
   <a href="convocations.html">Convocations</a> |
+  <a href="stats.html">Statistiques</a> |
   <a href="login.html">Connexion</a>
 </nav>
 
 <div class="page-layout">
+
   <div class="left-panel">
     <div class="panel-title">Effectif U19</div>
     <div class="table-wrap">
@@ -58,6 +60,7 @@
       </div>
     </div>
   </div>
+
 </div>
 
 <script type="module">
@@ -91,6 +94,7 @@
     const snap = await getDoc(doc(db, "effectif", "joueurs"));
     const data = snap.exists() ? snap.data() : {};
 
+    // Afficher/cacher bouton save et terrain selon admin
     document.querySelector('.btn-save').style.display = isAdmin ? 'inline-block' : 'none';
     document.querySelectorAll('.slot-name').forEach(el => {
       el.contentEditable = isAdmin ? 'true' : 'false';
@@ -120,7 +124,6 @@
         </tr>`;
       }
     }
-
     const snapT = await getDoc(doc(db, "effectif", "terrain"));
     const dataT = snapT.exists() ? snapT.data() : {};
     ['ag','ac','ad','mg','mc','md','dg','dcg','dcd','dd','gk'].forEach(p => {
