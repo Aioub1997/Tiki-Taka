@@ -6,116 +6,103 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 <style>
-  .terrain {
-    background: linear-gradient(to bottom,
-      #1a6b35 0%, #1e7a3d 8%, #1a6b35 16%, #1e7a3d 24%,
-      #1a6b35 32%, #1e7a3d 40%, #1a6b35 48%, #1e7a3d 56%,
-      #1a6b35 64%, #1e7a3d 72%, #1a6b35 80%, #1e7a3d 88%, #1a6b35 100%);
-    padding: 30px 24px 36px;
-    position: relative;
-    border-radius: 0 0 12px 12px;
-  }
-  .terrain::before {
-    content: '';
-    position: absolute;
-    top: 50%; left: 10%; right: 10%;
-    height: 2px;
-    background: rgba(255,255,255,0.25);
-    transform: translateY(-50%);
-  }
-  .terrain::after {
-    content: '';
-    position: absolute;
-    top: 50%; left: 50%;
-    width: 80px; height: 80px;
-    border: 2px solid rgba(255,255,255,0.25);
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-  }
-  .terrain-header {
-    background: #141414;
-    color: #e8c840;
-    padding: 14px 20px;
-    border-radius: 12px 12px 0 0;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .terrain-header span {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.4rem;
-    letter-spacing: .08em;
-  }
-  .terrain-badge {
-    background: #e8c840;
-    color: #141414;
-    font-size: 11px;
-    font-weight: 700;
-    padding: 3px 10px;
-    border-radius: 20px;
-    letter-spacing: .06em;
-  }
-  .tactic-label {
-    text-align: center;
-    font-size: 10px;
-    color: rgba(255,255,255,0.4);
-    letter-spacing: .12em;
-    text-transform: uppercase;
-    margin-bottom: 10px;
-  }
-  .row {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    margin: 14px 0;
-  }
-  .slot { text-align: center; cursor: pointer; }
-  .slot-circle {
-    width: 62px; height: 62px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.12);
-    border: 2px solid rgba(255,255,255,0.6);
-    display: flex; align-items: center; justify-content: center;
-    margin: 0 auto 6px;
-    font-size: 0;
-    transition: .2s;
-    position: relative;
-  }
-  .slot-circle::after {
-    content: '';
-    width: 20px; height: 20px;
-    background: white;
-    border-radius: 50%;
-    opacity: 0.85;
-  }
-  .slot:hover .slot-circle {
-    background: rgba(255,255,255,0.28);
-    transform: scale(1.08);
-  }
-  .slot-name {
-    font-size: 11px;
-    color: white;
-    font-weight: 600;
-    text-shadow: 0 1px 4px rgba(0,0,0,.7);
-    min-height: 15px;
-    cursor: text;
-    max-width: 70px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  .slot-name:focus {
-    outline: 1px dashed rgba(255,255,255,.8);
-    border-radius: 3px;
-    background: rgba(0,0,0,.25);
-    padding: 0 3px;
-    white-space: normal;
-  }
-  /* Couleurs par ligne */
-  .row-att .slot-circle { border-color: #e8c840; background: rgba(232,200,64,0.15); }
-  .row-mid .slot-circle { border-color: #60aaff; background: rgba(96,170,255,0.15); }
-  .row-def .slot-circle { border-color: #ff7f50; background: rgba(255,127,80,0.15); }
-  .row-gk  .slot-circle { border-color: #a0ff80; background: rgba(160,255,128,0.15); }
+.page-layout { display: flex; gap: 32px; max-width: 1400px; margin: 30px auto; padding: 0 24px; align-items: flex-start; }
+.left-panel { flex: 1.2; min-width: 0; }
+.right-panel { width: 520px; flex-shrink: 0; }
+
+/* TERRAIN FIFA */
+.terrain-wrap { border-radius: 12px; overflow: hidden; border: 3px solid #1a5c2a; box-shadow: 0 8px 32px rgba(0,0,0,.3); }
+.terrain-header { background: #141414; color: #e8c840; padding: 14px 20px; display: flex; align-items: center; justify-content: space-between; }
+.terrain-header span { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; letter-spacing: .08em; }
+.terrain-badge { background: #e8c840; color: #141414; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; }
+
+.terrain {
+  width: 100%;
+  min-height: 560px;
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      rgba(255,255,255,0.04) 0px,
+      rgba(255,255,255,0.04) 40px,
+      transparent 40px,
+      transparent 80px
+    ),
+    linear-gradient(to bottom, #1a6b35, #22834a);
+  padding: 20px 16px 24px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Lignes de terrain */
+.terrain::before {
+  content: '';
+  position: absolute;
+  top: 50%; left: 8%; right: 8%;
+  height: 2px;
+  background: rgba(255,255,255,0.2);
+}
+.terrain::after {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 90px; height: 90px;
+  border: 2px solid rgba(255,255,255,0.2);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+.goal-top, .goal-bottom {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px; height: 14px;
+  border: 2px solid rgba(255,255,255,0.35);
+  background: rgba(255,255,255,0.07);
+}
+.goal-top { top: 0; border-top: none; border-radius: 0 0 6px 6px; }
+.goal-bottom { bottom: 0; border-bottom: none; border-radius: 6px 6px 0 0; }
+
+.tactic-label { text-align: center; font-size: 10px; color: rgba(255,255,255,0.4); letter-spacing: .12em; text-transform: uppercase; margin: 4px 0; }
+.terrain-rows { display: flex; flex-direction: column; justify-content: space-between; height: 100%; gap: 8px; }
+.row { display: flex; justify-content: space-around; align-items: center; }
+
+.slot { text-align: center; cursor: pointer; }
+.slot-circle {
+  width: 68px; height: 68px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 6px;
+  transition: .2s;
+  font-size: 22px;
+  font-weight: 700;
+  color: white;
+  text-shadow: 0 1px 3px rgba(0,0,0,.5);
+  border: 3px solid rgba(255,255,255,0.7);
+  background: rgba(0,0,0,0.3);
+  backdrop-filter: blur(2px);
+}
+.slot:hover .slot-circle { transform: scale(1.1); background: rgba(0,0,0,0.5); }
+.slot-name {
+  font-size: 11px; color: white; font-weight: 600;
+  text-shadow: 0 1px 4px rgba(0,0,0,.8);
+  min-height: 15px; cursor: text;
+  max-width: 72px; margin: 0 auto;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  display: block;
+}
+.slot-name:focus {
+  outline: 1px dashed rgba(255,255,255,.8);
+  border-radius: 3px; background: rgba(0,0,0,.3);
+  padding: 0 3px; white-space: normal;
+}
+
+/* Couleurs par ligne */
+.row-att .slot-circle { border-color: #e8c840; background: rgba(232,200,64,0.25); }
+.row-att .slot-circle { color: #e8c840; }
+.row-mid .slot-circle { border-color: #60aaff; background: rgba(96,170,255,0.2); color: #60aaff; }
+.row-def .slot-circle { border-color: #ff8c42; background: rgba(255,140,66,0.2); color: #ff8c42; }
+.row-gk  .slot-circle { border-color: #a0ff80; background: rgba(160,255,128,0.2); color: #a0ff80; }
 </style>
 </head>
 <body>
@@ -138,15 +125,186 @@
         <thead><tr>
           <th>#</th><th>Nom</th><th>Prénom</th><th>Poste</th>
         </tr></thead>
-        <tbody id="tbody"><tr><td colspan="4" style="text-align:center;padding:20px;color:#888;">Chargement...</td></tr></tbody>
+        <tbody id="tbody">
+          <tr><td colspan="4" style="text-align:center;padding:20px;color:#888;">Chargement...</td></tr>
+        </tbody>
       </table>
     </div>
     <button class="btn-save" onclick="sauvegarder()">✔ Sauvegarder</button>
   </div>
 
   <div class="right-panel">
-    <div class="terrain-header">
-      <span>Tactique 4-3-3</span>
-      <span class="terrain-badge">U19</span>
+    <div class="terrain-wrap">
+      <div class="terrain-header">
+        <span>Tactique 4-3-3</span>
+        <span class="terrain-badge">U19</span>
+      </div>
+      <div class="terrain">
+        <div class="goal-top"></div>
+        <div class="goal-bottom"></div>
+
+        <div class="tactic-label">↑ But adverse</div>
+
+        <div class="terrain-rows">
+          <div class="row row-att">
+            <div class="slot">
+              <div class="slot-circle">AG</div>
+              <div class="slot-name" contenteditable="true" data-pos="ag" onblur="saveSlot(this)">AG</div>
+            </div>
+            <div class="slot">
+              <div class="slot-circle">AC</div>
+              <div class="slot-name" contenteditable="true" data-pos="ac" onblur="saveSlot(this)">AC</div>
+            </div>
+            <div class="slot">
+              <div class="slot-circle">AD</div>
+              <div class="slot-name" contenteditable="true" data-pos="ad" onblur="saveSlot(this)">AD</div>
+            </div>
+          </div>
+
+          <div class="row row-mid">
+            <div class="slot">
+              <div class="slot-circle">MG</div>
+              <div class="slot-name" contenteditable="true" data-pos="mg" onblur="saveSlot(this)">MG</div>
+            </div>
+            <div class="slot">
+              <div class="slot-circle">MC</div>
+              <div class="slot-name" contenteditable="true" data-pos="mc" onblur="saveSlot(this)">MC</div>
+            </div>
+            <div class="slot">
+              <div class="slot-circle">MD</div>
+              <div class="slot-name" contenteditable="true" data-pos="md" onblur="saveSlot(this)">MD</div>
+            </div>
+          </div>
+
+          <div class="row row-def">
+            <div class="slot">
+              <div class="slot-circle">DG</div>
+              <div class="slot-name" contenteditable="true" data-pos="dg" onblur="saveSlot(this)">DG</div>
+            </div>
+            <div class="slot">
+              <div class="slot-circle">DCG</div>
+              <div class="slot-name" contenteditable="true" data-pos="dcg" onblur="saveSlot(this)">DCG</div>
+            </div>
+            <div class="slot">
+              <div class="slot-circle">DCD</div>
+              <div class="slot-name" contenteditable="true" data-pos="dcd" onblur="saveSlot(this)">DCD</div>
+            </div>
+            <div class="slot">
+              <div class="slot-circle">DD</div>
+              <div class="slot-name" contenteditable="true" data-pos="dd" onblur="saveSlot(this)">DD</div>
+            </div>
+          </div>
+
+          <div class="row row-gk">
+            <div class="slot">
+              <div class="slot-circle">GK</div>
+              <div class="slot-name" contenteditable="true" data-pos="gk" onblur="saveSlot(this)">GK</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tactic-label">↓ Notre but</div>
+      </div>
     </div>
-    <div class="
+  </div>
+
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBtHgQSmZY76kMrZQhClrRo9NuuMgHLbKE",
+    authDomain: "racing-white-woluwe.firebaseapp.com",
+    projectId: "racing-white-woluwe",
+    storageBucket: "racing-white-woluwe.firebasestorage.app",
+    messagingSenderId: "443553313021",
+    appId: "1:443553313021:web:058e27950c829566624e94"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+  const nb = 23;
+  const ADMIN = "mekhalfaioub@gmail.com";
+
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) { window.location.href = "login.html"; return; }
+    await charger(user.email === ADMIN);
+  });
+
+  async function charger(isAdmin) {
+    const tbody = document.getElementById('tbody');
+    tbody.innerHTML = '';
+    const snap = await getDoc(doc(db, "effectif", "joueurs"));
+    const data = snap.exists() ? snap.data() : {};
+
+    document.querySelector('.btn-save').style.display = isAdmin ? 'inline-block' : 'none';
+    document.querySelectorAll('.slot-name').forEach(el => {
+      el.contentEditable = isAdmin ? 'true' : 'false';
+    });
+
+    for (let i = 1; i <= nb; i++) {
+      const nom = data['nom'+i] || '';
+      const prenom = data['prenom'+i] || '';
+      const poste = data['poste'+i] || '';
+      const cls = nom.toLowerCase().includes('capitaine') ? 'cle' : '';
+      if (isAdmin) {
+        tbody.innerHTML += `<tr class="${cls}">
+          <td>${i}</td>
+          <td><input type="text" id="nom${i}" value="${nom}" placeholder="Nom"></td>
+          <td><input type="text" id="prenom${i}" value="${prenom}" placeholder="Prénom"></td>
+          <td><input type="text" id="poste${i}" value="${poste}" placeholder="Poste"></td>
+        </tr>`;
+      } else {
+        tbody.innerHTML += `<tr class="${cls}">
+          <td>${i}</td>
+          <td>${nom || '—'}</td>
+          <td>${prenom || '—'}</td>
+          <td>${poste || '—'}</td>
+        </tr>`;
+      }
+    }
+
+    // Charger noms terrain
+    const snapT = await getDoc(doc(db, "effectif", "terrain"));
+    const dataT = snapT.exists() ? snapT.data() : {};
+    ['ag','ac','ad','mg','mc','md','dg','dcg','dcd','dd','gk'].forEach(p => {
+      const el = document.querySelector('[data-pos="'+p+'"]');
+      const circle = el ? el.previousElementSibling : null;
+      if (dataT[p] && el) {
+        el.textContent = dataT[p];
+        if (circle) circle.textContent = dataT[p].split(' ')[0].slice(0,3).toUpperCase();
+      }
+    });
+  }
+
+  window.sauvegarder = async function() {
+    const data = {};
+    for (let i = 1; i <= nb; i++) {
+      data['nom'+i] = document.getElementById('nom'+i)?.value || '';
+      data['prenom'+i] = document.getElementById('prenom'+i)?.value || '';
+      data['poste'+i] = document.getElementById('poste'+i)?.value || '';
+    }
+    await setDoc(doc(db, "effectif", "joueurs"), data);
+    const b = document.querySelector('.btn-save');
+    b.textContent = '✔ Sauvegardé !'; b.style.background = '#3a9e6f';
+    setTimeout(() => { b.textContent = '✔ Sauvegarder'; b.style.background = '#141414'; }, 2000);
+  };
+
+  window.saveSlot = async function(el) {
+    if (auth.currentUser?.email !== ADMIN) return;
+    const snapT = await getDoc(doc(db, "effectif", "terrain"));
+    const dataT = snapT.exists() ? snapT.data() : {};
+    const val = el.textContent.trim();
+    dataT[el.dataset.pos] = val;
+    // Mettre à jour aussi le cercle
+    const circle = el.previousElementSibling;
+    if (circle) circle.textContent = val.split(' ')[0].slice(0,3).toUpperCase();
+    await setDoc(doc(db, "effectif", "terrain"), dataT);
+  };
+</script>
+</body>
+</html>
