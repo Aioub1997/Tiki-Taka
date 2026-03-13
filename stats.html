@@ -57,7 +57,7 @@
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
   import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-  import { getFirestore, doc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyBtHgQSmZY76kMrZQhClrRo9NuuMgHLbKE",
@@ -79,11 +79,9 @@
   onAuthStateChanged(auth, async (user) => {
     if (!user) { window.location.href = "login.html"; return; }
 
-    // Écouter matchs en temps réel
-    onSnapshot(doc(db, "matchs", "liste"), (snap) => {
-      const matchs = snap.exists() ? (snap.data().matchs || []) : [];
-      calculerStats(matchs);
-    });
+    const snap = await getDoc(doc(db, "matchs", "liste"));
+    const matchs = snap.exists() ? (snap.data().matchs || []) : [];
+    calculerStats(matchs);
   });
 
   function calculerStats(matchs) {
