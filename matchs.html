@@ -16,9 +16,8 @@
   .match-meta span { background: #f0ede4; padding: 3px 10px; border-radius: 20px; }
   .buteurs-list { font-size: 13px; color: #555; margin-top: 8px; }
   .btn-edit { background: #141414; color: #e8c840; border: none; padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; }
-  .btn-edit:hover { background: #2a2a2a; }
   .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.5); display: flex; align-items: center; justify-content: center; z-index: 100; overflow-y: auto; padding: 20px; }
-  .modal { background: white; border-radius: 12px; padding: 28px; width: 100%; max-width: 480px; }
+  .modal { background: white; border-radius: 12px; padding: 28px; width: 100%; max-width: 520px; max-height: 90vh; overflow-y: auto; }
   .modal h3 { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; margin-bottom: 16px; }
   .modal label { font-size: 13px; font-weight: 600; display: block; margin-bottom: 4px; margin-top: 12px; }
   .modal input, .modal select { width: 100%; padding: 8px 10px; border: 1px solid #ddd; border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 14px; }
@@ -28,9 +27,17 @@
   .add-match-btn { background: #141414; color: #e8c840; border: none; padding: 10px 20px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; margin-bottom: 16px; }
   .racing-row td { font-weight: 700; background: #fffbe8 !important; }
   .classement-edit-btn { background: #f0ede4; color: #555; border: none; padding: 5px 12px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; margin-left: 10px; }
-  .auto-badge { background: #d4f5e4; color: #1f7a4f; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; margin-left: 8px; letter-spacing: .05em; }
+  .auto-badge { background: #d4f5e4; color: #1f7a4f; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; margin-left: 8px; }
   .classement-header { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; }
   td input.cls-input { width: 50px; padding: 3px 6px; border: 1px solid #ddd; border-radius: 4px; font-size: 13px; text-align: center; }
+  /* Buteurs/passeurs dans modal */
+  .scorers-section { margin-top: 16px; border-top: 1px solid #eee; padding-top: 14px; }
+  .scorers-section h4 { font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; margin-bottom: 10px; letter-spacing: .05em; }
+  .scorer-row { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
+  .scorer-row select { flex: 1; }
+  .scorer-row input[type=number] { width: 70px; flex-shrink: 0; }
+  .btn-add-scorer { background: #f0ede4; color: #555; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; margin-top: 4px; }
+  .btn-remove { background: #fde8e6; color: #a33426; border: none; width: 28px; height: 28px; border-radius: 50%; font-size: 14px; cursor: pointer; flex-shrink: 0; }
 </style>
 </head>
 <body>
@@ -57,9 +64,9 @@
     <span class="auto-badge">⚡ AUTO Racing</span>
   </div>
   <div class="classement-header">
-    <span style="font-size:13px;color:#888;">Le classement de Racing se met à jour automatiquement selon vos résultats.</span>
+    <span style="font-size:13px;color:#888;">Le classement de Racing se met à jour automatiquement.</span>
     <button class="classement-edit-btn" id="btnEditCls" style="display:none" onclick="toggleEditClassement()">✏ Modifier autres équipes</button>
-    <button class="classement-edit-btn" id="btnSaveCls" style="display:none" onclick="sauverClassement()">💾 Sauvegarder classement</button>
+    <button class="classement-edit-btn" id="btnSaveCls" style="display:none" onclick="sauverClassement()">💾 Sauvegarder</button>
   </div>
   <div class="table-wrap">
     <table id="tableClassement">
@@ -67,7 +74,6 @@
       <tbody id="tbodyClassement"><tr><td colspan="10" style="text-align:center;padding:20px;color:#888;">Chargement...</td></tr></tbody>
     </table>
   </div>
-
 </main>
 
 <!-- Modal match -->
@@ -84,8 +90,21 @@
     <select id="mLieu"><option value="Domicile">Domicile</option><option value="Extérieur">Extérieur</option></select>
     <label>Score Racing - Adversaire (ex: 3-1) — vide si match à venir</label>
     <input type="text" id="mScore" placeholder="ex: 3-1">
-    <label>Buteurs (séparés par virgule)</label>
-    <input type="text" id="mButeurs" placeholder="ex: Dupont, Martin x2">
+
+    <!-- BUTEURS -->
+    <div class="scorers-section">
+      <h4>⚽ Buteurs</h4>
+      <div id="buteursList"></div>
+      <button class="btn-add-scorer" onclick="ajouterButeur()">+ Ajouter buteur</button>
+    </div>
+
+    <!-- PASSEURS -->
+    <div class="scorers-section">
+      <h4>🎯 Passes décisives</h4>
+      <div id="passeursList"></div>
+      <button class="btn-add-scorer" onclick="ajouterPasseur()">+ Ajouter passeur</button>
+    </div>
+
     <div class="modal-btns">
       <button class="btn-cancel" onclick="fermerModal()">Annuler</button>
       <button class="btn-edit" onclick="sauverMatch()">Sauvegarder</button>
@@ -116,9 +135,9 @@
   let isAdmin = false;
   let editIndex = -1;
   let allMatchs = [];
+  let joueursList = [];
   let editingClassement = false;
 
-  // Classement de base des autres équipes (modifiable par admin)
   const defaultClassement = [
     { nom: "R. Leopold F.C. B",     m:13, v:13, n:0, d:0, bp:56, bc:9  },
     { nom: "Racing White Woluwe B", m:0,  v:0,  n:0, d:0, bp:0,  bc:0, isRacing: true },
@@ -129,25 +148,28 @@
     { nom: "R.C.S. Nivellois",      m:11, v:1,  n:3, d:7, bp:18, bc:33 },
     { nom: "R.A.S. Jodoigne B",     m:12, v:1,  n:1, d:10,bp:23, bc:50 },
   ];
-
   let classementData = [];
 
   onAuthStateChanged(auth, async (user) => {
     if (!user) { window.location.href = "login.html"; return; }
     isAdmin = user.email === ADMIN;
-    if (isAdmin) {
-      document.getElementById('btnEditCls').style.display = 'inline-block';
+    if (isAdmin) document.getElementById('btnEditCls').style.display = 'inline-block';
+
+    // Charger joueurs pour le modal
+    const snapJ = await getDoc(doc(db, "effectif", "joueurs"));
+    const dataJ = snapJ.exists() ? snapJ.data() : {};
+    joueursList = [];
+    for (let i = 1; i <= 23; i++) {
+      const nom = dataJ['nom'+i] || '';
+      const prenom = dataJ['prenom'+i] || '';
+      if (nom.trim()) joueursList.push({ id: i, nom, prenom, display: (prenom+' '+nom).trim() });
     }
 
-    // Charger classement sauvegardé
+    // Charger classement
     const snapCls = await getDoc(doc(db, "classement", "data"));
-    if (snapCls.exists()) {
-      classementData = snapCls.data().equipes || defaultClassement;
-    } else {
-      classementData = JSON.parse(JSON.stringify(defaultClassement));
-    }
+    classementData = snapCls.exists() ? (snapCls.data().equipes || defaultClassement) : JSON.parse(JSON.stringify(defaultClassement));
 
-    // Écouter matchs en temps réel
+    // Écouter matchs
     onSnapshot(doc(db, "matchs", "liste"), (snap) => {
       allMatchs = snap.exists() ? (snap.data().matchs || []) : [];
       recalculerRacing();
@@ -155,66 +177,48 @@
     });
   });
 
-  // ── RECALCUL AUTO RACING ──
+  // ── RECALCUL RACING ──
   function recalculerRacing() {
     const racing = classementData.find(e => e.isRacing);
     if (!racing) return;
-
-    let m=0, v=0, n=0, d=0, bp=0, bc=0;
+    let m=0,v=0,n=0,d=0,bp=0,bc=0;
     allMatchs.forEach(match => {
       if (!match.score) return;
       const parts = match.score.split('-').map(s => parseInt(s.trim()));
       if (parts.length !== 2 || isNaN(parts[0]) || isNaN(parts[1])) return;
-      m++;
-      bp += parts[0]; bc += parts[1];
+      m++; bp += parts[0]; bc += parts[1];
       if (parts[0] > parts[1]) v++;
       else if (parts[0] === parts[1]) n++;
       else d++;
     });
-    racing.m = m; racing.v = v; racing.n = n; racing.d = d;
-    racing.bp = bp; racing.bc = bc;
+    racing.m=m; racing.v=v; racing.n=n; racing.d=d; racing.bp=bp; racing.bc=bc;
     renderClassement();
   }
 
-  // ── CLASSEMENT ──
   function renderClassement() {
-    // Calculer pts et trier
-    const avec_pts = classementData.map(e => ({
-      ...e,
-      pts: e.v * 3 + e.n,
-      diff: e.bp - e.bc
-    }));
-    avec_pts.sort((a, b) => b.pts - a.pts || b.diff - a.diff || b.bp - a.bp);
-
+    const avec_pts = classementData.map(e => ({ ...e, pts: e.v*3+e.n, diff: e.bp-e.bc }));
+    avec_pts.sort((a,b) => b.pts-a.pts || b.diff-a.diff || b.bp-a.bp);
     const tbody = document.getElementById('tbodyClassement');
     tbody.innerHTML = '';
     avec_pts.forEach((e, i) => {
-      const isRacing = !!e.isRacing;
       const diff = e.diff >= 0 ? '+'+e.diff : e.diff;
-      let rowClass = isRacing ? 'racing-row' : (i < 2 ? 'top' : (i >= avec_pts.length - 2 ? 'bottom' : ''));
-
-      if (editingClassement && !isRacing) {
+      const rowClass = e.isRacing ? 'racing-row' : (i < 2 ? 'top' : (i >= avec_pts.length-2 ? 'bottom' : ''));
+      if (editingClassement && !e.isRacing) {
         tbody.innerHTML += `<tr class="${rowClass}">
-          <td>${i+1}</td>
-          <td>${e.nom}${isRacing ? ' ⚡' : ''}</td>
+          <td>${i+1}</td><td>${e.nom}</td>
           <td><input class="cls-input" data-team="${e.nom}" data-field="m" value="${e.m}"></td>
           <td><input class="cls-input" data-team="${e.nom}" data-field="v" value="${e.v}"></td>
           <td><input class="cls-input" data-team="${e.nom}" data-field="n" value="${e.n}"></td>
           <td><input class="cls-input" data-team="${e.nom}" data-field="d" value="${e.d}"></td>
           <td><input class="cls-input" data-team="${e.nom}" data-field="bp" value="${e.bp}"></td>
           <td><input class="cls-input" data-team="${e.nom}" data-field="bc" value="${e.bc}"></td>
-          <td>${diff}</td>
-          <td>${e.pts}</td>
-        </tr>`;
+          <td>${diff}</td><td>${e.pts}</td></tr>`;
       } else {
         tbody.innerHTML += `<tr class="${rowClass}">
-          <td>${i+1}</td>
-          <td>${e.nom}${isRacing ? ' ⚡' : ''}</td>
+          <td>${i+1}</td><td>${e.nom}${e.isRacing?' ⚡':''}</td>
           <td>${e.m}</td><td>${e.v}</td><td>${e.n}</td><td>${e.d}</td>
           <td>${e.bp}</td><td>${e.bc}</td>
-          <td>${diff}</td>
-          <td><strong>${e.pts}</strong></td>
-        </tr>`;
+          <td>${diff}</td><td><strong>${e.pts}</strong></td></tr>`;
       }
     });
   }
@@ -227,12 +231,9 @@
   };
 
   window.sauverClassement = async function() {
-    // Récupérer les valeurs des inputs
     document.querySelectorAll('.cls-input').forEach(input => {
-      const teamNom = input.dataset.team;
-      const field = input.dataset.field;
-      const equipe = classementData.find(e => e.nom === teamNom);
-      if (equipe) equipe[field] = parseInt(input.value) || 0;
+      const equipe = classementData.find(e => e.nom === input.dataset.team);
+      if (equipe) equipe[input.dataset.field] = parseInt(input.value) || 0;
     });
     await setDoc(doc(db, "classement", "data"), { equipes: classementData });
     editingClassement = false;
@@ -244,18 +245,13 @@
   // ── MATCHS ──
   function scoreClass(score) {
     if (!score) return '';
-    const parts = score.split('-');
-    if (parts.length !== 2) return '';
-    const [a, b] = parts.map(Number);
-    if (a > b) return 'win';
-    if (a < b) return 'loss';
-    return 'draw';
+    const [a,b] = score.split('-').map(Number);
+    if (a > b) return 'win'; if (a < b) return 'loss'; return 'draw';
   }
 
   function renderMatchs() {
     const avenir = allMatchs.filter(m => !m.score);
     const resultats = allMatchs.filter(m => m.score).reverse();
-
     const divAvenir = document.getElementById('matchsAvenir');
     const divResultats = document.getElementById('matchsResultats');
 
@@ -264,25 +260,63 @@
     avenir.forEach(m => { divAvenir.innerHTML += matchCard(m, allMatchs.indexOf(m)); });
 
     divResultats.innerHTML = '';
-    if (!resultats.length) divResultats.innerHTML = '<p style="color:#888;font-size:14px;">Aucun résultat enregistré.</p>';
+    if (!resultats.length) divResultats.innerHTML = '<p style="color:#888;font-size:14px;">Aucun résultat.</p>';
     resultats.forEach(m => { divResultats.innerHTML += matchCard(m, allMatchs.indexOf(m)); });
   }
 
   function matchCard(m, idx) {
-    const sc = m.score
-      ? `<div class="match-score ${scoreClass(m.score)}">${m.score}</div>`
-      : `<div class="match-score">vs</div>`;
-    const buteurs = m.buteurs ? `<div class="buteurs-list">⚽ ${m.buteurs}</div>` : '';
+    const sc = m.score ? `<div class="match-score ${scoreClass(m.score)}">${m.score}</div>` : `<div class="match-score">vs</div>`;
     const editBtn = isAdmin ? `<button class="btn-edit" onclick="ouvrirModal(${idx})">✏ Modifier</button>` : '';
+
+    // Afficher buteurs/passeurs
+    let details = '';
+    if (m.buteurs && m.buteurs.length) {
+      const bStr = m.buteurs.map(b => `${b.nom}${b.nb > 1 ? ' x'+b.nb : ''}`).join(', ');
+      details += `<div class="buteurs-list">⚽ ${bStr}</div>`;
+    }
+    if (m.passeurs && m.passeurs.length) {
+      const pStr = m.passeurs.map(p => `${p.nom}${p.nb > 1 ? ' x'+p.nb : ''}`).join(', ');
+      details += `<div class="buteurs-list">🎯 ${pStr}</div>`;
+    }
+
     return `<div class="match-card">
       <div>
         <div class="match-teams">Racing White Woluwe ${sc} ${m.adversaire}</div>
         <div class="match-meta"><span>📅 ${m.date}</span><span>🕐 ${m.heure}</span><span>📍 ${m.lieu}</span></div>
-        ${buteurs}
+        ${details}
       </div>
       ${editBtn}
     </div>`;
   }
+
+  // ── MODAL ──
+  function joueurOptions(selectedNom='') {
+    let opts = '<option value="">-- Joueur --</option>';
+    joueursList.forEach(j => {
+      opts += `<option value="${j.display}" ${j.display===selectedNom?'selected':''}>${j.display}</option>`;
+    });
+    return opts;
+  }
+
+  window.ajouterButeur = function(nom='', nb=1) {
+    const div = document.createElement('div');
+    div.className = 'scorer-row';
+    div.innerHTML = `
+      <select>${joueurOptions(nom)}</select>
+      <input type="number" value="${nb}" min="1" max="10" placeholder="Buts">
+      <button class="btn-remove" onclick="this.parentElement.remove()">×</button>`;
+    document.getElementById('buteursList').appendChild(div);
+  };
+
+  window.ajouterPasseur = function(nom='', nb=1) {
+    const div = document.createElement('div');
+    div.className = 'scorer-row';
+    div.innerHTML = `
+      <select>${joueurOptions(nom)}</select>
+      <input type="number" value="${nb}" min="1" max="10" placeholder="Passes">
+      <button class="btn-remove" onclick="this.parentElement.remove()">×</button>`;
+    document.getElementById('passeursList').appendChild(div);
+  };
 
   window.ouvrirModal = function(idx) {
     editIndex = idx;
@@ -293,7 +327,15 @@
     document.getElementById('mHeure').value = m.heure || '';
     document.getElementById('mLieu').value = m.lieu || 'Domicile';
     document.getElementById('mScore').value = m.score || '';
-    document.getElementById('mButeurs').value = m.buteurs || '';
+
+    // Remplir buteurs
+    document.getElementById('buteursList').innerHTML = '';
+    if (m.buteurs) m.buteurs.forEach(b => ajouterButeur(b.nom, b.nb));
+
+    // Remplir passeurs
+    document.getElementById('passeursList').innerHTML = '';
+    if (m.passeurs) m.passeurs.forEach(p => ajouterPasseur(p.nom, p.nb));
+
     document.getElementById('modalOverlay').style.display = 'flex';
   };
 
@@ -302,14 +344,31 @@
   };
 
   window.sauverMatch = async function() {
+    // Récupérer buteurs
+    const buteurs = [];
+    document.querySelectorAll('#buteursList .scorer-row').forEach(row => {
+      const nom = row.querySelector('select').value;
+      const nb = parseInt(row.querySelector('input[type=number]').value) || 1;
+      if (nom) buteurs.push({ nom, nb });
+    });
+
+    // Récupérer passeurs
+    const passeurs = [];
+    document.querySelectorAll('#passeursList .scorer-row').forEach(row => {
+      const nom = row.querySelector('select').value;
+      const nb = parseInt(row.querySelector('input[type=number]').value) || 1;
+      if (nom) passeurs.push({ nom, nb });
+    });
+
     const m = {
       adversaire: document.getElementById('mAdversaire').value,
       date: document.getElementById('mDate').value,
       heure: document.getElementById('mHeure').value,
       lieu: document.getElementById('mLieu').value,
       score: document.getElementById('mScore').value,
-      buteurs: document.getElementById('mButeurs').value,
+      buteurs, passeurs
     };
+
     if (editIndex >= 0) allMatchs[editIndex] = m;
     else allMatchs.push(m);
     await setDoc(doc(db, "matchs", "liste"), { matchs: allMatchs });

@@ -13,13 +13,18 @@
   .chart-card h3 { font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; letter-spacing: .05em; margin-bottom: 16px; }
   .top-scorer { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid #ebe9e4; }
   .top-scorer:last-child { border-bottom: none; }
-  .scorer-rank { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; color: #e8c840; width: 24px; }
+  .scorer-rank { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; color: #e8c840; width: 28px; text-align: center; }
+  .scorer-rank.gold   { color: #f5c400; }
+  .scorer-rank.silver { color: #aaa; }
+  .scorer-rank.bronze { color: #cd7f32; }
   .scorer-name { flex: 1; font-weight: 500; font-size: 14px; }
-  .scorer-val { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; color: #141414; }
-  .scorer-label { font-size: 11px; color: #888; }
+  .scorer-val { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; color: #141414; text-align: right; }
+  .scorer-label { font-size: 11px; color: #888; text-align: right; }
   .page-header { max-width: 1100px; margin: 30px auto 0; padding: 0 20px; }
   .page-header h2 { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; letter-spacing: .05em; }
   .page-header p { font-size: 13px; color: #888; }
+  .auto-badge { background: #d4f5e4; color: #1f7a4f; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; margin-left: 8px; }
+  .empty-msg { color: #aaa; font-size: 13px; padding: 10px 0; }
 </style>
 </head>
 <body>
@@ -32,9 +37,10 @@
   <a href="stats.html" class="active">Statistiques</a> |
   <a href="login.html">Connexion</a>
 </nav>
+
 <div class="page-header">
-  <h2>Statistiques U19</h2>
-  <p>Buts et passes décisives de la saison</p>
+  <h2>Statistiques U19 <span class="auto-badge">⚡ AUTO</span></h2>
+  <p>Mis à jour automatiquement depuis les résultats des matchs</p>
 </div>
 
 <div class="stats-grid">
@@ -76,69 +82,94 @@
   const auth = getAuth(app);
   const db = getFirestore(app);
 
+  let chartButs = null;
+  let chartPasses = null;
+
   onAuthStateChanged(auth, async (user) => {
     if (!user) { window.location.href = "login.html"; return; }
 
-    const snap = await getDoc(doc(db, "effectif", "joueurs"));
-    const data = snap.exists() ? snap.data() : {};
+    // Charger les matchs
+    const snapM = await getDoc(doc(db, "matchs", "liste"));
+    const matchs = snapM.exists() ? (snapM.data().matchs || []) : [];
 
-    const joueurs = [];
-    for (let i = 1; i <= 23; i++) {
-      const nom = data['nom'+i] || '';
-      if (!nom.trim()) continue;
-      joueurs.push({
-        nom,
-        buts: parseInt(data['buts'+i]) || 0,
-        passes: parseInt(data['passes'+i]) || 0
+    // Calculer buts et passes depuis les matchs
+    const butsMap = {};
+    const passesMap = {};
+
+    matchs.forEach(m => {
+      if (!m.score) return;
+      if (m.buteurs) m.buteurs.forEach(b => {
+        if (!b.nom) return;
+        butsMap[b.nom] = (butsMap[b.nom] || 0) + (b.nb || 1);
       });
+      if (m.passeurs) m.passeurs.forEach(p => {
+        if (!p.nom) return;
+        passesMap[p.nom] = (passesMap[p.nom] || 0) + (p.nb || 1);
+      });
+    });
+
+    const sorted_buts = Object.entries(butsMap).map(([nom,v])=>({nom,val:v})).sort((a,b)=>b.val-a.val).slice(0,8);
+    const sorted_passes = Object.entries(passesMap).map(([nom,v])=>({nom,val:v})).sort((a,b)=>b.val-a.val).slice(0,8);
+
+    // Graphique buts
+    if (chartButs) chartButs.destroy();
+    if (sorted_buts.length) {
+      chartButs = new Chart(document.getElementById('chartButs'), {
+        type: 'bar',
+        data: {
+          labels: sorted_buts.map(j => j.nom.split(' ')[0]),
+          datasets: [{ data: sorted_buts.map(j => j.val), backgroundColor: '#141414', borderRadius: 6 }]
+        },
+        options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
+      });
+    } else {
+      document.getElementById('chartButs').parentElement.innerHTML += '<p class="empty-msg">Aucun but enregistré dans les matchs.</p>';
     }
 
-    if (!joueurs.length) return;
-
-    const sorted_buts = [...joueurs].sort((a,b) => b.buts - a.buts).filter(j => j.buts > 0).slice(0, 8);
-    const sorted_passes = [...joueurs].sort((a,b) => b.passes - a.passes).filter(j => j.passes > 0).slice(0, 8);
-
-    // Chart buts
-    new Chart(document.getElementById('chartButs'), {
-      type: 'bar',
-      data: {
-        labels: sorted_buts.map(j => j.nom.split(' ')[0]),
-        datasets: [{ data: sorted_buts.map(j => j.buts), backgroundColor: '#141414', borderRadius: 6 }]
-      },
-      options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
-    });
-
-    // Chart passes
-    new Chart(document.getElementById('chartPasses'), {
-      type: 'bar',
-      data: {
-        labels: sorted_passes.map(j => j.nom.split(' ')[0]),
-        datasets: [{ data: sorted_passes.map(j => j.passes), backgroundColor: '#e8c840', borderRadius: 6 }]
-      },
-      options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
-    });
+    // Graphique passes
+    if (chartPasses) chartPasses.destroy();
+    if (sorted_passes.length) {
+      chartPasses = new Chart(document.getElementById('chartPasses'), {
+        type: 'bar',
+        data: {
+          labels: sorted_passes.map(j => j.nom.split(' ')[0]),
+          datasets: [{ data: sorted_passes.map(j => j.val), backgroundColor: '#e8c840', borderRadius: 6 }]
+        },
+        options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
+      });
+    } else {
+      document.getElementById('chartPasses').parentElement.innerHTML += '<p class="empty-msg">Aucune passe enregistrée dans les matchs.</p>';
+    }
 
     // Top buteurs
     const topB = document.getElementById('topButeurs');
-    sorted_buts.slice(0,5).forEach((j, i) => {
-      topB.innerHTML += `<div class="top-scorer">
-        <div class="scorer-rank">${i+1}</div>
-        <div class="scorer-name">${j.nom}</div>
-        <div><div class="scorer-val">${j.buts}</div><div class="scorer-label">buts</div></div>
-      </div>`;
-    });
-    if (!sorted_buts.length) topB.innerHTML = '<p style="color:#888;font-size:14px;">Aucun but enregistré.</p>';
+    if (!sorted_buts.length) {
+      topB.innerHTML = '<p class="empty-msg">Entrez les buteurs dans le calendrier pour les voir ici.</p>';
+    } else {
+      sorted_buts.slice(0,5).forEach((j, i) => {
+        const rankClass = i===0?'gold':i===1?'silver':i===2?'bronze':'';
+        topB.innerHTML += `<div class="top-scorer">
+          <div class="scorer-rank ${rankClass}">${i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1}</div>
+          <div class="scorer-name">${j.nom}</div>
+          <div><div class="scorer-val">${j.val}</div><div class="scorer-label">buts</div></div>
+        </div>`;
+      });
+    }
 
     // Top passeurs
     const topP = document.getElementById('topPasseurs');
-    sorted_passes.slice(0,5).forEach((j, i) => {
-      topP.innerHTML += `<div class="top-scorer">
-        <div class="scorer-rank">${i+1}</div>
-        <div class="scorer-name">${j.nom}</div>
-        <div><div class="scorer-val">${j.passes}</div><div class="scorer-label">passes</div></div>
-      </div>`;
-    });
-    if (!sorted_passes.length) topP.innerHTML = '<p style="color:#888;font-size:14px;">Aucune passe enregistrée.</p>';
+    if (!sorted_passes.length) {
+      topP.innerHTML = '<p class="empty-msg">Entrez les passeurs dans le calendrier pour les voir ici.</p>';
+    } else {
+      sorted_passes.slice(0,5).forEach((j, i) => {
+        const rankClass = i===0?'gold':i===1?'silver':i===2?'bronze':'';
+        topP.innerHTML += `<div class="top-scorer">
+          <div class="scorer-rank ${rankClass}">${i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1}</div>
+          <div class="scorer-name">${j.nom}</div>
+          <div><div class="scorer-val">${j.val}</div><div class="scorer-label">passes</div></div>
+        </div>`;
+      });
+    }
   });
 </script>
 </body>
