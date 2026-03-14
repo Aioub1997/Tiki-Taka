@@ -1,111 +1,244 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>Connexion - Racing White Woluwe</title>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Connexion - Racing White Woluwe</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/layout.css">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#141414">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Racing WW">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
+<style>
+  .login-wrap {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 40px 20px;
+    background:
+      radial-gradient(ellipse at 80% 50%, rgba(232,200,64,0.04) 0%, transparent 60%),
+      var(--black);
+  }
+  .login-box {
+    width: 100%; max-width: 420px;
+    background: var(--black2);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 40px 36px;
+  }
+  .login-logo {
+    width: 64px; height: 64px;
+    border-radius: 50%;
+    background: var(--yellow);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 20px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.5rem;
+    color: var(--black);
+  }
+  .login-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    letter-spacing: .05em;
+    text-align: center;
+    color: var(--white);
+    margin-bottom: 4px;
+  }
+  .login-sub {
+    font-size: 12px;
+    color: rgba(255,255,255,0.3);
+    text-align: center;
+    margin-bottom: 28px;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+  }
+  .form-group { margin-bottom: 14px; }
+  .form-group label {
+    font-size: 10px; font-weight: 700;
+    letter-spacing: .12em; text-transform: uppercase;
+    color: rgba(255,255,255,0.35);
+    display: block; margin-bottom: 6px;
+  }
+  .btn-login {
+    width: 100%;
+    background: var(--yellow);
+    color: var(--black);
+    border: none;
+    padding: 13px;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    margin-top: 6px;
+    transition: background .2s;
+  }
+  .btn-login:hover { background: var(--yellow2); }
+  .login-links {
+    margin-top: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+  }
+  .login-links a {
+    font-size: 12px;
+    color: rgba(255,255,255,0.35);
+    text-decoration: none;
+    cursor: pointer;
+    transition: color .2s;
+  }
+  .login-links a:hover { color: var(--yellow); }
+  .login-links a span { color: var(--yellow); }
+  .msg { font-size: 12px; padding: 10px 14px; border-radius: 8px; margin-bottom: 14px; display: none; }
+  .msg.error { background: rgba(163,52,38,0.2); color: #ff7c6e; display: block; }
+  .msg.success { background: rgba(31,122,79,0.2); color: #4ade80; display: block; }
+  .msg.warning { background: rgba(232,200,64,0.15); color: var(--yellow); display: block; }
+  .divider { border: none; border-top: 1px solid rgba(255,255,255,0.07); margin: 20px 0; }
+  .connected-box { text-align: center; }
+  .connected-box .welcome-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem;
+    color: var(--yellow);
+    margin: 10px 0 4px;
+  }
+  .connected-box p { font-size: 13px; color: rgba(255,255,255,0.4); margin-bottom: 20px; }
+  .connected-box .btn-go {
+    display: inline-block;
+    background: var(--yellow);
+    color: var(--black);
+    padding: 11px 28px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    margin: 4px;
+    transition: background .2s;
+  }
+  .connected-box .btn-go:hover { background: var(--yellow2); }
+  .connected-box .btn-logout {
+    display: block;
+    margin: 14px auto 0;
+    background: none;
+    border: 1px solid rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.35);
+    padding: 9px 20px;
+    border-radius: 8px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .connected-box .btn-logout:hover { border-color: #ff7c6e; color: #ff7c6e; }
+</style>
 </head>
 <body>
 
-<header><h1>Racing White Woluwe</h1></header>
-<nav>
-  <a href="joueurs.html">Effectif</a> |
-  <a href="matchs.html">Calendrier</a> |
-  <a href="convocations.html">Convocations</a> |
-  <a href="equipe.html">Équipe</a></a> |
-  <a href="login.html" class="active">Connexion</a>
-</nav>
+<button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+<div class="overlay-bg" id="overlayBg" onclick="closeSidebar()"></div>
 
-<main>
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo"><span>RW</span></div>
+  <div class="sidebar-club">Racing White<br>Woluwe U19</div>
+  <nav class="sidebar-nav">
+    <a href="index.html"><span class="nav-icon">🏠</span> Accueil</a>
+    <a href="joueurs.html"><span class="nav-icon">👥</span> Effectif</a>
+    <a href="matchs.html"><span class="nav-icon">📅</span> Calendrier</a>
+    <a href="convocations.html"><span class="nav-icon">✉️</span> Convocations</a>
+    <a href="equipe.html"><span class="nav-icon">⭐</span> Équipe</a>
+    <a href="login.html" class="active"><span class="nav-icon">🔐</span> Connexion</a>
+  </nav>
+</aside>
 
-  <!-- CONNEXION -->
-  <section id="section-login">
-    <h2>Connexion</h2>
-    <p id="msg-login" style="color:red;font-size:13px;margin-bottom:10px;"></p>
-    <form onsubmit="return false">
-      <label>Email :</label><br>
-      <input type="email" id="login-email" placeholder="tonemail@exemple.com"><br><br>
-      <label>Mot de passe :</label><br>
-      <input type="password" id="login-password" placeholder="Mot de passe"><br><br>
-      <button onclick="seConnecter()">Se connecter</button>
-    </form>
-    <br>
-    <p><a href="#" onclick="afficher('section-login','section-forgot')">Mot de passe oublié ?</a></p>
-    <p>Pas encore de compte ? <a href="#" onclick="afficher('section-login','section-register')">Créer un compte</a></p>
-  </section>
+<div class="main">
+  <div class="login-wrap">
+    <div class="login-box">
 
-  <!-- CRÉER UN COMPTE -->
-  <section id="section-register" style="display:none">
-    <h2>Créer un compte</h2>
-    <p id="msg-register" style="font-size:13px;margin-bottom:10px;"></p>
-    <form onsubmit="return false">
-      <label>Nom :</label><br>
-      <input type="text" id="reg-nom" placeholder="Ton nom de famille"><br><br>
-      <label>Prénom :</label><br>
-      <input type="text" id="reg-prenom" placeholder="Ton prénom"><br><br>
-      <label>Poste :</label><br>
-      <select id="reg-poste">
-        <option value="">-- Choisir un poste --</option>
-        <option>Gardien (GK)</option>
-        <option>Défenseur central (DC)</option>
-        <option>Défenseur gauche (DG)</option>
-        <option>Défenseur droit (DD)</option>
-        <option>Milieu central (MC)</option>
-        <option>Milieu gauche (MG)</option>
-        <option>Milieu droit (MD)</option>
-        <option>Attaquant central (AC)</option>
-        <option>Ailier gauche (AG)</option>
-        <option>Ailier droit (AD)</option>
-      </select><br><br>
-      <label>Email :</label><br>
-      <input type="email" id="reg-email" placeholder="tonemail@exemple.com"><br><br>
-      <label>Mot de passe :</label><br>
-      <input type="password" id="reg-password" placeholder="Choisir un mot de passe"><br><br>
-      <label>Confirmer le mot de passe :</label><br>
-      <input type="password" id="reg-password2" placeholder="Répéter le mot de passe"><br><br>
-      <button onclick="creerCompte()">Créer le compte</button>
-    </form>
-    <br>
-    <p>Déjà un compte ? <a href="#" onclick="afficher('section-register','section-login')">Se connecter</a></p>
-  </section>
+      <!-- CONNECTÉ -->
+      <div id="section-connected" style="display:none" class="connected-box">
+        <div class="login-logo">RW</div>
+        <div class="welcome-name" id="msg-welcome">Bienvenue !</div>
+        <p>Vous êtes connecté</p>
+        <a href="joueurs.html" class="btn-go">Effectif</a>
+        <a href="matchs.html" class="btn-go">Calendrier</a>
+        <button class="btn-logout" onclick="seDeconnecter()">Se déconnecter</button>
+      </div>
 
-  <!-- MOT DE PASSE OUBLIÉ -->
-  <section id="section-forgot" style="display:none">
-    <h2>Mot de passe oublié</h2>
-    <p id="msg-forgot" style="font-size:13px;margin-bottom:10px;"></p>
-    <p style="margin-bottom:16px;font-size:14px;color:#666;">Entrez votre email pour recevoir un lien de réinitialisation.</p>
-    <form onsubmit="return false">
-      <label>Email :</label><br>
-      <input type="email" id="forgot-email" placeholder="tonemail@exemple.com"><br><br>
-      <button onclick="motDePasseOublie()">Envoyer le lien</button>
-    </form>
-    <br>
-    <p><a href="#" onclick="afficher('section-forgot','section-login')">← Retour à la connexion</a></p>
-  </section>
+      <!-- CONNEXION -->
+      <div id="section-login">
+        <div class="login-logo">RW</div>
+        <div class="login-title">Connexion</div>
+        <div class="login-sub">Racing White Woluwe U19</div>
+        <div class="msg" id="msg-login"></div>
+        <div class="form-group"><label>Email</label><input type="email" id="login-email" placeholder="tonemail@exemple.com"></div>
+        <div class="form-group"><label>Mot de passe</label><input type="password" id="login-password" placeholder="••••••••"></div>
+        <button class="btn-login" onclick="seConnecter()">Se connecter</button>
+        <div class="login-links">
+          <a onclick="afficher('section-login','section-forgot')">Mot de passe oublié ?</a>
+          <a onclick="afficher('section-login','section-register')">Pas de compte ? <span>Créer un compte</span></a>
+        </div>
+      </div>
 
-  <!-- CONNECTÉ -->
-  <section id="section-connected" style="display:none">
-    <h2>Bienvenue !</h2>
-    <p id="msg-welcome" style="font-size:15px;margin-bottom:20px;"></p>
-    <button onclick="seDeconnecter()">Se déconnecter</button>
-  </section>
+      <!-- CRÉER UN COMPTE -->
+      <div id="section-register" style="display:none">
+        <div class="login-title">Créer un compte</div>
+        <div class="login-sub">Rejoindre l'équipe</div>
+        <div class="msg" id="msg-register"></div>
+        <div class="form-group"><label>Nom</label><input type="text" id="reg-nom" placeholder="Ton nom de famille"></div>
+        <div class="form-group"><label>Prénom</label><input type="text" id="reg-prenom" placeholder="Ton prénom"></div>
+        <div class="form-group">
+          <label>Poste</label>
+          <select id="reg-poste">
+            <option value="">-- Choisir un poste --</option>
+            <option>Gardien (GK)</option>
+            <option>Défenseur central (DC)</option>
+            <option>Défenseur gauche (DG)</option>
+            <option>Défenseur droit (DD)</option>
+            <option>Milieu central (MC)</option>
+            <option>Milieu gauche (MG)</option>
+            <option>Milieu droit (MD)</option>
+            <option>Attaquant central (AC)</option>
+            <option>Ailier gauche (AG)</option>
+            <option>Ailier droit (AD)</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Email</label><input type="email" id="reg-email" placeholder="tonemail@exemple.com"></div>
+        <div class="form-group"><label>Mot de passe</label><input type="password" id="reg-password" placeholder="••••••••"></div>
+        <div class="form-group"><label>Confirmer le mot de passe</label><input type="password" id="reg-password2" placeholder="••••••••"></div>
+        <button class="btn-login" onclick="creerCompte()">Créer le compte</button>
+        <div class="login-links">
+          <a onclick="afficher('section-register','section-login')">Déjà un compte ? <span>Se connecter</span></a>
+        </div>
+      </div>
 
-</main>
+      <!-- MOT DE PASSE OUBLIÉ -->
+      <div id="section-forgot" style="display:none">
+        <div class="login-title">Mot de passe</div>
+        <div class="login-sub">Réinitialisation</div>
+        <div class="msg" id="msg-forgot"></div>
+        <p style="font-size:13px;color:rgba(255,255,255,0.4);margin-bottom:16px;">Entrez votre email pour recevoir un lien de réinitialisation.</p>
+        <div class="form-group"><label>Email</label><input type="email" id="forgot-email" placeholder="tonemail@exemple.com"></div>
+        <button class="btn-login" onclick="motDePasseOublie()">Envoyer le lien</button>
+        <div class="login-links">
+          <a onclick="afficher('section-forgot','section-login')">← Retour à la connexion</a>
+        </div>
+      </div>
 
-<footer>&copy; 2025 Racing White Woluwe — Tous droits réservés</footer>
+    </div>
+  </div>
+  <div class="page-footer">&copy; 2025 Racing White Woluwe</div>
+</div>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import {
-    getAuth, onAuthStateChanged, signInWithEmailAndPassword,
-    createUserWithEmailAndPassword, sendPasswordResetEmail, signOut
-  } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
   import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
   const firebaseConfig = {
@@ -123,9 +256,12 @@
 
   onAuthStateChanged(auth, (user) => {
     if (user) {
-      afficher('section-login', 'section-connected');
-      afficher('section-register', 'section-connected');
-      document.getElementById('msg-welcome').textContent = 'Connecté en tant que ' + user.email;
+      ['section-login','section-register','section-forgot'].forEach(s => {
+        const el = document.getElementById(s);
+        if (el) el.style.display = 'none';
+      });
+      document.getElementById('section-connected').style.display = 'block';
+      document.getElementById('msg-welcome').textContent = user.displayName || user.email.split('@')[0];
     }
   });
 
@@ -134,91 +270,82 @@
     document.getElementById(montrer).style.display = 'block';
   };
 
+  function showMsg(id, text, type) {
+    const el = document.getElementById(id);
+    el.textContent = text;
+    el.className = 'msg ' + type;
+  }
+
   window.seConnecter = async function() {
     const email = document.getElementById('login-email').value.trim();
     const pwd = document.getElementById('login-password').value;
-    const msg = document.getElementById('msg-login');
     try {
       await signInWithEmailAndPassword(auth, email, pwd);
       window.location.href = 'joueurs.html';
     } catch(e) {
-      msg.textContent = 'Email ou mot de passe incorrect.';
+      showMsg('msg-login', 'Email ou mot de passe incorrect.', 'error');
     }
   };
 
   window.creerCompte = async function() {
-    const nom    = document.getElementById('reg-nom').value.trim();
+    const nom = document.getElementById('reg-nom').value.trim();
     const prenom = document.getElementById('reg-prenom').value.trim();
-    const poste  = document.getElementById('reg-poste').value;
-    const email  = document.getElementById('reg-email').value.trim();
-    const pwd    = document.getElementById('reg-password').value;
-    const pwd2   = document.getElementById('reg-password2').value;
-    const msg    = document.getElementById('msg-register');
-
-    if (!nom || !prenom) { msg.style.color='red'; msg.textContent = 'Veuillez entrer votre nom et prénom.'; return; }
-    if (pwd !== pwd2) { msg.style.color='red'; msg.textContent = 'Les mots de passe ne correspondent pas.'; return; }
-
+    const poste = document.getElementById('reg-poste').value;
+    const email = document.getElementById('reg-email').value.trim();
+    const pwd = document.getElementById('reg-password').value;
+    const pwd2 = document.getElementById('reg-password2').value;
+    if (!nom || !prenom) { showMsg('msg-register','Veuillez entrer votre nom et prénom.','error'); return; }
+    if (pwd !== pwd2) { showMsg('msg-register','Les mots de passe ne correspondent pas.','error'); return; }
     try {
-      // Créer le compte Firebase Auth
       const cred = await createUserWithEmailAndPassword(auth, email, pwd);
-
-      // Trouver le prochain slot libre dans l'effectif
       const snap = await getDoc(doc(db, "effectif", "joueurs"));
       const data = snap.exists() ? snap.data() : {};
-
       let slotLibre = -1;
       for (let i = 1; i <= 23; i++) {
-        if (!data['nom'+i] || data['nom'+i].trim() === '') {
-          slotLibre = i;
-          break;
-        }
+        if (!data['nom'+i] || data['nom'+i].trim() === '') { slotLibre = i; break; }
       }
-
       if (slotLibre === -1) {
-        msg.style.color='orange';
-        msg.textContent = '✔ Compte créé mais effectif complet (23/23). Contactez le coach.';
+        showMsg('msg-register','✔ Compte créé mais effectif complet. Contactez le coach.','warning');
       } else {
-        // Enregistrer dans l'effectif
-        data['nom'+slotLibre]    = nom;
+        data['nom'+slotLibre] = nom;
         data['prenom'+slotLibre] = prenom;
-        data['poste'+slotLibre]  = poste;
-        data['email'+slotLibre]  = email;
+        data['poste'+slotLibre] = poste;
+        data['email'+slotLibre] = email;
         await setDoc(doc(db, "effectif", "joueurs"), data);
-
-        // Sauvegarder aussi le profil du joueur (par uid)
-        await setDoc(doc(db, "joueurs", cred.user.uid), {
-          nom, prenom, poste, email, slot: slotLibre
-        });
-
-        msg.style.color='green';
-        msg.textContent = '✔ Compte créé ! Bienvenue ' + prenom + ' !';
+        await setDoc(doc(db, "joueurs", cred.user.uid), { nom, prenom, poste, email, slot: slotLibre });
+        showMsg('msg-register','✔ Compte créé ! Bienvenue ' + prenom + ' !','success');
       }
-
       setTimeout(() => window.location.href = 'joueurs.html', 1500);
-
     } catch(e) {
-      msg.style.color='red';
-      msg.textContent = e.code === 'auth/email-already-in-use'
-        ? 'Cet email est déjà utilisé.'
-        : 'Erreur : ' + e.message;
+      showMsg('msg-register', e.code === 'auth/email-already-in-use' ? 'Cet email est déjà utilisé.' : e.message, 'error');
     }
   };
 
   window.motDePasseOublie = async function() {
     const email = document.getElementById('forgot-email').value.trim();
-    const msg = document.getElementById('msg-forgot');
     try {
       await sendPasswordResetEmail(auth, email);
-      msg.style.color='green'; msg.textContent = '✔ Email de réinitialisation envoyé !';
+      showMsg('msg-forgot','✔ Email de réinitialisation envoyé !','success');
     } catch(e) {
-      msg.style.color='red'; msg.textContent = 'Aucun compte trouvé avec cet email.';
+      showMsg('msg-forgot','Aucun compte trouvé avec cet email.','error');
     }
   };
 
   window.seDeconnecter = async function() {
     await signOut(auth);
-    afficher('section-connected', 'section-login');
+    document.getElementById('section-connected').style.display = 'none';
+    document.getElementById('section-login').style.display = 'block';
   };
+</script>
+<script>
+  document.getElementById('hamburger').onclick = () => {
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('overlayBg').classList.toggle('show');
+  };
+  function closeSidebar() {
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('overlayBg').classList.remove('show');
+  }
 </script>
 </body>
 </html>

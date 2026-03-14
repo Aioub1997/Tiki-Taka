@@ -2,140 +2,144 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Équipe - Racing White Woluwe</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css">
-<style>
-  .page-wrap { max-width: 1000px; margin: 0 auto; padding: 30px 20px; }
-  .section-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; letter-spacing: .05em; margin: 36px 0 16px; display: flex; align-items: center; gap: 10px; }
-  .section-title span { font-size: 1.4rem; }
-
-  /* CARDS GRID */
-  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-  @media(max-width:700px){ .two-col { grid-template-columns: 1fr; } }
-  .card { background: white; border: 1px solid #d4d3cf; border-radius: 12px; padding: 22px; box-shadow: 0 2px 8px rgba(0,0,0,.05); }
-  .card h3 { font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; letter-spacing: .05em; margin-bottom: 14px; border-bottom: 2px solid #e8c840; padding-bottom: 8px; }
-
-  /* TOP SCORERS */
-  .top-scorer { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid #ebe9e4; }
-  .top-scorer:last-child { border-bottom: none; }
-  .scorer-rank { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; width: 32px; text-align: center; }
-  .scorer-avatar { width: 36px; height: 36px; border-radius: 50%; background: #141414; color: #e8c840; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
-  .scorer-name { flex: 1; font-weight: 600; font-size: 14px; }
-  .scorer-val { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; color: #141414; text-align: right; }
-  .scorer-label { font-size: 10px; color: #888; text-transform: uppercase; text-align: right; }
-  .empty-msg { color: #aaa; font-size: 13px; padding: 16px 0; text-align: center; }
-  .auto-badge { background: #d4f5e4; color: #1f7a4f; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; margin-left: 6px; vertical-align: middle; }
-
-  /* VOTE */
-  .vote-match-info { background: #141414; color: white; border-radius: 10px; padding: 14px 18px; margin-bottom: 16px; font-size: 14px; }
-  .vote-match-info strong { font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; color: #e8c840; display: block; margin-bottom: 4px; }
-  .vote-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-  .vote-btn { background: #f5f4f0; border: 2px solid #d4d3cf; border-radius: 8px; padding: 10px 6px; text-align: center; cursor: pointer; transition: .2s; font-size: 12px; font-weight: 600; }
-  .vote-btn:hover { border-color: #e8c840; background: #fffbe8; }
-  .vote-btn.voted { background: #141414; color: #e8c840; border-color: #141414; }
-  .vote-btn .vote-count { font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; display: block; color: #e8c840; }
-  .vote-btn.voted .vote-count { color: #e8c840; }
-  .vote-winner { background: linear-gradient(135deg, #141414, #2a2a2a); color: white; border-radius: 10px; padding: 16px; text-align: center; margin-bottom: 14px; }
-  .vote-winner .win-label { font-size: 11px; color: #aaa; text-transform: uppercase; letter-spacing: .1em; }
-  .vote-winner .win-name { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; color: #e8c840; }
-  .vote-winner .win-votes { font-size: 12px; color: #888; }
-  .no-match-vote { color: #aaa; font-size: 13px; text-align: center; padding: 20px 0; }
-
-  /* TROPHÉES */
-  .trophy-list { display: flex; flex-direction: column; gap: 12px; }
-  .trophy-item { display: flex; align-items: center; gap: 14px; padding: 12px; background: #f9f8f4; border-radius: 10px; border: 1px solid #ebe9e4; }
-  .trophy-icon { font-size: 2rem; flex-shrink: 0; }
-  .trophy-info { flex: 1; }
-  .trophy-title { font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: .08em; }
-  .trophy-name { font-weight: 700; font-size: 15px; color: #141414; }
-  .trophy-detail { font-size: 12px; color: #aaa; }
-  .trophy-empty { color: #aaa; font-size: 13px; text-align: center; padding: 16px 0; }
-  .btn-trophy { background: #141414; color: #e8c840; border: none; padding: 8px 16px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; margin-top: 12px; }
-  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.5); display: flex; align-items: center; justify-content: center; z-index: 100; padding: 20px; }
-  .modal { background: white; border-radius: 12px; padding: 28px; width: 100%; max-width: 440px; }
-  .modal h3 { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; margin-bottom: 16px; }
-  .modal label { font-size: 13px; font-weight: 600; display: block; margin-bottom: 4px; margin-top: 12px; }
-  .modal input, .modal select { width: 100%; padding: 8px 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; font-family: 'DM Sans', sans-serif; }
-  .modal-btns { display: flex; gap: 10px; margin-top: 20px; justify-content: flex-end; }
-  .btn-cancel { background: #f0ede4; color: #555; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 600; }
-
-  /* ANNONCES */
-  .annonce-item { background: #f9f8f4; border-left: 4px solid #e8c840; border-radius: 0 10px 10px 0; padding: 14px 16px; margin-bottom: 12px; }
-  .annonce-item.urgent { border-left-color: #e05c4b; background: #fff5f4; }
-  .annonce-meta { font-size: 11px; color: #aaa; margin-bottom: 4px; display: flex; gap: 10px; align-items: center; }
-  .annonce-badge { font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 10px; background: #fde8e6; color: #a33426; }
-  .annonce-text { font-size: 14px; color: #141414; font-weight: 500; }
-  .annonce-empty { color: #aaa; font-size: 13px; text-align: center; padding: 20px 0; }
-  .annonce-form { margin-top: 14px; border-top: 1px solid #eee; padding-top: 14px; }
-  .annonce-form textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 14px; resize: vertical; min-height: 80px; }
-  .annonce-form-row { display: flex; gap: 8px; margin-top: 8px; align-items: center; flex-wrap: wrap; }
-  .annonce-form select { padding: 8px 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 13px; }
-  .btn-annonce { background: #141414; color: #e8c840; border: none; padding: 8px 18px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; }
-  .btn-delete { background: none; border: none; color: #ccc; cursor: pointer; font-size: 16px; margin-left: auto; }
-  .btn-delete:hover { color: #e05c4b; }
-</style>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/layout.css">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#141414">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Racing WW">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
+<style>
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 24px; }
+  @media(max-width:700px){ .two-col { grid-template-columns: 1fr; } }
+
+  /* TOP SCORER */
+  .top-scorer { display: flex; align-items: center; gap: 12px; padding: 11px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+  .top-scorer:last-child { border-bottom: none; }
+  .scorer-rank { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; width: 32px; text-align: center; }
+  .scorer-name { flex: 1; font-weight: 600; font-size: 13px; color: var(--white); }
+  .scorer-val { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; color: var(--yellow); text-align: right; }
+  .scorer-lbl { font-size: 10px; color: rgba(255,255,255,0.3); text-align: right; }
+
+  /* VOTE */
+  .vote-match-info { background: rgba(232,200,64,0.07); border: 1px solid rgba(232,200,64,0.15); border-radius: 10px; padding: 14px 16px; margin-bottom: 14px; }
+  .vote-match-info strong { font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; color: var(--yellow); display: block; margin-bottom: 4px; }
+  .vote-match-info span { font-size: 12px; color: rgba(255,255,255,0.3); }
+  .vote-winner { background: linear-gradient(135deg, rgba(232,200,64,0.12), rgba(232,200,64,0.05)); border: 1px solid rgba(232,200,64,0.2); border-radius: 10px; padding: 14px; text-align: center; margin-bottom: 14px; }
+  .vote-winner .win-label { font-size: 10px; color: rgba(255,255,255,0.3); text-transform: uppercase; letter-spacing: .1em; }
+  .vote-winner .win-name { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; color: var(--yellow); }
+  .vote-winner .win-votes { font-size: 11px; color: rgba(255,255,255,0.3); }
+  .vote-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+  .vote-btn { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 8px 4px; text-align: center; cursor: pointer; transition: .2s; font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.5); }
+  .vote-btn:hover { border-color: var(--yellow); color: var(--yellow); background: rgba(232,200,64,0.07); }
+  .vote-btn.voted { background: rgba(232,200,64,0.12); color: var(--yellow); border-color: rgba(232,200,64,0.3); }
+  .vote-btn .vote-count { font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; display: block; color: var(--yellow); }
+
+  /* TROPHÉES */
+  .trophy-list { display: flex; flex-direction: column; gap: 10px; }
+  .trophy-item { display: flex; align-items: center; gap: 12px; padding: 12px; background: rgba(255,255,255,0.03); border-radius: 10px; border: 1px solid rgba(255,255,255,0.06); }
+  .trophy-icon { font-size: 1.8rem; flex-shrink: 0; }
+  .trophy-title { font-size: 10px; color: rgba(255,255,255,0.3); text-transform: uppercase; letter-spacing: .08em; }
+  .trophy-name { font-weight: 700; font-size: 14px; color: var(--white); }
+  .trophy-detail { font-size: 11px; color: rgba(255,255,255,0.25); }
+  .btn-delete { background: none; border: none; color: rgba(255,255,255,0.2); cursor: pointer; font-size: 14px; margin-left: auto; transition: color .2s; }
+  .btn-delete:hover { color: #ff7c6e; }
+
+  /* ANNONCES */
+  .annonce-item { background: rgba(255,255,255,0.03); border-left: 3px solid rgba(232,200,64,0.4); border-radius: 0 10px 10px 0; padding: 12px 16px; margin-bottom: 10px; }
+  .annonce-item.urgent { border-left-color: #ff7c6e; background: rgba(163,52,38,0.07); }
+  .annonce-meta { font-size: 10px; color: rgba(255,255,255,0.25); margin-bottom: 4px; display: flex; gap: 8px; align-items: center; }
+  .annonce-badge { font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 10px; background: rgba(163,52,38,0.3); color: #ff7c6e; }
+  .annonce-text { font-size: 13px; color: rgba(255,255,255,0.8); }
+  .annonce-form { margin-top: 14px; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 14px; }
+  .annonce-form textarea { width: 100%; padding: 10px 12px; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 13px; resize: vertical; min-height: 75px; background: rgba(255,255,255,0.05); color: var(--white); }
+  .annonce-form textarea:focus { outline: none; border-color: var(--yellow); }
+  .annonce-form-row { display: flex; gap: 8px; margin-top: 8px; align-items: center; flex-wrap: wrap; }
+  .annonce-form select { padding: 8px 10px; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; font-size: 12px; background: rgba(255,255,255,0.05); color: var(--white); }
+
+  .empty-msg { color: rgba(255,255,255,0.25); font-size: 13px; padding: 16px 0; text-align: center; }
+  .no-match-vote { color: rgba(255,255,255,0.25); font-size: 13px; text-align: center; padding: 20px 0; }
+</style>
 </head>
 <body>
 
-<header><h1>Racing White Woluwe</h1></header>
-<nav>
-  <a href="joueurs.html">Effectif</a> |
-  <a href="matchs.html">Calendrier</a> |
-  <a href="convocations.html">Convocations</a> |
-  <a href="equipe.html" class="active">Équipe</a> |
-  <a href="login.html">Connexion</a>
-</nav>
+<button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+<div class="overlay-bg" id="overlayBg" onclick="closeSidebar()"></div>
 
-<div class="page-wrap">
-
-  <!-- ── ANNONCES ── -->
-  <div class="section-title"><span>📢</span> Annonces</div>
-  <div class="card">
-    <div id="annoncesList"><p class="empty-msg">Chargement...</p></div>
-    <div class="annonce-form" id="annonceForm" style="display:none">
-      <textarea id="annonceText" placeholder="Écrire une annonce pour l'équipe..."></textarea>
-      <div class="annonce-form-row">
-        <select id="annonceType">
-          <option value="normal">📌 Normal</option>
-          <option value="urgent">🚨 Urgent</option>
-        </select>
-        <button class="btn-annonce" onclick="publierAnnonce()">📢 Publier</button>
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo"><span>RW</span></div>
+  <div class="sidebar-club">Racing White<br>Woluwe U19</div>
+  <nav class="sidebar-nav">
+    <a href="index.html"><span class="nav-icon">🏠</span> Accueil</a>
+    <a href="joueurs.html"><span class="nav-icon">👥</span> Effectif</a>
+    <a href="matchs.html"><span class="nav-icon">📅</span> Calendrier</a>
+    <a href="convocations.html"><span class="nav-icon">✉️</span> Convocations</a>
+    <a href="equipe.html" class="active"><span class="nav-icon">⭐</span> Équipe</a>
+    <a href="login.html"><span class="nav-icon">🔐</span> Connexion</a>
+  </nav>
+  <div class="sidebar-user" id="sidebarUser" style="display:none">
+    <div class="sidebar-user-info">
+      <div class="sidebar-user-avatar" id="userAvatar">?</div>
+      <div>
+        <div class="sidebar-user-email" id="userEmail"></div>
+        <button class="sidebar-user-logout" onclick="deconnexionSidebar()">Déconnexion</button>
       </div>
     </div>
   </div>
+</aside>
 
-  <!-- ── VOTE JOUEUR DU MATCH ── -->
-  <div class="section-title"><span>🗳️</span> Vote — Joueur du match</div>
-  <div class="card">
-    <div id="voteSection"><p class="empty-msg">Chargement...</p></div>
+<div class="main">
+  <div class="page-header-bar">
+    <h1>Équipe</h1>
+    <p>Stats, votes, trophées et annonces</p>
   </div>
+  <div class="page-content">
 
-  <!-- ── STATS ── -->
-  <div class="section-title"><span>📊</span> Statistiques <span class="auto-badge">⚡ AUTO</span></div>
-  <div class="two-col">
-    <div class="card">
-      <h3>🏆 Top Buteurs</h3>
-      <div id="topButeurs"><p class="empty-msg">Chargement...</p></div>
+    <!-- ANNONCES -->
+    <div class="section-lbl">📢 Annonces</div>
+    <div class="card" style="margin-bottom:24px;">
+      <div id="annoncesList"><p class="empty-msg">Chargement...</p></div>
+      <div class="annonce-form" id="annonceForm" style="display:none">
+        <textarea id="annonceText" placeholder="Écrire une annonce pour l'équipe..."></textarea>
+        <div class="annonce-form-row">
+          <select id="annonceType">
+            <option value="normal">📌 Normal</option>
+            <option value="urgent">🚨 Urgent</option>
+          </select>
+          <button class="btn btn-yellow" onclick="publierAnnonce()">📢 Publier</button>
+        </div>
+      </div>
     </div>
-    <div class="card">
-      <h3>🎯 Top Passeurs</h3>
-      <div id="topPasseurs"><p class="empty-msg">Chargement...</p></div>
+
+    <!-- VOTE -->
+    <div class="section-lbl">🗳️ Vote — Joueur du match</div>
+    <div class="card" style="margin-bottom:24px;">
+      <div id="voteSection"><p class="empty-msg">Chargement...</p></div>
     </div>
-  </div>
 
-  <!-- ── TROPHÉES ── -->
-  <div class="section-title"><span>🏅</span> Trophées</div>
-  <div class="card">
-    <div class="trophy-list" id="tropheesList"><p class="trophy-empty">Chargement...</p></div>
-    <button class="btn-trophy" id="btnAddTrophee" style="display:none" onclick="ouvrirModalTrophee()">+ Ajouter un trophée</button>
-  </div>
+    <!-- STATS -->
+    <div class="section-lbl">📊 Statistiques <span class="auto-badge">⚡ AUTO</span></div>
+    <div class="two-col">
+      <div class="card">
+        <div class="card-title">🏆 Top Buteurs</div>
+        <div id="topButeurs"><p class="empty-msg">Chargement...</p></div>
+      </div>
+      <div class="card">
+        <div class="card-title">🎯 Top Passeurs</div>
+        <div id="topPasseurs"><p class="empty-msg">Chargement...</p></div>
+      </div>
+    </div>
 
+    <!-- TROPHÉES -->
+    <div class="section-lbl">🏅 Trophées</div>
+    <div class="card">
+      <div class="trophy-list" id="tropheesList"><p class="empty-msg">Chargement...</p></div>
+      <button class="btn btn-yellow" id="btnAddTrophee" style="display:none;margin-top:14px;" onclick="ouvrirModalTrophee()">+ Ajouter un trophée</button>
+    </div>
+
+  </div>
+  <div class="page-footer">&copy; 2025 Racing White Woluwe</div>
 </div>
 
 <!-- Modal trophée -->
@@ -158,17 +162,16 @@
     <input type="text" id="tropheePeriode" placeholder="ex: Mars 2026">
     <div class="modal-btns">
       <button class="btn-cancel" onclick="fermerModalTrophee()">Annuler</button>
-      <button class="btn-trophy" onclick="sauverTrophee()">Sauvegarder</button>
+      <button class="btn btn-yellow" onclick="sauverTrophee()">Sauvegarder</button>
     </div>
   </div>
 </div>
 
-<footer>&copy; 2025 Racing White Woluwe — Tous droits réservés</footer>
 <div id="toast"></div>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
   import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
   const firebaseConfig = {
@@ -184,63 +187,49 @@
   const auth = getAuth(app);
   const db = getFirestore(app);
   const ADMIN = "mekhalfaioub@gmail.com";
-  let isAdmin = false;
-  let currentUser = null;
-  let joueursList = [];
-  let dernierMatch = null;
+  let isAdmin = false, currentUser = null, joueursList = [], dernierMatch = null;
 
-  function initials(nom) {
-    return nom.split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
-  }
+  function initials(nom) { return nom.split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2); }
 
   onAuthStateChanged(auth, async (user) => {
     if (!user) { window.location.href = "login.html"; return; }
-    currentUser = user;
-    isAdmin = user.email === ADMIN;
+    currentUser = user; isAdmin = user.email === ADMIN;
+    document.getElementById('sidebarUser').style.display = 'block';
+    document.getElementById('userEmail').textContent = user.email;
+    document.getElementById('userAvatar').textContent = user.email[0].toUpperCase();
 
-    // Afficher formulaire annonce si admin
     if (isAdmin) {
       document.getElementById('annonceForm').style.display = 'block';
       document.getElementById('btnAddTrophee').style.display = 'inline-block';
     }
 
-    // Charger joueurs
     const snapJ = await getDoc(doc(db, "effectif", "joueurs"));
     const dataJ = snapJ.exists() ? snapJ.data() : {};
     joueursList = [];
     for (let i = 1; i <= 23; i++) {
-      const nom = dataJ['nom'+i] || '';
-      const prenom = dataJ['prenom'+i] || '';
+      const nom = dataJ['nom'+i] || '', prenom = dataJ['prenom'+i] || '';
       if (nom.trim()) joueursList.push({ id: i, display: (prenom+' '+nom).trim() });
     }
-    // Remplir select trophée
     const sel = document.getElementById('tropheeJoueur');
     joueursList.forEach(j => { sel.innerHTML += `<option value="${j.display}">${j.display}</option>`; });
 
-    // Charger matchs pour stats + vote
     const snapM = await getDoc(doc(db, "matchs", "liste"));
     const matchs = snapM.exists() ? (snapM.data().matchs || []) : [];
     calculerStats(matchs);
-
-    // Dernier match joué
     const joues = matchs.filter(m => m.score).reverse();
     dernierMatch = joues.length ? joues[0] : null;
     chargerVote();
 
-    // Écouter annonces en temps réel
     onSnapshot(doc(db, "equipe", "annonces"), (snap) => {
-      const annonces = snap.exists() ? (snap.data().liste || []) : [];
-      renderAnnonces(annonces);
+      renderAnnonces(snap.exists() ? (snap.data().liste || []) : []);
     });
-
-    // Écouter trophées en temps réel
     onSnapshot(doc(db, "equipe", "trophees"), (snap) => {
-      const trophees = snap.exists() ? (snap.data().liste || []) : [];
-      renderTrophees(trophees);
+      renderTrophees(snap.exists() ? (snap.data().liste || []) : []);
     });
   });
 
-  // ── STATS ──
+  window.deconnexionSidebar = async function() { await signOut(auth); window.location.href = 'login.html'; };
+
   function calculerStats(matchs) {
     const butsMap = {}, passesMap = {};
     matchs.forEach(m => {
@@ -256,32 +245,25 @@
 
   function renderTop(id, list, label) {
     const div = document.getElementById(id);
-    if (!list.length) { div.innerHTML = `<p class="empty-msg">Aucun ${label} enregistré dans les matchs.</p>`; return; }
+    if (!list.length) { div.innerHTML = `<p class="empty-msg">Aucun ${label} enregistré.</p>`; return; }
     const medals = ['🥇','🥈','🥉'];
     div.innerHTML = list.slice(0,8).map((j,i) => `
       <div class="top-scorer">
         <div class="scorer-rank">${medals[i]||i+1}</div>
-        <div class="scorer-avatar">${initials(j.nom)}</div>
+        <div class="avatar" style="width:30px;height:30px;font-size:10px;flex-shrink:0">${initials(j.nom)}</div>
         <div class="scorer-name">${j.nom}</div>
-        <div><div class="scorer-val">${j.val}</div><div class="scorer-label">${label}${j.val>1?'s':''}</div></div>
+        <div><div class="scorer-val">${j.val}</div><div class="scorer-lbl">${label}${j.val>1?'s':''}</div></div>
       </div>`).join('');
   }
 
-  // ── VOTE ──
   async function chargerVote() {
     const div = document.getElementById('voteSection');
-    if (!dernierMatch) {
-      div.innerHTML = '<p class="no-match-vote">Aucun match joué pour le moment.</p>';
-      return;
-    }
-
+    if (!dernierMatch) { div.innerHTML = '<p class="no-match-vote">Aucun match joué pour le moment.</p>'; return; }
     const snapV = await getDoc(doc(db, "votes", "matchs"));
     const allVotes = snapV.exists() ? snapV.data() : {};
     const matchKey = dernierMatch.date + '_' + dernierMatch.adversaire.replace(/\s/g,'');
     const votes = allVotes[matchKey] || {};
     const monVote = votes[currentUser.uid] || null;
-
-    // Compter votes par joueur
     const comptage = {};
     Object.values(votes).forEach(v => { comptage[v] = (comptage[v]||0)+1; });
     const totalVotes = Object.values(comptage).reduce((a,b)=>a+b,0);
@@ -289,9 +271,8 @@
 
     let html = `<div class="vote-match-info">
       <strong>Racing vs ${dernierMatch.adversaire} — ${dernierMatch.score}</strong>
-      📅 ${dernierMatch.date} · ${totalVotes} vote${totalVotes>1?'s':''}
+      <span>📅 ${dernierMatch.date} · ${totalVotes} vote${totalVotes>1?'s':''}</span>
     </div>`;
-
     if (winner && totalVotes > 0) {
       html += `<div class="vote-winner">
         <div class="win-label">⭐ Joueur du match</div>
@@ -299,12 +280,10 @@
         <div class="win-votes">${winner[1]} vote${winner[1]>1?'s':''}</div>
       </div>`;
     }
-
     html += `<div class="vote-grid">`;
     joueursList.forEach(j => {
       const nb = comptage[j.display] || 0;
-      const isVoted = monVote === j.display;
-      html += `<div class="vote-btn ${isVoted?'voted':''}" onclick="voter('${matchKey}', '${j.display}')">
+      html += `<div class="vote-btn ${monVote===j.display?'voted':''}" onclick="voter('${matchKey}','${j.display}')">
         ${j.display.split(' ')[0]}
         <span class="vote-count">${nb}</span>
       </div>`;
@@ -319,14 +298,13 @@
     if (!allVotes[matchKey]) allVotes[matchKey] = {};
     allVotes[matchKey][currentUser.uid] = joueurNom;
     await setDoc(doc(db, "votes", "matchs"), allVotes);
-    showToast('✅ Vote enregistré pour ' + joueurNom.split(' ')[0] + ' !');
+    showToast('✅ Vote pour ' + joueurNom.split(' ')[0] + ' !');
     chargerVote();
   };
 
-  // ── ANNONCES ──
   function renderAnnonces(annonces) {
     const div = document.getElementById('annoncesList');
-    if (!annonces.length) { div.innerHTML = '<p class="annonce-empty">Aucune annonce pour le moment.</p>'; return; }
+    if (!annonces.length) { div.innerHTML = '<p class="empty-msg">Aucune annonce pour le moment.</p>'; return; }
     div.innerHTML = [...annonces].reverse().map((a, i) => `
       <div class="annonce-item ${a.type==='urgent'?'urgent':''}">
         <div class="annonce-meta">
@@ -357,14 +335,13 @@
     await setDoc(doc(db, "equipe", "annonces"), { liste });
   };
 
-  // ── TROPHÉES ──
   function renderTrophees(trophees) {
     const div = document.getElementById('tropheesList');
-    if (!trophees.length) { div.innerHTML = '<p class="trophy-empty">Aucun trophée attribué pour le moment.</p>'; return; }
+    if (!trophees.length) { div.innerHTML = '<p class="empty-msg">Aucun trophée attribué.</p>'; return; }
     div.innerHTML = [...trophees].reverse().map((t, i) => `
       <div class="trophy-item">
         <div class="trophy-icon">${t.icon}</div>
-        <div class="trophy-info">
+        <div style="flex:1">
           <div class="trophy-title">${t.titre}</div>
           <div class="trophy-name">${t.joueur}</div>
           <div class="trophy-detail">${t.periode}</div>
@@ -373,21 +350,13 @@
       </div>`).join('');
   }
 
-  window.ouvrirModalTrophee = function() {
-    document.getElementById('modalTrophee').style.display = 'flex';
-    document.getElementById('tropheePeriode').value = '';
-  };
-
-  window.fermerModalTrophee = function() {
-    document.getElementById('modalTrophee').style.display = 'none';
-  };
+  window.ouvrirModalTrophee = function() { document.getElementById('modalTrophee').style.display = 'flex'; document.getElementById('tropheePeriode').value = ''; };
+  window.fermerModalTrophee = function() { document.getElementById('modalTrophee').style.display = 'none'; };
 
   window.sauverTrophee = async function() {
     const typeEl = document.getElementById('tropheeType');
-    const icon = typeEl.value;
-    const titre = typeEl.options[typeEl.selectedIndex].text.replace(icon+' ','');
-    const joueur = document.getElementById('tropheeJoueur').value;
-    const periode = document.getElementById('tropheePeriode').value;
+    const icon = typeEl.value, titre = typeEl.options[typeEl.selectedIndex].text.replace(icon+' ','');
+    const joueur = document.getElementById('tropheeJoueur').value, periode = document.getElementById('tropheePeriode').value;
     if (!joueur || !periode) { showToast('⚠ Remplissez tous les champs !'); return; }
     const snap = await getDoc(doc(db, "equipe", "trophees"));
     const liste = snap.exists() ? (snap.data().liste || []) : [];
@@ -408,6 +377,16 @@
     const t = document.getElementById('toast');
     t.textContent = msg; t.classList.add('show');
     setTimeout(() => t.classList.remove('show'), 3000);
+  }
+</script>
+<script>
+  document.getElementById('hamburger').onclick = () => {
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('overlayBg').classList.toggle('show');
+  };
+  function closeSidebar() {
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('overlayBg').classList.remove('show');
   }
 </script>
 </body>

@@ -1,136 +1,122 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>Convocations - Racing White Woluwe</title>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
-  <style>
-    .resp-btn { border: none; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer; transition: .2s; }
-    .resp-present { background: #d4f5e4; color: #1f7a4f; }
-    .resp-absent  { background: #fde8e6; color: #a33426; }
-    .resp-present.active { background: #1f7a4f; color: white; }
-    .resp-absent.active  { background: #a33426; color: white; }
-    .resp-group { display: flex; gap: 6px; justify-content: center; }
-    .stats-bar { display: flex; gap: 20px; margin-bottom: 20px; flex-wrap: wrap; }
-    .stat-card { background: white; border: 1px solid #d4d3cf; border-radius: 10px; padding: 12px 20px; text-align: center; }
-    .stat-card .num { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; color: #141414; }
-    .stat-card .lbl { font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: .08em; }
-    .stat-present .num { color: #1f7a4f; }
-    .stat-absent .num  { color: #a33426; }
-    .stat-pending .num { color: #888; }
-
-    /* Carte match */
-    .match-banner {
-      background: #141414;
-      color: white;
-      border-radius: 12px;
-      padding: 20px 24px;
-      margin-bottom: 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 16px;
-      border-left: 5px solid #e8c840;
-    }
-    .match-banner .match-label {
-      font-size: 10px;
-      color: #e8c840;
-      font-weight: 700;
-      letter-spacing: .12em;
-      text-transform: uppercase;
-      margin-bottom: 6px;
-    }
-    .match-banner .match-teams {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 1.6rem;
-      letter-spacing: .05em;
-    }
-    .match-banner .match-infos {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-top: 8px;
-    }
-    .match-banner .match-infos span {
-      background: rgba(255,255,255,0.1);
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 12px;
-      color: #ddd;
-    }
-    .no-match-banner {
-      background: #f0ede4;
-      border-radius: 12px;
-      padding: 16px 20px;
-      margin-bottom: 24px;
-      font-size: 14px;
-      color: #888;
-      border-left: 5px solid #d4d3cf;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Convocations - Racing White Woluwe</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/layout.css">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#141414">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Racing WW">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
+<style>
+  .match-banner {
+    background: linear-gradient(135deg, rgba(232,200,64,0.1), rgba(232,200,64,0.05));
+    border: 1px solid rgba(232,200,64,0.2);
+    border-left: 4px solid var(--yellow);
+    border-radius: 12px;
+    padding: 18px 22px;
+    margin-bottom: 22px;
+  }
+  .match-banner .match-label { font-size: 10px; color: var(--yellow); font-weight: 700; letter-spacing: .12em; text-transform: uppercase; margin-bottom: 6px; }
+  .match-banner .match-teams { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; letter-spacing: .05em; color: var(--white); }
+  .match-banner .match-infos { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+  .match-banner .match-infos span { background: rgba(255,255,255,0.07); padding: 3px 10px; border-radius: 20px; font-size: 11px; color: rgba(255,255,255,0.5); }
+  .no-match-banner { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); border-radius: 12px; padding: 14px 18px; margin-bottom: 20px; font-size: 13px; color: rgba(255,255,255,0.3); }
+  .no-match-banner a { color: var(--yellow); text-decoration: none; }
+
+  .stats-bar { display: flex; gap: 14px; margin-bottom: 22px; flex-wrap: wrap; }
+  .stat-card { background: var(--black3); border: 1px solid rgba(255,255,255,0.07); border-radius: 10px; padding: 14px 20px; text-align: center; flex: 1; min-width: 100px; }
+  .stat-card .num { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; line-height: 1; }
+  .stat-card .lbl { font-size: 10px; color: rgba(255,255,255,0.3); text-transform: uppercase; letter-spacing: .08em; margin-top: 2px; }
+  .stat-present .num { color: #4ade80; }
+  .stat-absent .num  { color: #ff7c6e; }
+  .stat-pending .num { color: rgba(255,255,255,0.3); }
+
+  .toolbar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 16px; }
+  .search-box { display: flex; align-items: center; gap: 8px; background: var(--black3); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 8px 14px; flex: 1; max-width: 300px; }
+  .search-box input { border: none; outline: none; font-family: 'DM Sans', sans-serif; font-size: 13px; width: 100%; background: transparent; color: var(--white); padding: 0; }
+  .counter { font-size: 12px; color: rgba(255,255,255,0.3); }
+  .counter span { font-weight: 700; color: var(--yellow); }
+  .btn-convoke { background: var(--yellow); color: var(--black); border: none; padding: 9px 18px; border-radius: 8px; font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; cursor: pointer; transition: .2s; }
+  .btn-convoke:hover { background: var(--yellow2); }
+  .btn-convoke:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  .resp-btn { border: none; padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; cursor: pointer; transition: .2s; }
+  .resp-present { background: rgba(31,122,79,0.2); color: #4ade80; }
+  .resp-absent  { background: rgba(163,52,38,0.2); color: #ff7c6e; }
+  .resp-present.active { background: rgba(31,122,79,0.5); color: #4ade80; }
+  .resp-absent.active  { background: rgba(163,52,38,0.5); color: #ff7c6e; }
+  .resp-group { display: flex; gap: 6px; justify-content: center; }
+</style>
 </head>
 <body>
 
-<header><h1>Racing White Woluwe</h1></header>
-<nav>
-  <a href="joueurs.html">Effectif</a> |
-  <a href="matchs.html">Calendrier</a> |
-  <a href="convocations.html" class="active">Convocations</a> |
-  <a href="equipe.html">Équipe</a> |
-  <a href="login.html">Connexion</a>
-</nav>
+<button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+<div class="overlay-bg" id="overlayBg" onclick="closeSidebar()"></div>
 
-<main>
-  <h2 class="page-title">Convocations</h2>
-
-  <!-- Prochain match -->
-  <div id="matchBanner"></div>
-
-  <!-- Stats rapides -->
-  <div class="stats-bar">
-    <div class="stat-card stat-present"><div class="num" id="countPresent">0</div><div class="lbl">Présents</div></div>
-    <div class="stat-card stat-absent"><div class="num" id="countAbsent">0</div><div class="lbl">Absents</div></div>
-    <div class="stat-card stat-pending"><div class="num" id="countPending">0</div><div class="lbl">En attente</div></div>
-  </div>
-
-  <!-- Toolbar admin -->
-  <div class="toolbar" id="adminToolbar" style="display:none">
-    <div class="search-box">
-      <span>🔍</span>
-      <input type="text" id="searchInput" placeholder="Rechercher un joueur…" oninput="filterTable()">
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo"><span>RW</span></div>
+  <div class="sidebar-club">Racing White<br>Woluwe U19</div>
+  <nav class="sidebar-nav">
+    <a href="index.html"><span class="nav-icon">🏠</span> Accueil</a>
+    <a href="joueurs.html"><span class="nav-icon">👥</span> Effectif</a>
+    <a href="matchs.html"><span class="nav-icon">📅</span> Calendrier</a>
+    <a href="convocations.html" class="active"><span class="nav-icon">✉️</span> Convocations</a>
+    <a href="equipe.html"><span class="nav-icon">⭐</span> Équipe</a>
+    <a href="login.html"><span class="nav-icon">🔐</span> Connexion</a>
+  </nav>
+  <div class="sidebar-user" id="sidebarUser" style="display:none">
+    <div class="sidebar-user-info">
+      <div class="sidebar-user-avatar" id="userAvatar">?</div>
+      <div>
+        <div class="sidebar-user-email" id="userEmail"></div>
+        <button class="sidebar-user-logout" onclick="deconnexionSidebar()">Déconnexion</button>
+      </div>
     </div>
-    <div class="counter"><span id="selectedCount">0</span> sélectionné(s)</div>
-    <button class="btn-convoke" id="convokeBtn" onclick="convoquer()" disabled>✉ Envoyer convocation</button>
   </div>
+</aside>
 
-  <div class="table-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th>Joueur</th>
-          <th>Poste</th>
-          <th>Statut</th>
-          <th id="thAction">Réponse</th>
-        </tr>
-      </thead>
-      <tbody id="tableBody"><tr><td colspan="4" style="text-align:center;padding:20px;color:#888;">Chargement...</td></tr></tbody>
-    </table>
+<div class="main">
+  <div class="page-header-bar">
+    <h1>Convocations</h1>
+    <p>Confirmez votre présence pour le prochain match</p>
   </div>
-</main>
+  <div class="page-content">
 
-<footer>&copy; 2025 Racing White Woluwe — Tous droits réservés</footer>
+    <div id="matchBanner"></div>
+
+    <div class="stats-bar">
+      <div class="stat-card stat-present"><div class="num" id="countPresent">0</div><div class="lbl">Présents</div></div>
+      <div class="stat-card stat-absent"><div class="num" id="countAbsent">0</div><div class="lbl">Absents</div></div>
+      <div class="stat-card stat-pending"><div class="num" id="countPending">0</div><div class="lbl">En attente</div></div>
+    </div>
+
+    <div class="toolbar" id="adminToolbar" style="display:none">
+      <div class="search-box">
+        <span style="color:rgba(255,255,255,0.3)">🔍</span>
+        <input type="text" id="searchInput" placeholder="Rechercher un joueur…" oninput="filterTable()">
+      </div>
+      <div class="counter"><span id="selectedCount">0</span> sélectionné(s)</div>
+      <button class="btn-convoke" id="convokeBtn" onclick="convoquer()" disabled>✉ Envoyer convocation</button>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Joueur</th><th>Poste</th><th>Statut</th><th id="thAction">Réponse</th></tr></thead>
+        <tbody id="tableBody"><tr><td colspan="4" style="text-align:center;padding:20px;color:rgba(255,255,255,0.3);">Chargement...</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+  <div class="page-footer">&copy; 2025 Racing White Woluwe</div>
+</div>
+
 <div id="toast"></div>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
   import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
   const firebaseConfig = {
@@ -146,82 +132,65 @@
   const auth = getAuth(app);
   const db = getFirestore(app);
   const ADMIN = "mekhalfaioub@gmail.com";
+  let currentUser = null, isAdmin = false, joueursList = [], prochainMatch = null;
 
-  let currentUser = null;
-  let isAdmin = false;
-  let joueursList = [];
-  let prochainMatch = null;
-
-  function initials(nom) {
-    return nom.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
-  }
+  function initials(nom) { return nom.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2); }
 
   onAuthStateChanged(auth, async (user) => {
     if (!user) { window.location.href = "login.html"; return; }
-    currentUser = user;
-    isAdmin = user.email === ADMIN;
+    currentUser = user; isAdmin = user.email === ADMIN;
+    document.getElementById('sidebarUser').style.display = 'block';
+    document.getElementById('userEmail').textContent = user.email;
+    document.getElementById('userAvatar').textContent = user.email[0].toUpperCase();
 
     if (isAdmin) {
       document.getElementById('adminToolbar').style.display = 'flex';
       document.getElementById('thAction').textContent = 'Sélectionner';
     }
 
-    // Charger le prochain match
     const snapM = await getDoc(doc(db, "matchs", "liste"));
     if (snapM.exists()) {
-      const matchs = snapM.data().matchs || [];
-      // Prochain match = premier sans score
-      prochainMatch = matchs.find(m => !m.score) || null;
+      prochainMatch = (snapM.data().matchs || []).find(m => !m.score) || null;
     }
     afficherMatch();
 
-    // Charger joueurs
     const snap = await getDoc(doc(db, "effectif", "joueurs"));
     const data = snap.exists() ? snap.data() : {};
     joueursList = [];
     for (let i = 1; i <= 23; i++) {
-      const nom = data['nom'+i] || '';
-      const prenom = data['prenom'+i] || '';
-      const poste = data['poste'+i] || '';
-      const email = data['email'+i] || '';
+      const nom = data['nom'+i] || '', prenom = data['prenom'+i] || '', poste = data['poste'+i] || '', email = data['email'+i] || '';
       if (nom.trim()) joueursList.push({ num: i, nom, prenom, poste, email });
     }
 
-    // Écouter les réponses en temps réel
     onSnapshot(doc(db, "convocations", "reponses"), (snap) => {
       const reponses = snap.exists() ? snap.data() : {};
-      buildTable(reponses);
-      updateStats(reponses);
+      buildTable(reponses); updateStats(reponses);
     });
   });
+
+  window.deconnexionSidebar = async function() { await signOut(auth); window.location.href = 'login.html'; };
 
   function afficherMatch() {
     const div = document.getElementById('matchBanner');
     if (!prochainMatch) {
-      div.innerHTML = `<div class="no-match-banner">⚽ Aucun match à venir — ajoutez-en un dans la page <a href="matchs.html">Calendrier</a>.</div>`;
+      div.innerHTML = `<div class="no-match-banner">⚽ Aucun match à venir — <a href="matchs.html">ajoutez-en un</a>.</div>`;
       return;
     }
-    div.innerHTML = `
-      <div class="match-banner">
-        <div>
-          <div class="match-label">⚽ Prochain match</div>
-          <div class="match-teams">Racing White Woluwe vs ${prochainMatch.adversaire}</div>
-          <div class="match-infos">
-            <span>📅 ${prochainMatch.date}</span>
-            <span>🕐 ${prochainMatch.heure}</span>
-            <span>📍 ${prochainMatch.lieu}</span>
-          </div>
-        </div>
-      </div>`;
+    div.innerHTML = `<div class="match-banner">
+      <div class="match-label">⚽ Prochain match</div>
+      <div class="match-teams">Racing White Woluwe vs ${prochainMatch.adversaire}</div>
+      <div class="match-infos">
+        <span>📅 ${prochainMatch.date}</span>
+        <span>🕐 ${prochainMatch.heure}</span>
+        <span>📍 ${prochainMatch.lieu}</span>
+      </div>
+    </div>`;
   }
 
   function buildTable(reponses) {
     const tbody = document.getElementById('tableBody');
     tbody.innerHTML = '';
-    if (!joueursList.length) {
-      tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#888;padding:30px;">Aucun joueur trouvé.</td></tr>';
-      return;
-    }
+    if (!joueursList.length) { tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:rgba(255,255,255,0.3);padding:30px;">Aucun joueur trouvé.</td></tr>'; return; }
     joueursList.forEach(j => {
       const rep = reponses['joueur_' + j.num] || 'pending';
       const badgeMap = {
@@ -230,39 +199,26 @@
         pending: '<span class="badge badge-pending">En attente</span>'
       };
       const tr = document.createElement('tr');
-
-      let actionCell = '';
-      if (isAdmin) {
-        actionCell = `<td class="checkbox-wrap"><input type="checkbox" onchange="updateCounter()"></td>`;
-      } else {
-        actionCell = `<td>
-          <div class="resp-group">
-            <button class="resp-btn resp-present ${rep === 'present' ? 'active' : ''}" onclick="repondre(${j.num}, 'present', this)">✓ Présent</button>
-            <button class="resp-btn resp-absent ${rep === 'absent' ? 'active' : ''}" onclick="repondre(${j.num}, 'absent', this)">✗ Absent</button>
-          </div>
-        </td>`;
-      }
-
+      let actionCell = isAdmin
+        ? `<td class="checkbox-wrap"><input type="checkbox" onchange="updateCounter()"></td>`
+        : `<td><div class="resp-group">
+            <button class="resp-btn resp-present ${rep==='present'?'active':''}" onclick="repondre(${j.num},'present')">✓ Présent</button>
+            <button class="resp-btn resp-absent ${rep==='absent'?'active':''}" onclick="repondre(${j.num},'absent')">✗ Absent</button>
+           </div></td>`;
       tr.innerHTML = `
-        <td><div class="player-cell">
-          <div class="avatar">${initials(j.nom)}</div>
-          <div><div class="player-name">${j.prenom} ${j.nom}</div></div>
-        </div></td>
-        <td style="color:#888;font-size:13px">${j.poste}</td>
+        <td><div class="player-cell"><div class="avatar">${initials(j.nom)}</div><div><div class="player-name">${j.prenom} ${j.nom}</div></div></div></td>
+        <td class="player-pos">${j.poste}</td>
         <td>${badgeMap[rep]}</td>
-        ${actionCell}
-      `;
+        ${actionCell}`;
       tbody.appendChild(tr);
     });
   }
 
   function updateStats(reponses) {
-    let present = 0, absent = 0, pending = 0;
+    let present=0, absent=0, pending=0;
     joueursList.forEach(j => {
-      const rep = reponses['joueur_' + j.num] || 'pending';
-      if (rep === 'present') present++;
-      else if (rep === 'absent') absent++;
-      else pending++;
+      const rep = reponses['joueur_'+j.num] || 'pending';
+      if (rep==='present') present++; else if (rep==='absent') absent++; else pending++;
     });
     document.getElementById('countPresent').textContent = present;
     document.getElementById('countAbsent').textContent = absent;
@@ -279,9 +235,7 @@
 
   window.filterTable = function() {
     const q = document.getElementById('searchInput').value.toLowerCase();
-    document.querySelectorAll('#tableBody tr').forEach(row => {
-      row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
-    });
+    document.querySelectorAll('#tableBody tr').forEach(row => { row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none'; });
     updateCounter();
   };
 
@@ -300,20 +254,11 @@
     const convokes = [];
     rows.forEach((row, idx) => {
       const cb = row.querySelector('input[type="checkbox"]');
-      if (cb && cb.checked && joueursList[idx]) {
-        convokes.push(joueursList[idx]);
-      }
+      if (cb && cb.checked && joueursList[idx]) convokes.push(joueursList[idx]);
     });
-
-    if (!prochainMatch) {
-      showToast('⚠ Aucun match à venir défini !');
-      return;
-    }
-
-    // Simulation envoi email — affiche les infos dans le toast
+    if (!prochainMatch) { showToast('⚠ Aucun match à venir défini !'); return; }
     const matchInfo = `${prochainMatch.adversaire} — ${prochainMatch.date} à ${prochainMatch.heure} (${prochainMatch.lieu})`;
     showToast(`✉ Convocation envoyée à ${convokes.length} joueur(s) pour : ${matchInfo}`);
-
     document.querySelectorAll('#tableBody input[type="checkbox"]').forEach(cb => cb.checked = false);
     updateCounter();
   };
@@ -322,6 +267,16 @@
     const t = document.getElementById('toast');
     t.textContent = msg; t.classList.add('show');
     setTimeout(() => t.classList.remove('show'), 4000);
+  }
+</script>
+<script>
+  document.getElementById('hamburger').onclick = () => {
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('overlayBg').classList.toggle('show');
+  };
+  function closeSidebar() {
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('overlayBg').classList.remove('show');
   }
 </script>
 </body>

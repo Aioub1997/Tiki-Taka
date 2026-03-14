@@ -2,178 +2,181 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Effectif - Racing White Woluwe</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css">
-<style>
-.page-layout { display: flex; gap: 24px; max-width: 1500px; margin: 24px auto; padding: 0 20px; align-items: flex-start; }
-.left-panel { flex: 1; min-width: 0; }
-.right-panel { width: 560px; flex-shrink: 0; }
-
-/* TABLEAU JOUEURS */
-.player-row { cursor: grab; user-select: none; }
-.player-row:active { cursor: grabbing; }
-.player-row.dragging { opacity: 0.4; background: #fffbe8 !important; }
-.drag-hint { font-size: 11px; color: #aaa; margin-top: 8px; }
-
-/* TERRAIN */
-.terrain-wrap { border-radius: 12px; overflow: hidden; border: 3px solid #1a5c2a; box-shadow: 0 8px 32px rgba(0,0,0,.25); }
-.terrain-header { background: #141414; color: #e8c840; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
-.terrain-header-left { display: flex; align-items: center; gap: 10px; }
-.terrain-header span { font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; letter-spacing: .08em; }
-.terrain-badge { background: #e8c840; color: #141414; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; }
-.tactic-select { background: #2a2a2a; color: #e8c840; border: 1px solid #e8c840; border-radius: 6px; padding: 5px 10px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; }
-
-.terrain {
-  width: 100%;
-  min-height: 520px;
-  background: repeating-linear-gradient(to bottom, rgba(255,255,255,0.04) 0px, rgba(255,255,255,0.04) 40px, transparent 40px, transparent 80px),
-    linear-gradient(to bottom, #1a6b35, #22834a);
-  padding: 16px 12px 20px;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-.terrain::before { content: ''; position: absolute; top: 50%; left: 8%; right: 8%; height: 2px; background: rgba(255,255,255,0.18); }
-.terrain::after { content: ''; position: absolute; top: 50%; left: 50%; width: 80px; height: 80px; border: 2px solid rgba(255,255,255,0.18); border-radius: 50%; transform: translate(-50%, -50%); }
-.goal-top, .goal-bottom { position: absolute; left: 50%; transform: translateX(-50%); width: 90px; height: 12px; border: 2px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.06); }
-.goal-top { top: 0; border-top: none; border-radius: 0 0 6px 6px; }
-.goal-bottom { bottom: 0; border-bottom: none; border-radius: 6px 6px 0 0; }
-
-.tactic-label { text-align: center; font-size: 10px; color: rgba(255,255,255,0.35); letter-spacing: .1em; text-transform: uppercase; margin: 2px 0; }
-.terrain-rows { display: flex; flex-direction: column; justify-content: space-around; flex: 1; gap: 4px; }
-.row { display: flex; justify-content: space-around; align-items: center; }
-
-/* SLOTS */
-.slot { text-align: center; cursor: pointer; position: relative; }
-.slot-circle {
-  width: 58px; height: 58px; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  margin: 0 auto 4px; transition: .2s;
-  font-size: 10px; font-weight: 700; color: white;
-  text-shadow: 0 1px 3px rgba(0,0,0,.6);
-  border: 2px solid rgba(255,255,255,0.6);
-  background: rgba(0,0,0,0.3);
-  backdrop-filter: blur(2px);
-  line-height: 1.1; text-align: center; padding: 4px;
-}
-.slot-circle.drag-over { border-color: #e8c840 !important; background: rgba(232,200,64,0.4) !important; transform: scale(1.15); }
-.slot-label { font-size: 10px; color: rgba(255,255,255,0.5); font-weight: 600; letter-spacing: .06em; }
-.slot-name-display { font-size: 10px; color: white; font-weight: 700; text-shadow: 0 1px 4px rgba(0,0,0,.9); min-height: 13px; }
-
-/* Couleurs lignes */
-.row-att .slot-circle { border-color: #e8c840; background: rgba(232,200,64,0.2); }
-.row-mid .slot-circle { border-color: #60aaff; background: rgba(96,170,255,0.18); }
-.row-def .slot-circle { border-color: #ff8c42; background: rgba(255,140,66,0.18); }
-.row-gk  .slot-circle { border-color: #a0ff80; background: rgba(160,255,128,0.18); }
-
-/* BANC */
-.bench-section { margin-top: 12px; background: #141414; border-radius: 0 0 10px 10px; padding: 12px 16px; }
-.bench-title { font-family: 'Bebas Neue', sans-serif; font-size: 1rem; color: #e8c840; letter-spacing: .08em; margin-bottom: 10px; }
-.bench-slots { display: flex; gap: 10px; flex-wrap: wrap; }
-.bench-slot {
-  display: flex; flex-direction: column; align-items: center;
-  width: 52px;
-}
-.bench-circle {
-  width: 48px; height: 48px; border-radius: 50%;
-  background: rgba(255,255,255,0.08); border: 2px dashed rgba(255,255,255,0.3);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 9px; color: rgba(255,255,255,0.4); font-weight: 600;
-  transition: .2s; margin-bottom: 4px; text-align: center; padding: 3px;
-  line-height: 1.1;
-}
-.bench-circle.drag-over { border-color: #e8c840; background: rgba(232,200,64,0.25); border-style: solid; transform: scale(1.1); }
-.bench-label { font-size: 10px; color: rgba(255,255,255,0.4); font-weight: 600; }
-
-/* SAVE BTN */
-.btn-save-terrain { background: #e8c840; color: #141414; border: none; padding: 8px 18px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; letter-spacing: .05em; transition: .2s; }
-.btn-save-terrain:hover { background: #f5d84a; }
-
-@media(max-width:900px){ .page-layout { flex-direction: column; } .right-panel { width: 100%; } }
-</style>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/layout.css">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#141414">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Racing WW">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
+<style>
+  .page-layout { display: flex; gap: 28px; align-items: flex-start; }
+  .left-panel { flex: 1.2; min-width: 0; }
+  .right-panel { width: 500px; flex-shrink: 0; }
+  @media(max-width:1100px){ .page-layout { flex-direction: column; } .right-panel { width: 100%; } }
+
+  /* TERRAIN FIFA */
+  .terrain-wrap { border-radius: 12px; overflow: hidden; border: 2px solid rgba(26,92,42,0.8); box-shadow: 0 8px 32px rgba(0,0,0,.4); }
+  .terrain-header { background: var(--black2); color: var(--yellow); padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; border-bottom: 1px solid rgba(232,200,64,0.15); }
+  .terrain-header-left { display: flex; align-items: center; gap: 10px; }
+  .terrain-header span { font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; letter-spacing: .08em; }
+  .terrain-badge { background: var(--yellow); color: var(--black); font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 20px; }
+  .tactic-select { background: rgba(255,255,255,0.08); color: var(--yellow); border: 1px solid rgba(232,200,64,0.3); border-radius: 6px; padding: 5px 10px; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 600; cursor: pointer; }
+  .tactic-select option { background: var(--black2); }
+  .btn-save-terrain { background: var(--yellow); color: var(--black); border: none; padding: 7px 14px; border-radius: 6px; font-size: 11px; font-weight: 700; cursor: pointer; letter-spacing: .05em; }
+
+  .terrain {
+    width: 100%; min-height: 500px;
+    background: repeating-linear-gradient(to bottom, rgba(255,255,255,0.03) 0px, rgba(255,255,255,0.03) 40px, transparent 40px, transparent 80px),
+      linear-gradient(to bottom, #1a5c2a, #1e7a3d, #1a5c2a);
+    padding: 14px 12px 18px;
+    position: relative;
+    display: flex; flex-direction: column; justify-content: space-between;
+  }
+  .terrain::before { content: ''; position: absolute; top: 50%; left: 8%; right: 8%; height: 1px; background: rgba(255,255,255,0.15); }
+  .terrain::after { content: ''; position: absolute; top: 50%; left: 50%; width: 70px; height: 70px; border: 1px solid rgba(255,255,255,0.15); border-radius: 50%; transform: translate(-50%, -50%); }
+  .goal-top, .goal-bottom { position: absolute; left: 50%; transform: translateX(-50%); width: 80px; height: 10px; border: 1px solid rgba(255,255,255,0.25); background: rgba(255,255,255,0.04); }
+  .goal-top { top: 0; border-top: none; border-radius: 0 0 5px 5px; }
+  .goal-bottom { bottom: 0; border-bottom: none; border-radius: 5px 5px 0 0; }
+  .tactic-label { text-align: center; font-size: 9px; color: rgba(255,255,255,0.25); letter-spacing: .1em; text-transform: uppercase; }
+  .terrain-rows { display: flex; flex-direction: column; justify-content: space-around; flex: 1; gap: 4px; }
+  .row { display: flex; justify-content: space-around; align-items: center; }
+  .slot { text-align: center; cursor: pointer; }
+  .slot-circle {
+    width: 54px; height: 54px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 4px; transition: .2s;
+    font-size: 9px; font-weight: 700; color: white;
+    border: 2px solid rgba(255,255,255,0.5);
+    background: rgba(0,0,0,0.35);
+    line-height: 1.1; text-align: center; padding: 3px;
+  }
+  .slot-circle.drag-over { border-color: var(--yellow) !important; background: rgba(232,200,64,0.3) !important; transform: scale(1.15); }
+  .slot-label { font-size: 9px; color: rgba(255,255,255,0.4); font-weight: 600; letter-spacing: .05em; }
+  .slot-name-display { font-size: 9px; color: white; font-weight: 700; text-shadow: 0 1px 3px rgba(0,0,0,.9); min-height: 12px; }
+  .row-att .slot-circle { border-color: var(--yellow); background: rgba(232,200,64,0.18); }
+  .row-mid .slot-circle { border-color: #60aaff; background: rgba(96,170,255,0.15); }
+  .row-def .slot-circle { border-color: #ff8c42; background: rgba(255,140,66,0.15); }
+  .row-gk  .slot-circle { border-color: #a0ff80; background: rgba(160,255,128,0.15); }
+
+  .bench-section { background: rgba(0,0,0,0.5); padding: 12px 14px; border-top: 1px solid rgba(255,255,255,0.06); }
+  .bench-title { font-family: 'Bebas Neue', sans-serif; font-size: .9rem; color: var(--yellow); letter-spacing: .08em; margin-bottom: 8px; }
+  .bench-slots { display: flex; gap: 8px; flex-wrap: wrap; }
+  .bench-slot { display: flex; flex-direction: column; align-items: center; width: 46px; }
+  .bench-circle {
+    width: 42px; height: 42px; border-radius: 50%;
+    background: rgba(255,255,255,0.05); border: 1px dashed rgba(255,255,255,0.2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 8px; color: rgba(255,255,255,0.3); font-weight: 600;
+    transition: .2s; margin-bottom: 3px; text-align: center; padding: 2px; line-height: 1.1;
+  }
+  .bench-circle.drag-over { border-color: var(--yellow); background: rgba(232,200,64,0.2); border-style: solid; transform: scale(1.1); }
+  .bench-label { font-size: 9px; color: rgba(255,255,255,0.3); font-weight: 600; }
+
+  .player-row { cursor: grab; }
+  .player-row:active { cursor: grabbing; }
+  .player-row.dragging { opacity: 0.3; }
+  .drag-tip { font-size: 11px; color: rgba(255,255,255,0.25); margin-top: 10px; }
+</style>
 </head>
 <body>
 
-<header><h1>Racing White Woluwe</h1></header>
-<nav>
-  <a href="joueurs.html" class="active">Effectif</a> |
-  <a href="matchs.html">Calendrier</a> |
-  <a href="convocations.html">Convocations</a> |
-  <a href="equipe.html">Équipe</a> |
-  <a href="login.html">Connexion</a>
-</nav>
+<button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+<div class="overlay-bg" id="overlayBg" onclick="closeSidebar()"></div>
 
-<div class="page-layout">
-
-  <!-- GAUCHE : tableau effectif -->
-  <div class="left-panel">
-    <div class="panel-title">Effectif U19</div>
-    <div class="table-wrap">
-      <table id="tableJoueurs">
-        <thead><tr>
-          <th>#</th><th>Nom</th><th>Prénom</th><th>Poste</th>
-        </tr></thead>
-        <tbody id="tbody">
-          <tr><td colspan="4" style="text-align:center;padding:20px;color:#888;">Chargement...</td></tr>
-        </tbody>
-      </table>
-    </div>
-    <div style="display:flex;gap:10px;align-items:center;margin-top:12px;flex-wrap:wrap;">
-      <button class="btn-save" id="btnSave" onclick="sauvegarder()">✔ Sauvegarder</button>
-      <span class="drag-hint" id="dragHint">⬆ Glissez un joueur sur le terrain →</span>
-    </div>
-  </div>
-
-  <!-- DROITE : terrain -->
-  <div class="right-panel">
-    <div class="terrain-wrap">
-      <div class="terrain-header">
-        <div class="terrain-header-left">
-          <span id="tacticLabel">Tactique</span>
-          <span class="terrain-badge">U19</span>
-        </div>
-        <div style="display:flex;gap:8px;align-items:center;">
-          <select class="tactic-select" id="tacticSelect" onchange="changerTactique(this.value)">
-            <option value="4-3-3">4-3-3</option>
-            <option value="4-4-2">4-4-2</option>
-            <option value="4-2-3-1">4-2-3-1</option>
-            <option value="3-5-2">3-5-2</option>
-            <option value="3-4-3">3-4-3</option>
-            <option value="5-3-2">5-3-2</option>
-            <option value="4-1-4-1">4-1-4-1</option>
-            <option value="4-3-2-1">4-3-2-1</option>
-            <option value="4-5-1">4-5-1</option>
-            <option value="3-6-1">3-6-1</option>
-          </select>
-          <button class="btn-save-terrain" onclick="sauverTerrain()">💾 Sauver</button>
-        </div>
-      </div>
-      <div class="terrain" id="terrain">
-        <div class="goal-top"></div>
-        <div class="goal-bottom"></div>
-        <div class="tactic-label">↑ But adverse</div>
-        <div class="terrain-rows" id="terrainRows"></div>
-        <div class="tactic-label">↓ Notre but</div>
-      </div>
-      <div class="bench-section">
-        <div class="bench-title">🪑 Banc de touche</div>
-        <div class="bench-slots" id="benchSlots"></div>
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo"><span>RW</span></div>
+  <div class="sidebar-club">Racing White<br>Woluwe U19</div>
+  <nav class="sidebar-nav">
+    <a href="index.html"><span class="nav-icon">🏠</span> Accueil</a>
+    <a href="joueurs.html" class="active"><span class="nav-icon">👥</span> Effectif</a>
+    <a href="matchs.html"><span class="nav-icon">📅</span> Calendrier</a>
+    <a href="convocations.html"><span class="nav-icon">✉️</span> Convocations</a>
+    <a href="equipe.html"><span class="nav-icon">⭐</span> Équipe</a>
+    <a href="login.html"><span class="nav-icon">🔐</span> Connexion</a>
+  </nav>
+  <div class="sidebar-user" id="sidebarUser" style="display:none">
+    <div class="sidebar-user-info">
+      <div class="sidebar-user-avatar" id="userAvatar">?</div>
+      <div>
+        <div class="sidebar-user-email" id="userEmail"></div>
+        <button class="sidebar-user-logout" onclick="deconnexionSidebar()">Déconnexion</button>
       </div>
     </div>
   </div>
+</aside>
 
+<div class="main">
+  <div class="page-header-bar">
+    <h1>Effectif U19</h1>
+    <p>Gérez les joueurs et la tactique de l'équipe</p>
+  </div>
+  <div class="page-content">
+    <div class="page-layout">
+
+      <!-- TABLEAU JOUEURS -->
+      <div class="left-panel">
+        <div class="table-wrap">
+          <table id="tableJoueurs">
+            <thead><tr><th>#</th><th>Nom</th><th>Prénom</th><th>Poste</th></tr></thead>
+            <tbody id="tbody"><tr><td colspan="4" style="text-align:center;padding:20px;color:rgba(255,255,255,0.3);">Chargement...</td></tr></tbody>
+          </table>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center;margin-top:12px;flex-wrap:wrap;">
+          <button class="btn btn-yellow" id="btnSave" onclick="sauvegarder()" style="display:none">✔ Sauvegarder</button>
+          <span class="drag-tip" id="dragHint" style="display:none">⬆ Glissez un joueur sur le terrain →</span>
+        </div>
+      </div>
+
+      <!-- TERRAIN -->
+      <div class="right-panel">
+        <div class="terrain-wrap">
+          <div class="terrain-header">
+            <div class="terrain-header-left">
+              <span id="tacticLabel">Tactique</span>
+              <span class="terrain-badge">U19</span>
+            </div>
+            <div style="display:flex;gap:8px;align-items:center;">
+              <select class="tactic-select" id="tacticSelect" onchange="changerTactique(this.value)">
+                <option value="4-3-3">4-3-3</option>
+                <option value="4-4-2">4-4-2</option>
+                <option value="4-2-3-1">4-2-3-1</option>
+                <option value="3-5-2">3-5-2</option>
+                <option value="3-4-3">3-4-3</option>
+                <option value="5-3-2">5-3-2</option>
+                <option value="4-1-4-1">4-1-4-1</option>
+                <option value="4-3-2-1">4-3-2-1</option>
+                <option value="4-5-1">4-5-1</option>
+                <option value="3-6-1">3-6-1</option>
+              </select>
+              <button class="btn-save-terrain" id="btnSaveTerrain" onclick="sauverTerrain()" style="display:none">💾 Sauver</button>
+            </div>
+          </div>
+          <div class="terrain" id="terrain">
+            <div class="goal-top"></div>
+            <div class="goal-bottom"></div>
+            <div class="tactic-label">↑ But adverse</div>
+            <div class="terrain-rows" id="terrainRows"></div>
+            <div class="tactic-label">↓ Notre but</div>
+          </div>
+          <div class="bench-section">
+            <div class="bench-title">🪑 Banc de touche</div>
+            <div class="bench-slots" id="benchSlots"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div class="page-footer">&copy; 2025 Racing White Woluwe</div>
 </div>
+
+<div id="toast"></div>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
   import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
   const firebaseConfig = {
@@ -193,111 +196,62 @@
   let isAdmin = false;
   let joueurs = [];
   let draggedPlayer = null;
-
-  // ── TOUTES LES TACTIQUES ──
-  const TACTICS = {
-    '4-3-3': [
-      { pos: ['AG','AC','AD'], cls: 'row-att' },
-      { pos: ['MG','MC','MD'], cls: 'row-mid' },
-      { pos: ['DG','DCG','DCD','DD'], cls: 'row-def' },
-      { pos: ['GK'], cls: 'row-gk' }
-    ],
-    '4-4-2': [
-      { pos: ['AVG','AVD'], cls: 'row-att' },
-      { pos: ['MG','MCG','MCD','MD'], cls: 'row-mid' },
-      { pos: ['DG','DCG','DCD','DD'], cls: 'row-def' },
-      { pos: ['GK'], cls: 'row-gk' }
-    ],
-    '4-2-3-1': [
-      { pos: ['AVT'], cls: 'row-att' },
-      { pos: ['OG','OC','OD'], cls: 'row-mid' },
-      { pos: ['MDG','MDD'], cls: 'row-mid' },
-      { pos: ['DG','DCG','DCD','DD'], cls: 'row-def' },
-      { pos: ['GK'], cls: 'row-gk' }
-    ],
-    '3-5-2': [
-      { pos: ['AVG','AVD'], cls: 'row-att' },
-      { pos: ['MG','MCG','MC','MCD','MD'], cls: 'row-mid' },
-      { pos: ['DCG','DC','DCD'], cls: 'row-def' },
-      { pos: ['GK'], cls: 'row-gk' }
-    ],
-    '3-4-3': [
-      { pos: ['AG','AC','AD'], cls: 'row-att' },
-      { pos: ['MG','MCG','MCD','MD'], cls: 'row-mid' },
-      { pos: ['DCG','DC','DCD'], cls: 'row-def' },
-      { pos: ['GK'], cls: 'row-gk' }
-    ],
-    '5-3-2': [
-      { pos: ['AVG','AVD'], cls: 'row-att' },
-      { pos: ['MG','MC','MD'], cls: 'row-mid' },
-      { pos: ['DG','DCG','DC','DCD','DD'], cls: 'row-def' },
-      { pos: ['GK'], cls: 'row-gk' }
-    ],
-    '4-1-4-1': [
-      { pos: ['AVT'], cls: 'row-att' },
-      { pos: ['MG','MCG','MCD','MD'], cls: 'row-mid' },
-      { pos: ['MDC'], cls: 'row-mid' },
-      { pos: ['DG','DCG','DCD','DD'], cls: 'row-def' },
-      { pos: ['GK'], cls: 'row-gk' }
-    ],
-    '4-3-2-1': [
-      { pos: ['AVT'], cls: 'row-att' },
-      { pos: ['OG','OD'], cls: 'row-mid' },
-      { pos: ['MG','MC','MD'], cls: 'row-mid' },
-      { pos: ['DG','DCG','DCD','DD'], cls: 'row-def' },
-      { pos: ['GK'], cls: 'row-gk' }
-    ],
-    '4-5-1': [
-      { pos: ['AVT'], cls: 'row-att' },
-      { pos: ['MG','MCG','MC','MCD','MD'], cls: 'row-mid' },
-      { pos: ['DG','DCG','DCD','DD'], cls: 'row-def' },
-      { pos: ['GK'], cls: 'row-gk' }
-    ],
-    '3-6-1': [
-      { pos: ['AVT'], cls: 'row-att' },
-      { pos: ['MG','MCG','MC1','MC2','MCD','MD'], cls: 'row-mid' },
-      { pos: ['DCG','DC','DCD'], cls: 'row-def' },
-      { pos: ['GK'], cls: 'row-gk' }
-    ]
-  };
-
   let currentTactic = '4-3-3';
-  let slotData = {}; // { posKey: "Nom Prenom" }
+  let slotData = {};
   let benchData = { r1:'', r2:'', r3:'', r4:'', r5:'' };
+
+  const TACTICS = {
+    '4-3-3': [{pos:['AG','AC','AD'],cls:'row-att'},{pos:['MG','MC','MD'],cls:'row-mid'},{pos:['DG','DCG','DCD','DD'],cls:'row-def'},{pos:['GK'],cls:'row-gk'}],
+    '4-4-2': [{pos:['AVG','AVD'],cls:'row-att'},{pos:['MG','MCG','MCD','MD'],cls:'row-mid'},{pos:['DG','DCG','DCD','DD'],cls:'row-def'},{pos:['GK'],cls:'row-gk'}],
+    '4-2-3-1': [{pos:['AVT'],cls:'row-att'},{pos:['OG','OC','OD'],cls:'row-mid'},{pos:['MDG','MDD'],cls:'row-mid'},{pos:['DG','DCG','DCD','DD'],cls:'row-def'},{pos:['GK'],cls:'row-gk'}],
+    '3-5-2': [{pos:['AVG','AVD'],cls:'row-att'},{pos:['MG','MCG','MC','MCD','MD'],cls:'row-mid'},{pos:['DCG','DC','DCD'],cls:'row-def'},{pos:['GK'],cls:'row-gk'}],
+    '3-4-3': [{pos:['AG','AC','AD'],cls:'row-att'},{pos:['MG','MCG','MCD','MD'],cls:'row-mid'},{pos:['DCG','DC','DCD'],cls:'row-def'},{pos:['GK'],cls:'row-gk'}],
+    '5-3-2': [{pos:['AVG','AVD'],cls:'row-att'},{pos:['MG','MC','MD'],cls:'row-mid'},{pos:['DG','DCG','DC','DCD','DD'],cls:'row-def'},{pos:['GK'],cls:'row-gk'}],
+    '4-1-4-1': [{pos:['AVT'],cls:'row-att'},{pos:['MG','MCG','MCD','MD'],cls:'row-mid'},{pos:['MDC'],cls:'row-mid'},{pos:['DG','DCG','DCD','DD'],cls:'row-def'},{pos:['GK'],cls:'row-gk'}],
+    '4-3-2-1': [{pos:['AVT'],cls:'row-att'},{pos:['OG','OD'],cls:'row-mid'},{pos:['MG','MC','MD'],cls:'row-mid'},{pos:['DG','DCG','DCD','DD'],cls:'row-def'},{pos:['GK'],cls:'row-gk'}],
+    '4-5-1': [{pos:['AVT'],cls:'row-att'},{pos:['MG','MCG','MC','MCD','MD'],cls:'row-mid'},{pos:['DG','DCG','DCD','DD'],cls:'row-def'},{pos:['GK'],cls:'row-gk'}],
+    '3-6-1': [{pos:['AVT'],cls:'row-att'},{pos:['MG','MCG','MC1','MC2','MCD','MD'],cls:'row-mid'},{pos:['DCG','DC','DCD'],cls:'row-def'},{pos:['GK'],cls:'row-gk'}]
+  };
 
   onAuthStateChanged(auth, async (user) => {
     if (!user) { window.location.href = "login.html"; return; }
     isAdmin = user.email === ADMIN;
-
-    document.getElementById('btnSave').style.display = isAdmin ? 'inline-block' : 'none';
-    document.getElementById('dragHint').style.display = isAdmin ? 'inline' : 'none';
-
+    // Sidebar user info
+    document.getElementById('sidebarUser').style.display = 'block';
+    document.getElementById('userEmail').textContent = user.email;
+    document.getElementById('userAvatar').textContent = user.email[0].toUpperCase();
+    if (isAdmin) {
+      document.getElementById('btnSave').style.display = 'inline-block';
+      document.getElementById('btnSaveTerrain').style.display = 'inline-block';
+      document.getElementById('dragHint').style.display = 'inline';
+    }
     await charger();
     await chargerTerrain();
   });
 
-  // ── CHARGER JOUEURS ──
+  window.deconnexionSidebar = async function() {
+    await signOut(auth);
+    window.location.href = 'login.html';
+  };
+
   async function charger() {
     const tbody = document.getElementById('tbody');
     tbody.innerHTML = '';
     const snap = await getDoc(doc(db, "effectif", "joueurs"));
     const data = snap.exists() ? snap.data() : {};
     joueurs = [];
-
     for (let i = 1; i <= nb; i++) {
       const nom = data['nom'+i] || '';
       const prenom = data['prenom'+i] || '';
       const poste = data['poste'+i] || '';
       if (nom || prenom) joueurs.push({ id: i, nom, prenom, poste });
-
       const cls = nom.toLowerCase().includes('capitaine') ? 'cle' : '';
       if (isAdmin) {
         const tr = document.createElement('tr');
         tr.className = cls + ' player-row';
         tr.draggable = true;
         tr.dataset.playerName = (prenom + ' ' + nom).trim();
-        tr.innerHTML = `
-          <td>${i}</td>
+        tr.innerHTML = `<td>${i}</td>
           <td><input type="text" id="nom${i}" value="${nom}" placeholder="Nom"></td>
           <td><input type="text" id="prenom${i}" value="${prenom}" placeholder="Prénom"></td>
           <td><input type="text" id="poste${i}" value="${poste}" placeholder="Poste"></td>`;
@@ -309,17 +263,11 @@
         tr.addEventListener('dragend', () => tr.classList.remove('dragging'));
         tbody.appendChild(tr);
       } else {
-        tbody.innerHTML += `<tr class="${cls}">
-          <td>${i}</td>
-          <td>${nom || '—'}</td>
-          <td>${prenom || '—'}</td>
-          <td>${poste || '—'}</td>
-        </tr>`;
+        tbody.innerHTML += `<tr class="${cls}"><td>${i}</td><td>${nom||'—'}</td><td>${prenom||'—'}</td><td>${poste||'—'}</td></tr>`;
       }
     }
   }
 
-  // ── CHARGER TERRAIN ──
   async function chargerTerrain() {
     const snap = await getDoc(doc(db, "effectif", "terrain2"));
     if (snap.exists()) {
@@ -332,110 +280,71 @@
     renderTerrain();
   }
 
-  // ── RENDER TERRAIN ──
-  window.changerTactique = function(t) {
-    currentTactic = t;
-    slotData = {};
-    renderTerrain();
-  };
+  window.changerTactique = function(t) { currentTactic = t; slotData = {}; renderTerrain(); };
 
   function renderTerrain() {
     document.getElementById('tacticLabel').textContent = 'Tactique ' + currentTactic;
     const rows = TACTICS[currentTactic];
     const container = document.getElementById('terrainRows');
     container.innerHTML = '';
-
     rows.forEach(rowDef => {
       const rowEl = document.createElement('div');
       rowEl.className = 'row ' + rowDef.cls;
       rowDef.pos.forEach(posKey => {
         const playerName = slotData[posKey] || '';
-        const displayText = playerName ? playerName.split(' ')[0].slice(0,8) : posKey;
+        const displayText = playerName ? playerName.split(' ')[0].slice(0,7) : posKey;
         const slot = document.createElement('div');
         slot.className = 'slot';
         slot.innerHTML = `
           <div class="slot-circle" data-pos="${posKey}">${displayText}</div>
           <div class="slot-label">${posKey}</div>
           <div class="slot-name-display">${playerName}</div>`;
-
         const circle = slot.querySelector('.slot-circle');
-
-        // Drag over
         circle.addEventListener('dragover', (e) => { e.preventDefault(); circle.classList.add('drag-over'); });
         circle.addEventListener('dragleave', () => circle.classList.remove('drag-over'));
         circle.addEventListener('drop', (e) => {
-          e.preventDefault();
-          circle.classList.remove('drag-over');
+          e.preventDefault(); circle.classList.remove('drag-over');
           if (draggedPlayer) {
             slotData[posKey] = draggedPlayer;
-            circle.textContent = draggedPlayer.split(' ')[0].slice(0,8);
+            circle.textContent = draggedPlayer.split(' ')[0].slice(0,7);
             slot.querySelector('.slot-name-display').textContent = draggedPlayer;
             draggedPlayer = null;
           }
         });
-
-        // Double-clic pour effacer
-        if (isAdmin) {
-          circle.addEventListener('dblclick', () => {
-            slotData[posKey] = '';
-            circle.textContent = posKey;
-            slot.querySelector('.slot-name-display').textContent = '';
-          });
-        }
+        if (isAdmin) circle.addEventListener('dblclick', () => { slotData[posKey] = ''; circle.textContent = posKey; slot.querySelector('.slot-name-display').textContent = ''; });
         rowEl.appendChild(slot);
       });
       container.appendChild(rowEl);
     });
-
     renderBench();
   }
 
-  // ── BANC ──
   function renderBench() {
     const container = document.getElementById('benchSlots');
     container.innerHTML = '';
     ['r1','r2','r3','r4','r5'].forEach((key, i) => {
       const name = benchData[key] || '';
-      const display = name ? name.split(' ')[0].slice(0,8) : '';
+      const display = name ? name.split(' ')[0].slice(0,7) : '';
       const div = document.createElement('div');
       div.className = 'bench-slot';
-      div.innerHTML = `
-        <div class="bench-circle" data-bench="${key}">${display || 'R'+(i+1)}</div>
-        <div class="bench-label">R${i+1}</div>`;
-
+      div.innerHTML = `<div class="bench-circle" data-bench="${key}">${display || 'R'+(i+1)}</div><div class="bench-label">R${i+1}</div>`;
       const circle = div.querySelector('.bench-circle');
       circle.addEventListener('dragover', (e) => { e.preventDefault(); circle.classList.add('drag-over'); });
       circle.addEventListener('dragleave', () => circle.classList.remove('drag-over'));
       circle.addEventListener('drop', (e) => {
-        e.preventDefault();
-        circle.classList.remove('drag-over');
-        if (draggedPlayer) {
-          benchData[key] = draggedPlayer;
-          circle.textContent = draggedPlayer.split(' ')[0].slice(0,8);
-          draggedPlayer = null;
-        }
+        e.preventDefault(); circle.classList.remove('drag-over');
+        if (draggedPlayer) { benchData[key] = draggedPlayer; circle.textContent = draggedPlayer.split(' ')[0].slice(0,7); draggedPlayer = null; }
       });
-      if (isAdmin) {
-        circle.addEventListener('dblclick', () => {
-          benchData[key] = '';
-          circle.textContent = 'R'+(i+1);
-        });
-      }
+      if (isAdmin) circle.addEventListener('dblclick', () => { benchData[key] = ''; circle.textContent = 'R'+(i+1); });
       container.appendChild(div);
     });
   }
 
-  // ── SAUVER TERRAIN ──
   window.sauverTerrain = async function() {
-    await setDoc(doc(db, "effectif", "terrain2"), {
-      tactic: currentTactic,
-      slots: slotData,
-      bench: benchData
-    });
+    await setDoc(doc(db, "effectif", "terrain2"), { tactic: currentTactic, slots: slotData, bench: benchData });
     showToast('✔ Terrain sauvegardé !');
   };
 
-  // ── SAUVER JOUEURS ──
   window.sauvegarder = async function() {
     const data = {};
     for (let i = 1; i <= nb; i++) {
@@ -444,23 +353,23 @@
       data['poste'+i] = document.getElementById('poste'+i)?.value || '';
     }
     await setDoc(doc(db, "effectif", "joueurs"), data);
-    // Mettre à jour les noms dans les lignes pour le drag
-    document.querySelectorAll('.player-row').forEach((tr, idx) => {
-      const i = idx + 1;
-      const nom = document.getElementById('nom'+i)?.value || '';
-      const prenom = document.getElementById('prenom'+i)?.value || '';
-      tr.dataset.playerName = (prenom + ' ' + nom).trim();
-    });
-    const b = document.querySelector('.btn-save');
-    b.textContent = '✔ Sauvegardé !'; b.style.background = '#3a9e6f';
-    setTimeout(() => { b.textContent = '✔ Sauvegarder'; b.style.background = '#141414'; }, 2000);
+    showToast('✔ Effectif sauvegardé !');
   };
 
   function showToast(msg) {
-    let t = document.getElementById('toast');
-    if (!t) { t = document.createElement('div'); t.id = 'toast'; document.body.appendChild(t); }
+    const t = document.getElementById('toast');
     t.textContent = msg; t.classList.add('show');
     setTimeout(() => t.classList.remove('show'), 2500);
+  }
+</script>
+<script>
+  document.getElementById('hamburger').onclick = () => {
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('overlayBg').classList.toggle('show');
+  };
+  function closeSidebar() {
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('overlayBg').classList.remove('show');
   }
 </script>
 </body>
