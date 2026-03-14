@@ -25,7 +25,6 @@
   .match-banner .match-infos span { background: rgba(255,255,255,0.07); padding: 3px 10px; border-radius: 20px; font-size: 11px; color: rgba(255,255,255,0.5); }
   .no-match-banner { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); border-radius: 12px; padding: 14px 18px; margin-bottom: 20px; font-size: 13px; color: rgba(255,255,255,0.3); }
   .no-match-banner a { color: var(--yellow); text-decoration: none; }
-
   .stats-bar { display: flex; gap: 14px; margin-bottom: 22px; flex-wrap: wrap; }
   .stat-card { background: var(--black3); border: 1px solid rgba(255,255,255,0.07); border-radius: 10px; padding: 14px 20px; text-align: center; flex: 1; min-width: 100px; }
   .stat-card .num { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; line-height: 1; }
@@ -33,7 +32,6 @@
   .stat-present .num { color: #4ade80; }
   .stat-absent .num  { color: #ff7c6e; }
   .stat-pending .num { color: rgba(255,255,255,0.3); }
-
   .toolbar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 16px; }
   .search-box { display: flex; align-items: center; gap: 8px; background: var(--black3); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 8px 14px; flex: 1; max-width: 300px; }
   .search-box input { border: none; outline: none; font-family: 'DM Sans', sans-serif; font-size: 13px; width: 100%; background: transparent; color: var(--white); padding: 0; }
@@ -42,13 +40,43 @@
   .btn-convoke { background: var(--yellow); color: var(--black); border: none; padding: 9px 18px; border-radius: 8px; font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; cursor: pointer; transition: .2s; }
   .btn-convoke:hover { background: var(--yellow2); }
   .btn-convoke:disabled { opacity: 0.35; cursor: not-allowed; }
-
   .resp-btn { border: none; padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; cursor: pointer; transition: .2s; }
   .resp-present { background: rgba(31,122,79,0.2); color: #4ade80; }
   .resp-absent  { background: rgba(163,52,38,0.2); color: #ff7c6e; }
   .resp-present.active { background: rgba(31,122,79,0.5); color: #4ade80; }
   .resp-absent.active  { background: rgba(163,52,38,0.5); color: #ff7c6e; }
   .resp-group { display: flex; gap: 6px; justify-content: center; }
+  .my-resp-only { font-size: 11px; color: rgba(255,255,255,0.3); text-align: center; font-style: italic; }
+
+  /* TABS */
+  .tabs { display: flex; gap: 4px; margin-bottom: 24px; background: var(--black3); border-radius: 10px; padding: 4px; border: 1px solid rgba(255,255,255,0.07); width: fit-content; }
+  .tab-btn { padding: 9px 20px; border: none; border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; cursor: pointer; transition: .2s; background: transparent; color: rgba(255,255,255,0.35); }
+  .tab-btn.active { background: var(--yellow); color: var(--black); }
+
+  /* ENTRAINEMENT */
+  .entrain-banner {
+    background: linear-gradient(135deg, rgba(96,170,255,0.1), rgba(96,170,255,0.05));
+    border: 1px solid rgba(96,170,255,0.2);
+    border-left: 4px solid #60aaff;
+    border-radius: 12px;
+    padding: 18px 22px;
+    margin-bottom: 22px;
+  }
+  .entrain-banner .entrain-label { font-size: 10px; color: #60aaff; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; margin-bottom: 6px; }
+  .entrain-banner .entrain-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; letter-spacing: .05em; color: var(--white); }
+  .entrain-banner .entrain-infos { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+  .entrain-banner .entrain-infos span { background: rgba(255,255,255,0.07); padding: 3px 10px; border-radius: 20px; font-size: 11px; color: rgba(255,255,255,0.5); }
+
+  .my-response-box { background: var(--black3); border: 1px solid rgba(255,255,255,0.07); border-radius: 12px; padding: 20px; margin-bottom: 22px; text-align: center; }
+  .my-response-box h3 { font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; color: var(--white); margin-bottom: 6px; }
+  .my-response-box p { font-size: 12px; color: rgba(255,255,255,0.3); margin-bottom: 16px; }
+  .my-resp-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .my-resp-big { border: none; padding: 12px 28px; border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; transition: .2s; letter-spacing: .05em; }
+  .my-resp-big.present { background: rgba(31,122,79,0.2); color: #4ade80; border: 2px solid rgba(31,122,79,0.3); }
+  .my-resp-big.present.active { background: rgba(31,122,79,0.5); border-color: #4ade80; }
+  .my-resp-big.absent { background: rgba(163,52,38,0.2); color: #ff7c6e; border: 2px solid rgba(163,52,38,0.3); }
+  .my-resp-big.absent.active { background: rgba(163,52,38,0.5); border-color: #ff7c6e; }
+  .stat-blue .num { color: #60aaff; }
 </style>
 </head>
 <body>
@@ -80,34 +108,73 @@
 
 <div class="main">
   <div class="page-header-bar">
-    <h1>Convocations</h1>
-    <p>Confirmez votre présence pour le prochain match</p>
+    <h1>Convocations & Entraînements</h1>
+    <p>Confirmez votre présence pour les matchs et entraînements</p>
   </div>
   <div class="page-content">
 
-    <div id="matchBanner"></div>
-
-    <div class="stats-bar">
-      <div class="stat-card stat-present"><div class="num" id="countPresent">0</div><div class="lbl">Présents</div></div>
-      <div class="stat-card stat-absent"><div class="num" id="countAbsent">0</div><div class="lbl">Absents</div></div>
-      <div class="stat-card stat-pending"><div class="num" id="countPending">0</div><div class="lbl">En attente</div></div>
+    <!-- TABS -->
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('match')">⚽ Match</button>
+      <button class="tab-btn" onclick="switchTab('entrain')">🏃 Entraînement</button>
     </div>
 
-    <div class="toolbar" id="adminToolbar" style="display:none">
-      <div class="search-box">
-        <span style="color:rgba(255,255,255,0.3)">🔍</span>
-        <input type="text" id="searchInput" placeholder="Rechercher un joueur…" oninput="filterTable()">
+    <!-- ── SECTION MATCH ── -->
+    <div id="tabMatch">
+      <div id="matchBanner"></div>
+      <div class="stats-bar">
+        <div class="stat-card stat-present"><div class="num" id="countPresent">0</div><div class="lbl">Présents</div></div>
+        <div class="stat-card stat-absent"><div class="num" id="countAbsent">0</div><div class="lbl">Absents</div></div>
+        <div class="stat-card stat-pending"><div class="num" id="countPending">0</div><div class="lbl">En attente</div></div>
       </div>
-      <div class="counter"><span id="selectedCount">0</span> sélectionné(s)</div>
-      <button class="btn-convoke" id="convokeBtn" onclick="convoquer()" disabled>✉ Envoyer convocation</button>
+
+      <!-- Toolbar admin seulement -->
+      <div class="toolbar" id="adminToolbar" style="display:none">
+        <div class="search-box">
+          <span style="color:rgba(255,255,255,0.3)">🔍</span>
+          <input type="text" id="searchInput" placeholder="Rechercher un joueur…" oninput="filterTable()">
+        </div>
+        <div class="counter"><span id="selectedCount">0</span> sélectionné(s)</div>
+        <button class="btn-convoke" id="convokeBtn" onclick="convoquer()" disabled>✉ Envoyer convocation</button>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Joueur</th><th>Poste</th><th>Statut</th><th id="thAction">Ma réponse</th></tr></thead>
+          <tbody id="tableBody"><tr><td colspan="4" style="text-align:center;padding:20px;color:rgba(255,255,255,0.3);">Chargement...</td></tr></tbody>
+        </table>
+      </div>
     </div>
 
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Joueur</th><th>Poste</th><th>Statut</th><th id="thAction">Réponse</th></tr></thead>
-        <tbody id="tableBody"><tr><td colspan="4" style="text-align:center;padding:20px;color:rgba(255,255,255,0.3);">Chargement...</td></tr></tbody>
-      </table>
+    <!-- ── SECTION ENTRAÎNEMENT ── -->
+    <div id="tabEntrain" style="display:none">
+      <div class="entrain-banner" id="entrainBanner"></div>
+
+      <div class="stats-bar">
+        <div class="stat-card stat-present"><div class="num" id="eCountPresent">0</div><div class="lbl">Présents</div></div>
+        <div class="stat-card stat-absent"><div class="num" id="eCountAbsent">0</div><div class="lbl">Absents</div></div>
+        <div class="stat-card stat-pending"><div class="num" id="eCountPending">0</div><div class="lbl">En attente</div></div>
+      </div>
+
+      <!-- Ma réponse (joueur connecté) -->
+      <div class="my-response-box" id="myResponseBox">
+        <h3>Ma présence</h3>
+        <p id="myResponseText">Serez-vous présent à cet entraînement ?</p>
+        <div class="my-resp-btns">
+          <button class="my-resp-big present" id="btnEPresent" onclick="repondreEntrain('present')">✓ Présent</button>
+          <button class="my-resp-big absent" id="btnEAbsent" onclick="repondreEntrain('absent')">✗ Absent</button>
+        </div>
+      </div>
+
+      <!-- Vue d'ensemble (tout le monde voit) -->
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Joueur</th><th>Poste</th><th>Statut entraînement</th></tr></thead>
+          <tbody id="entrainBody"><tr><td colspan="3" style="text-align:center;padding:20px;color:rgba(255,255,255,0.3);">Chargement...</td></tr></tbody>
+        </table>
+      </div>
     </div>
+
   </div>
   <div class="page-footer">&copy; 2025 Racing White Woluwe</div>
 </div>
@@ -133,8 +200,30 @@
   const db = getFirestore(app);
   const ADMIN = "mekhalfaioub@gmail.com";
   let currentUser = null, isAdmin = false, joueursList = [], prochainMatch = null;
+  let monNumeroJoueur = -1; // numéro du joueur connecté dans l'effectif
+  let entrainKey = ''; // clé de l'entraînement courant
 
   function initials(nom) { return nom.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2); }
+
+  // ── PROCHAIN ENTRAÎNEMENT ──
+  function prochainEntrain() {
+    const now = new Date();
+    const day = now.getDay(); // 0=dim, 1=lun, 2=mar, 3=mer, 4=jeu, 5=ven, 6=sam
+    const d = new Date(now);
+    // Cherche le prochain mardi (2) ou jeudi (4)
+    let daysToAdd = 0;
+    for (let i = 1; i <= 7; i++) {
+      const next = (day + i) % 7;
+      if (next === 2 || next === 4) { daysToAdd = i; break; }
+    }
+    // Si aujourd'hui est mardi ou jeudi et avant 20h → c'est aujourd'hui
+    if ((day === 2 || day === 4) && now.getHours() < 20) daysToAdd = 0;
+    d.setDate(d.getDate() + daysToAdd);
+    const jourNom = d.getDay() === 2 ? 'Mardi' : 'Jeudi';
+    const dateStr = d.toLocaleDateString('fr-BE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    const key = `entrain_${d.getFullYear()}_${d.getMonth()+1}_${d.getDate()}`;
+    return { jourNom, dateStr, key };
+  }
 
   onAuthStateChanged(auth, async (user) => {
     if (!user) { window.location.href = "login.html"; return; }
@@ -148,28 +237,60 @@
       document.getElementById('thAction').textContent = 'Sélectionner';
     }
 
+    // Charger match
     const snapM = await getDoc(doc(db, "matchs", "liste"));
-    if (snapM.exists()) {
-      prochainMatch = (snapM.data().matchs || []).find(m => !m.score) || null;
-    }
+    if (snapM.exists()) prochainMatch = (snapM.data().matchs || []).find(m => !m.score) || null;
     afficherMatch();
 
+    // Charger joueurs
     const snap = await getDoc(doc(db, "effectif", "joueurs"));
     const data = snap.exists() ? snap.data() : {};
     joueursList = [];
     for (let i = 1; i <= 23; i++) {
       const nom = data['nom'+i] || '', prenom = data['prenom'+i] || '', poste = data['poste'+i] || '', email = data['email'+i] || '';
-      if (nom.trim()) joueursList.push({ num: i, nom, prenom, poste, email });
+      if (nom.trim()) {
+        joueursList.push({ num: i, nom, prenom, poste, email });
+        // Identifier le joueur connecté par email
+        if (email && email.toLowerCase() === user.email.toLowerCase()) monNumeroJoueur = i;
+      }
     }
 
+    // Entraînement
+    const entrain = prochainEntrain();
+    entrainKey = entrain.key;
+    afficherEntrain(entrain);
+
+    // Écouter réponses match
     onSnapshot(doc(db, "convocations", "reponses"), (snap) => {
       const reponses = snap.exists() ? snap.data() : {};
       buildTable(reponses); updateStats(reponses);
+    });
+
+    // Écouter réponses entraînement
+    onSnapshot(doc(db, "entrainements", entrainKey), (snap) => {
+      const reponses = snap.exists() ? snap.data() : {};
+      buildEntrainTable(reponses);
+      updateEntrainStats(reponses);
+      // Mettre à jour ma réponse
+      const maRep = reponses['joueur_' + monNumeroJoueur] || null;
+      document.getElementById('btnEPresent').classList.toggle('active', maRep === 'present');
+      document.getElementById('btnEAbsent').classList.toggle('active', maRep === 'absent');
+      if (maRep) document.getElementById('myResponseText').textContent = maRep === 'present' ? '✅ Vous avez confirmé votre présence.' : '❌ Vous avez indiqué votre absence.';
     });
   });
 
   window.deconnexionSidebar = async function() { await signOut(auth); window.location.href = 'login.html'; };
 
+  // ── TABS ──
+  window.switchTab = function(tab) {
+    document.getElementById('tabMatch').style.display = tab === 'match' ? 'block' : 'none';
+    document.getElementById('tabEntrain').style.display = tab === 'entrain' ? 'block' : 'none';
+    document.querySelectorAll('.tab-btn').forEach((btn, i) => {
+      btn.classList.toggle('active', (i === 0 && tab === 'match') || (i === 1 && tab === 'entrain'));
+    });
+  };
+
+  // ── MATCH ──
   function afficherMatch() {
     const div = document.getElementById('matchBanner');
     if (!prochainMatch) {
@@ -190,7 +311,7 @@
   function buildTable(reponses) {
     const tbody = document.getElementById('tableBody');
     tbody.innerHTML = '';
-    if (!joueursList.length) { tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:rgba(255,255,255,0.3);padding:30px;">Aucun joueur trouvé.</td></tr>'; return; }
+    if (!joueursList.length) { tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:rgba(255,255,255,0.3);padding:30px;">Aucun joueur.</td></tr>'; return; }
     joueursList.forEach(j => {
       const rep = reponses['joueur_' + j.num] || 'pending';
       const badgeMap = {
@@ -199,12 +320,20 @@
         pending: '<span class="badge badge-pending">En attente</span>'
       };
       const tr = document.createElement('tr');
-      let actionCell = isAdmin
-        ? `<td class="checkbox-wrap"><input type="checkbox" onchange="updateCounter()"></td>`
-        : `<td><div class="resp-group">
-            <button class="resp-btn resp-present ${rep==='present'?'active':''}" onclick="repondre(${j.num},'present')">✓ Présent</button>
-            <button class="resp-btn resp-absent ${rep==='absent'?'active':''}" onclick="repondre(${j.num},'absent')">✗ Absent</button>
-           </div></td>`;
+      let actionCell = '';
+      if (isAdmin) {
+        // Admin : case à cocher pour sélectionner
+        actionCell = `<td class="checkbox-wrap"><input type="checkbox" onchange="updateCounter()"></td>`;
+      } else if (j.num === monNumeroJoueur) {
+        // Joueur connecté : peut répondre SEULEMENT pour lui-même
+        actionCell = `<td><div class="resp-group">
+          <button class="resp-btn resp-present ${rep==='present'?'active':''}" onclick="repondre(${j.num},'present')">✓ Présent</button>
+          <button class="resp-btn resp-absent ${rep==='absent'?'active':''}" onclick="repondre(${j.num},'absent')">✗ Absent</button>
+        </div></td>`;
+      } else {
+        // Autre joueur : lecture seule
+        actionCell = `<td class="my-resp-only">—</td>`;
+      }
       tr.innerHTML = `
         <td><div class="player-cell"><div class="avatar">${initials(j.nom)}</div><div><div class="player-name">${j.prenom} ${j.nom}</div></div></div></td>
         <td class="player-pos">${j.poste}</td>
@@ -226,6 +355,8 @@
   }
 
   window.repondre = async function(num, rep) {
+    // Vérifier que le joueur répond uniquement pour lui-même
+    if (!isAdmin && num !== monNumeroJoueur) return;
     const snap = await getDoc(doc(db, "convocations", "reponses"));
     const data = snap.exists() ? snap.data() : {};
     data['joueur_' + num] = rep;
@@ -256,11 +387,69 @@
       const cb = row.querySelector('input[type="checkbox"]');
       if (cb && cb.checked && joueursList[idx]) convokes.push(joueursList[idx]);
     });
-    if (!prochainMatch) { showToast('⚠ Aucun match à venir défini !'); return; }
+    if (!prochainMatch) { showToast('⚠ Aucun match à venir !'); return; }
     const matchInfo = `${prochainMatch.adversaire} — ${prochainMatch.date} à ${prochainMatch.heure} (${prochainMatch.lieu})`;
     showToast(`✉ Convocation envoyée à ${convokes.length} joueur(s) pour : ${matchInfo}`);
     document.querySelectorAll('#tableBody input[type="checkbox"]').forEach(cb => cb.checked = false);
     updateCounter();
+  };
+
+  // ── ENTRAÎNEMENT ──
+  function afficherEntrain(entrain) {
+    document.getElementById('entrainBanner').innerHTML = `
+      <div class="entrain-label">🏃 Prochain entraînement</div>
+      <div class="entrain-title">${entrain.jourNom} ${entrain.dateStr}</div>
+      <div class="entrain-infos">
+        <span>🕐 18h30 — 20h00</span>
+        <span>📍 Terrain Racing White Woluwe</span>
+      </div>`;
+
+    if (monNumeroJoueur === -1) {
+      document.getElementById('myResponseBox').innerHTML = `
+        <p style="font-size:13px;color:rgba(255,255,255,0.3);text-align:center;">
+          Votre email n'est pas lié à un joueur de l'effectif.<br>Demandez à l'admin de vous ajouter.
+        </p>`;
+    }
+  }
+
+  function buildEntrainTable(reponses) {
+    const tbody = document.getElementById('entrainBody');
+    tbody.innerHTML = '';
+    if (!joueursList.length) { tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:rgba(255,255,255,0.3);padding:30px;">Aucun joueur.</td></tr>'; return; }
+    joueursList.forEach(j => {
+      const rep = reponses['joueur_' + j.num] || 'pending';
+      const badgeMap = {
+        present: '<span class="badge badge-ok">✓ Présent</span>',
+        absent:  '<span class="badge badge-no">✗ Absent</span>',
+        pending: '<span class="badge badge-pending">En attente</span>'
+      };
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td><div class="player-cell"><div class="avatar">${initials(j.nom)}</div><div><div class="player-name">${j.prenom} ${j.nom}</div></div></div></td>
+        <td class="player-pos">${j.poste}</td>
+        <td>${badgeMap[rep]}</td>`;
+      tbody.appendChild(tr);
+    });
+  }
+
+  function updateEntrainStats(reponses) {
+    let present=0, absent=0, pending=0;
+    joueursList.forEach(j => {
+      const rep = reponses['joueur_'+j.num] || 'pending';
+      if (rep==='present') present++; else if (rep==='absent') absent++; else pending++;
+    });
+    document.getElementById('eCountPresent').textContent = present;
+    document.getElementById('eCountAbsent').textContent = absent;
+    document.getElementById('eCountPending').textContent = pending;
+  }
+
+  window.repondreEntrain = async function(rep) {
+    if (monNumeroJoueur === -1) { showToast('⚠ Votre compte n\'est pas lié à un joueur.'); return; }
+    const snap = await getDoc(doc(db, "entrainements", entrainKey));
+    const data = snap.exists() ? snap.data() : {};
+    data['joueur_' + monNumeroJoueur] = rep;
+    await setDoc(doc(db, "entrainements", entrainKey), data);
+    showToast(rep === 'present' ? '✓ Présence à l\'entraînement confirmée !' : '✗ Absence à l\'entraînement enregistrée.');
   };
 
   function showToast(msg) {
