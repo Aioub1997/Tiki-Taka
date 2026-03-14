@@ -2,33 +2,464 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Racing White Woluwe</title>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#141414">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Racing WW">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --black: #0d0d0d;
+      --yellow: #e8c840;
+      --yellow-dark: #c9a800;
+      --white: #f5f4f0;
+      --sidebar-w: 220px;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--black);
+      color: var(--white);
+      min-height: 100vh;
+      display: flex;
+      overflow-x: hidden;
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      width: var(--sidebar-w);
+      min-height: 100vh;
+      background: var(--black);
+      border-right: 1px solid rgba(232,200,64,0.15);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 36px 0 30px;
+      position: fixed;
+      left: 0; top: 0; bottom: 0;
+      z-index: 100;
+    }
+
+    .sidebar-logo {
+      width: 90px; height: 90px;
+      border-radius: 50%;
+      background: var(--yellow);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 8px;
+      box-shadow: 0 0 40px rgba(232,200,64,0.3);
+      position: relative;
+    }
+    .sidebar-logo::after {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
+      border: 2px solid rgba(232,200,64,0.3);
+    }
+    .sidebar-logo span {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2rem;
+      color: var(--black);
+      letter-spacing: .05em;
+    }
+
+    .sidebar-club {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: .85rem;
+      letter-spacing: .15em;
+      color: rgba(255,255,255,0.3);
+      text-transform: uppercase;
+      margin-bottom: 48px;
+      text-align: center;
+      padding: 0 16px;
+    }
+
+    .sidebar-nav {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      padding: 0 16px;
+      flex: 1;
+    }
+
+    .sidebar-nav a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      color: rgba(255,255,255,0.45);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      border-radius: 8px;
+      transition: all .2s;
+      position: relative;
+    }
+    .sidebar-nav a:hover {
+      color: var(--yellow);
+      background: rgba(232,200,64,0.08);
+    }
+    .sidebar-nav a.active {
+      color: var(--yellow);
+      background: rgba(232,200,64,0.12);
+    }
+    .sidebar-nav a.active::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 50%;
+      transform: translateY(-50%);
+      width: 3px; height: 60%;
+      background: var(--yellow);
+      border-radius: 0 3px 3px 0;
+    }
+    .nav-icon { font-size: 1rem; width: 20px; text-align: center; }
+
+    .sidebar-social {
+      display: flex;
+      gap: 14px;
+      margin-top: 24px;
+      padding: 0 16px;
+    }
+    .sidebar-social a {
+      color: rgba(255,255,255,0.3);
+      font-size: 13px;
+      text-decoration: none;
+      transition: color .2s;
+    }
+    .sidebar-social a:hover { color: var(--yellow); }
+
+    /* ── MAIN CONTENT ── */
+    .main {
+      margin-left: var(--sidebar-w);
+      flex: 1;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to right, rgba(13,13,13,0.95) 0%, rgba(13,13,13,0.5) 50%, rgba(13,13,13,0.2) 100%),
+        url('https://images.unsplash.com/photo-1489944440615-453fc2b6a9a9?w=1600&q=80') center/cover no-repeat;
+      animation: slowZoom 20s ease-in-out infinite alternate;
+    }
+
+    @keyframes slowZoom {
+      from { transform: scale(1); }
+      to { transform: scale(1.05); }
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 0 60px;
+      max-width: 700px;
+    }
+
+    .hero-label {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .25em;
+      text-transform: uppercase;
+      color: var(--yellow);
+      margin-bottom: 16px;
+      opacity: 0;
+      animation: fadeUp .6s ease forwards .2s;
+    }
+
+    .hero-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(3.5rem, 7vw, 6rem);
+      line-height: .95;
+      letter-spacing: .02em;
+      color: var(--white);
+      margin-bottom: 24px;
+      opacity: 0;
+      animation: fadeUp .7s ease forwards .4s;
+    }
+    .hero-title em {
+      color: var(--yellow);
+      font-style: normal;
+      display: block;
+    }
+
+    .hero-desc {
+      font-size: 15px;
+      color: rgba(255,255,255,0.55);
+      line-height: 1.7;
+      max-width: 420px;
+      margin-bottom: 40px;
+      opacity: 0;
+      animation: fadeUp .7s ease forwards .6s;
+    }
+
+    .hero-btns {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp .7s ease forwards .8s;
+    }
+
+    .btn-primary {
+      background: var(--yellow);
+      color: var(--black);
+      border: none;
+      padding: 14px 32px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: all .2s;
+      clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+    }
+    .btn-primary:hover {
+      background: #f5d84a;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(232,200,64,0.3);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--white);
+      border: 1px solid rgba(255,255,255,0.3);
+      padding: 14px 32px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: all .2s;
+    }
+    .btn-secondary:hover {
+      border-color: var(--yellow);
+      color: var(--yellow);
+    }
+
+    /* Stats bar */
+    .hero-stats {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      background: rgba(13,13,13,0.85);
+      backdrop-filter: blur(10px);
+      border-top: 1px solid rgba(232,200,64,0.15);
+      display: flex;
+      z-index: 3;
+      opacity: 0;
+      animation: fadeUp .7s ease forwards 1s;
+    }
+
+    .hero-stat {
+      flex: 1;
+      padding: 20px 24px;
+      border-right: 1px solid rgba(255,255,255,0.06);
+      text-align: center;
+    }
+    .hero-stat:last-child { border-right: none; }
+    .stat-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.2rem;
+      color: var(--yellow);
+      line-height: 1;
+      display: block;
+    }
+    .stat-lbl {
+      font-size: 10px;
+      color: rgba(255,255,255,0.35);
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      margin-top: 4px;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── MOBILE ── */
+    .hamburger {
+      display: none;
+      position: fixed;
+      top: 16px; left: 16px;
+      z-index: 200;
+      background: var(--yellow);
+      border: none;
+      width: 44px; height: 44px;
+      border-radius: 8px;
+      cursor: pointer;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+    }
+    .hamburger span {
+      display: block;
+      width: 22px; height: 2px;
+      background: var(--black);
+      border-radius: 2px;
+      transition: .3s;
+    }
+
+    @media(max-width: 768px) {
+      .sidebar {
+        transform: translateX(-100%);
+        transition: transform .3s;
+      }
+      .sidebar.open { transform: translateX(0); }
+      .main { margin-left: 0; }
+      .hero-content { padding: 0 24px; padding-top: 60px; }
+      .hero-title { font-size: 3rem; }
+      .hamburger { display: flex; }
+      .hero-stats { flex-wrap: wrap; }
+      .hero-stat { min-width: 50%; }
+    }
+  </style>
 </head>
 <body>
 
-<header><h1>Racing White Woluwe</h1></header>
-<nav>
-  <a href="index.html" class="active">Accueil</a> |
-  <a href="joueurs.html">Effectif</a> |
-  <a href="matchs.html">Calendrier</a> |
-  <a href="convocations.html">Convocations</a> |
-  <a href="equipe.html">Équipe</a> |
-  <a href="login.html">Connexion</a>
-</nav>
+<!-- Hamburger mobile -->
+<button class="hamburger" id="hamburger" onclick="toggleSidebar()">
+  <span></span><span></span><span></span>
+</button>
 
-<main>
-<section>
-  <h2>Bienvenue !</h2>
-  <p>Suivez la saison, les matchs et les convocations de l'équipe.</p>
-  <br>
-  <button onclick="window.location.href='login.html'">Se connecter</button>
-</section>
-</main>
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <span>RW</span>
+  </div>
+  <div class="sidebar-club">Racing White Woluwe<br>U19</div>
 
-<footer>&copy; 2025 Racing White Woluwe — Tous droits réservés</footer>
+  <nav class="sidebar-nav">
+    <a href="index.html" class="active"><span class="nav-icon">🏠</span> Accueil</a>
+    <a href="joueurs.html"><span class="nav-icon">👥</span> Effectif</a>
+    <a href="matchs.html"><span class="nav-icon">📅</span> Calendrier</a>
+    <a href="convocations.html"><span class="nav-icon">✉️</span> Convocations</a>
+    <a href="equipe.html"><span class="nav-icon">⭐</span> Équipe</a>
+    <a href="login.html"><span class="nav-icon">🔐</span> Connexion</a>
+  </nav>
+
+  <div class="sidebar-social">
+    <a href="#">FB</a>
+    <a href="#">IG</a>
+    <a href="#">TW</a>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+      <div class="hero-label">⚽ Saison 2025 — 2026</div>
+      <h1 class="hero-title">
+        WE ARE
+        <em>RACING WHITE</em>
+        WOLUWE
+      </h1>
+      <p class="hero-desc">
+        Suivez la saison, les matchs et les convocations de l'équipe U19 du Racing White Woluwe.
+      </p>
+      <div class="hero-btns">
+        <a href="login.html" class="btn-primary">Accéder au site</a>
+        <a href="matchs.html" class="btn-secondary">Voir les matchs</a>
+      </div>
+    </div>
+
+    <!-- Stats bar -->
+    <div class="hero-stats" id="heroStats">
+      <div class="hero-stat">
+        <span class="stat-num" id="statV">—</span>
+        <div class="stat-lbl">Victoires</div>
+      </div>
+      <div class="hero-stat">
+        <span class="stat-num" id="statM">—</span>
+        <div class="stat-lbl">Matchs joués</div>
+      </div>
+      <div class="hero-stat">
+        <span class="stat-num" id="statBP">—</span>
+        <div class="stat-lbl">Buts marqués</div>
+      </div>
+      <div class="hero-stat">
+        <span class="stat-num" id="statPts">—</span>
+        <div class="stat-lbl">Points</div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBtHgQSmZY76kMrZQhClrRo9NuuMgHLbKE",
+    authDomain: "racing-white-woluwe.firebaseapp.com",
+    projectId: "racing-white-woluwe",
+    storageBucket: "racing-white-woluwe.firebasestorage.app",
+    messagingSenderId: "443553313021",
+    appId: "1:443553313021:web:058e27950c829566624e94"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // Charger stats Racing depuis les matchs
+  const snap = await getDoc(doc(db, "matchs", "liste"));
+  const matchs = snap.exists() ? (snap.data().matchs || []) : [];
+  let v=0, m=0, bp=0;
+  matchs.forEach(match => {
+    if (!match.score) return;
+    const parts = match.score.split('-').map(Number);
+    if (parts.length !== 2) return;
+    m++; bp += parts[0];
+    if (parts[0] > parts[1]) v++;
+  });
+  document.getElementById('statV').textContent = v;
+  document.getElementById('statM').textContent = m;
+  document.getElementById('statBP').textContent = bp;
+  document.getElementById('statPts').textContent = v * 3;
+</script>
+
 <script>
+  window.toggleSidebar = function() {
+    document.getElementById('sidebar').classList.toggle('open');
+  };
+  // Fermer sidebar en cliquant ailleurs
+  document.addEventListener('click', function(e) {
+    const sidebar = document.getElementById('sidebar');
+    const hamburger = document.getElementById('hamburger');
+    if (!sidebar.contains(e.target) && !hamburger.contains(e.target)) {
+      sidebar.classList.remove('open');
+    }
+  });
+
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('service-worker.js');
   }
