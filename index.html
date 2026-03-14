@@ -28,6 +28,10 @@
 </main>
 
 <footer>&copy; 2025 Racing White Woluwe — Tous droits réservés</footer>
-
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('service-worker.js');
+  }
+</script>
 </body>
 </html>
